@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:selaa/backend-functions/load_data.dart';
-import 'package:selaa/screens/seller/add_poste.dart';
+import 'package:selaa/screens/seller/add_product.dart';
 import 'package:selaa/screens/seller/edit_profile.dart';
 import 'package:selaa/screens/seller/home_seller.dart';
 import 'package:selaa/screens/buyer/notification.dart';

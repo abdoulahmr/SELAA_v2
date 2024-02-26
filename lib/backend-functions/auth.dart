@@ -139,6 +139,7 @@ Future<User?> loginWithEmailPassword(
         ),
       );
     } else {
+      print(e);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Error logging in please send us a feedback code 15'),

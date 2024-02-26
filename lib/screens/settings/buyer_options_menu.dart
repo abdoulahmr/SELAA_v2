@@ -48,30 +48,6 @@ class BuyerOptionsMenu extends StatelessWidget {
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.1,
                 child: OutlinedButton(
-                  onPressed: () {},
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Colors.white),
-                  ),
-                  child: const Row(
-                    children: <Widget>[
-                      SizedBox(width: 40),
-                      Icon(
-                        Icons.account_balance_wallet_outlined,
-                        size: 40,
-                        color: Color(0xFF008080),
-                      ),
-                      SizedBox(width: 40),
-                      Text(
-                        "Balance",
-                        style: TextStyle(fontSize: 20, color: Colors.black),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.1,
-                child: OutlinedButton(
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -102,7 +78,7 @@ class BuyerOptionsMenu extends StatelessWidget {
                 height: MediaQuery.of(context).size.height * 0.1,
                 child: OutlinedButton(
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => MyOrdersPage()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const MyOrdersPage()));
                   },
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: Colors.white),

@@ -1,11 +1,11 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:selaa/screens/register/redirect_login.dart';
-import 'package:selaa/screens/register/pre_register.dart';
+import 'package:selaa/screens/splash.dart';
+
 import 'firebase_options.dart';
 import 'package:selaa/generated/l10n.dart';
 
@@ -58,20 +58,7 @@ class _MainState extends State<Main> {
         hintColor: const Color(0xFFCCE6E6),
       ),
       debugShowCheckedModeBanner: false,
-      home: StreamBuilder(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator()); 
-          } else {
-            if (snapshot.hasData) {
-              return const RedirectLogin();
-            } else {
-              return const PreRegister();
-            }            
-          }
-        },
-      ),
+      home: const Splash()
     );
   }
 }

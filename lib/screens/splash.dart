@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:selaa/main.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:selaa/backend-functions/links.dart';
+import 'package:selaa/screens/after_splash.dart';
 
 class Splash extends StatefulWidget {
   const Splash({Key? key}) : super(key: key);
@@ -38,17 +39,20 @@ class _SplashState extends State<Splash> {
         },
       );
     } else {
-      // Internet connection is available
-      await Future.delayed(const Duration(milliseconds: 1500));
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const Main()));
+      await Future.delayed(const Duration(milliseconds: 200));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const AfterSplash()));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const Center(
-        child: CircularProgressIndicator(),
+      body: Center(
+        child: Image(
+          image: AssetImage(ImagePaths().verticalLogo),
+          width: 150,
+          height: 150,  
+        ),
       ),
     );
   }

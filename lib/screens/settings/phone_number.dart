@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:selaa/backend-functions/account_settings.dart';
@@ -23,18 +25,21 @@ class _AddPhoneNumberPageState extends State<AddPhoneNumberPage> {
       });
     });
     super.initState();
+    if(_phoneNumberController.text.isEmpty){
+      isEditing = true;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Phone Number'),
+        title: const Text('Add Phone Number',style: TextStyle(color: Colors.white)),
         backgroundColor: const Color(0xFF008080),
         actions: [
           if (!isEditing)
             IconButton(
-              icon: const Icon(Icons.edit),
+              icon: const Icon(Icons.edit,color: Colors.white),
               onPressed: () {
                 setState(() {
                   isEditing = true;
@@ -43,8 +48,11 @@ class _AddPhoneNumberPageState extends State<AddPhoneNumberPage> {
             ),
         ],
       ),
-      body: PopScope(
-        canPop: false,
+      body: WillPopScope(
+        onWillPop: () async {
+          Navigator.pop(context);
+          return true;
+        },
         child: Column(
           children: [
             const SizedBox(height: 50),
@@ -77,6 +85,7 @@ class _AddPhoneNumberPageState extends State<AddPhoneNumberPage> {
                           style: TextStyle(
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
+                            
                           ),
                         ),
                         SizedBox(height: 20),
@@ -144,7 +153,7 @@ class _AddPhoneNumberPageState extends State<AddPhoneNumberPage> {
                       );
                     }
                   },
-                  child: const Text('Add'),
+                  child: const Text('Add',style: TextStyle(color: Colors.white)),
                 ),
               ),
           ],

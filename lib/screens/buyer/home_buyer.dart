@@ -7,7 +7,6 @@ import 'package:selaa/screens/buyer/product_category_overview.dart';
 import 'package:selaa/screens/buyer/products_categorys.dart';
 import 'package:selaa/screens/seller/product_page.dart';
 import 'package:selaa/screens/buyer/shopping_cart.dart';
-import 'package:selaa/screens/seller/user_page.dart';
 import 'package:selaa/screens/buyer/product_search_list.dart';
 import 'package:selaa/screens/settings/buyer_options_menu.dart';
 
@@ -22,7 +21,7 @@ class _HomeState extends State<HomeBuyer> {
   int _currentIndex = 0;
   final List<Widget> _pages = [
     const HomeBuyer(),
-    const UserPage(),
+    const HomeBuyer(),
     const NotificationPage(),
     const ShoppingCart(),
   ];
@@ -260,7 +259,7 @@ class _HomeState extends State<HomeBuyer> {
                 ],
               ),
               Container(
-                margin: const EdgeInsets.only(left:10),
+                margin: const EdgeInsets.only(left: 10),
                 child: ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
@@ -275,8 +274,14 @@ class _HomeState extends State<HomeBuyer> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         GestureDetector(
-                          onTap: ()async{
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPage(productID: postes[index]['productID'])));
+                          onTap: () async {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ProductPage(productID: postes[startIndex]['productID']),
+                              ),
+                            );
                           },
                           child: Container(
                             padding: const EdgeInsets.all(10),
@@ -284,8 +289,8 @@ class _HomeState extends State<HomeBuyer> {
                               color: Color(0xFFCCE6E6),
                               borderRadius: BorderRadius.all(Radius.circular(30.0)),
                             ),
-                            width: MediaQuery.of(context).size.width*0.45,
-                            height: MediaQuery.of(context).size.height*0.35,
+                            width: MediaQuery.of(context).size.width * 0.45,
+                            height: MediaQuery.of(context).size.height * 0.35,
                             child: Column(
                               children: [
                                 ClipRRect(
@@ -306,7 +311,7 @@ class _HomeState extends State<HomeBuyer> {
                                   width: MediaQuery.of(context).size.width,
                                   child: Text(
                                     postes[startIndex]['title'],
-                                    textAlign: TextAlign.left,                                
+                                    textAlign: TextAlign.left,
                                     style: const TextStyle(
                                       fontSize: 15,
                                       overflow: TextOverflow.ellipsis,
@@ -319,7 +324,7 @@ class _HomeState extends State<HomeBuyer> {
                                   width: MediaQuery.of(context).size.width,
                                   child: Text(
                                     "${postes[startIndex]['price']} DZ",
-                                    textAlign: TextAlign.center,                                
+                                    textAlign: TextAlign.center,
                                     style: const TextStyle(
                                       fontSize: 15,
                                       overflow: TextOverflow.ellipsis,
@@ -329,11 +334,17 @@ class _HomeState extends State<HomeBuyer> {
                                 ),
                               ],
                             ),
-                          )
+                          ),
                         ),
                         GestureDetector(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPage(productID: postes[endIndex]['productID'])));
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ProductPage(productID: postes[endIndex]['productID']),
+                              ),
+                            );
                           },
                           child: Container(
                             margin: const EdgeInsets.all(10),
@@ -342,8 +353,8 @@ class _HomeState extends State<HomeBuyer> {
                               color: Color(0xFFCCE6E6),
                               borderRadius: BorderRadius.all(Radius.circular(30.0)),
                             ),
-                            width: MediaQuery.of(context).size.width*0.45,
-                            height: MediaQuery.of(context).size.height*0.35,
+                            width: MediaQuery.of(context).size.width * 0.45,
+                            height: MediaQuery.of(context).size.height * 0.35,
                             child: Column(
                               children: [
                                 ClipRRect(
@@ -364,7 +375,7 @@ class _HomeState extends State<HomeBuyer> {
                                   width: MediaQuery.of(context).size.width,
                                   child: Text(
                                     postes[endIndex]['title'],
-                                    textAlign: TextAlign.left,                                
+                                    textAlign: TextAlign.left,
                                     style: const TextStyle(
                                       fontSize: 15,
                                       overflow: TextOverflow.ellipsis,
@@ -377,7 +388,7 @@ class _HomeState extends State<HomeBuyer> {
                                   width: MediaQuery.of(context).size.width,
                                   child: Text(
                                     "${postes[endIndex]['price']} DZ",
-                                    textAlign: TextAlign.center,                                
+                                    textAlign: TextAlign.center,
                                     style: const TextStyle(
                                       fontSize: 15,
                                       overflow: TextOverflow.ellipsis,
@@ -387,7 +398,7 @@ class _HomeState extends State<HomeBuyer> {
                                 ),
                               ],
                             ),
-                          )
+                          ),
                         ),
                       ],
                     );

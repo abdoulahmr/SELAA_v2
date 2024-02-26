@@ -37,10 +37,38 @@ class _PreRegisterPageState extends State<PreRegister> {
               height: 40,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      currentStep = 4;
+                    });
+                    _pageController.animateToPage(
+                      currentStep - 1,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                    ),
+                  ),
+                  child: Text(
+                    'Skip',
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
                 DropdownButton(
-                  icon: const Icon(Icons.language, color: Color(0xFF415B5B),),
+                  icon: const Icon(Icons.language, color: Color(0xFF415B5B)),
+                  underline: Container(),
                   items: const [
                     DropdownMenuItem(
                       value: 'en',
@@ -59,9 +87,6 @@ class _PreRegisterPageState extends State<PreRegister> {
                       Main.setLocale(context, const Locale('ar'));
                     }
                   }
-                ),
-                const SizedBox(
-                  width: 20,
                 ),
               ],
             ),

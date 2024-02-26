@@ -4,8 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:flutter/material.dart';
-import 'package:selaa/backend-functions/load_data.dart';
-import 'package:selaa/screens/buyer/my_orders.dart';
 import 'package:selaa/screens/seller/user_page.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
@@ -248,13 +246,9 @@ Future<void> deleteItemFromCart(String productID, context) async {
 
 // pass an order
 Future<void> saveOrder(
-  String productName,
-  String productID,
-  String sellerID,
+  List<Map<String, dynamic>> orderDetails,
   String orderID,
-  int quantity,
-  double unitPrice,
-  String location,
+  bool deliveryOption,
   String date,
   context
 ) async {
@@ -263,60 +257,38 @@ Future<void> saveOrder(
     // Handle the case where the user is null (not signed in)
     return;
   }
-  try {
-    String shippingAddress = await loadUserShippingAddress(context);
-    if (shippingAddress.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please add a shipping address before placing an order.'),
-        ),
-      );
-      return;
-    }
-
+  try{
     // Save order for the buyer
     await FirebaseFirestore.instance.collection('users')
-      .doc(user.uid)
-      .collection("orders")
-      .add({
-        "orderId": orderID,
-        "productId": productID,
-        "productName": productName,
-        "sellerID": sellerID,
-        "quantity": quantity,
-        "unitPrice": unitPrice,
-        "date": date,
-        "location": location,
-        "status": "Pending"
-      });
-
-    // Save order for the seller
-    await FirebaseFirestore.instance.collection('users')
-      .doc(sellerID)
-      .collection("orders")
-      .add({
-        "orderId": orderID,
-        "productId": productID,
-        "productName": productName,
-        "buyerID": user.uid,
-        "quantity": quantity,
-        "unitPrice": unitPrice,
-        "date": date,
-        "location": location,
-        "status": "Pending"
-      });
-
-    deleteItemFromCart(productID, context);
-    double orderAmount = unitPrice * quantity;
-    updateBalance(orderAmount, context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Order passed successfully'),
-      ),
-    );
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const MyOrdersPage()));
-  } catch (error) {
-    // Handle the error
+        .doc(user.uid)
+        .collection("orders")
+        .add({
+          "orderId": orderID,
+          "deliveryOption": deliveryOption,
+          "date": date,
+          "status": "Pending"
+        });
+    
+    // Save order for each seller
+    Set<String> sellerIds = Set<String>();
+    for (var orderDetail in orderDetails) {
+      String sellerID = orderDetail['productDetails']['sellerID'];
+      // Check if an order for the same seller already exists
+      if (!sellerIds.contains(sellerID)) {
+        await FirebaseFirestore.instance.collection('users')
+            .doc(sellerID)
+            .collection("orders")
+            .add({
+              "orderId": orderID,
+              "buyerId": user.uid,
+              "deliveryOption": deliveryOption,
+              "date": date,
+              "status": "Pending"
+            });
+        sellerIds.add(sellerID);
+      }
+    }
+  } catch(e){
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Error please send us a feedback  code: 26'),
@@ -325,72 +297,67 @@ Future<void> saveOrder(
   }
 }
 
-// Function to update the user's balance
-Future<void> updateBalance(double orderAmount, context) async {
-  User? user = FirebaseAuth.instance.currentUser;
+// Function to save items in an order
+Future<void> saveItemsInOrder(
+  List<Map<String, dynamic>> items,
+  String orderID,
+  context
+) async {
   try {
-    // Fetch the current balance
-    DocumentSnapshot<Map<String, dynamic>> userSnapshot =
-        await FirebaseFirestore.instance.collection('users').doc(user!.uid).get();
-
-    if (userSnapshot.exists) {
-      // Update the balance by subtracting the order amount
-      double currentBalance = userSnapshot['balance'].toDouble();
-      double newBalance = currentBalance - orderAmount;
-
-      // Save the updated balance to Firestore
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .update({'balance': newBalance});
+    // Save items in the order
+    for (var item in items) {
+      await FirebaseFirestore.instance.collection('orders')
+        .add({
+          "orderId": orderID,
+          "productId": FirebaseFirestore.instance.collection('products').doc(item['productDetails']['productID']),
+          "sellerId": FirebaseFirestore.instance.collection('users').doc(item['productDetails']['sellerID']),
+          "quantity": item['quantity'],
+        });
     }
   } catch (error) {
     // Handle the error
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Error please send us a feedback  code: 27'),
+        content: Text('Error please send us a feedback  code: 61'),
       ),
     );
   }
 }
 
-// add delivery
-Future<void> addDeliveryForOrder(BuildContext context, String orderId) async {
-  User? user = FirebaseAuth.instance.currentUser;
-  String shippingAddress = await loadUserShippingAddress(context);
-  if (shippingAddress.isEmpty) {
-    Navigator.pushNamed(context, "/shippingAddress");
-  } else {
-    try {
-      QuerySnapshot snapshot = await FirebaseFirestore.instance
-          .collection('user')
-          .doc(user!.uid)
-          .collection("orders")
-          .where('orderId', isEqualTo: orderId)
-          .get();
-      for (QueryDocumentSnapshot doc in snapshot.docs) {
-        await doc.reference.update({"delivery": true});
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
+// Future function to load buyer's orders
+Future<List<Map<String, dynamic>>> loadBuyerOrders(context) async {
+  try {
+    // Get the current user
+    User? user = FirebaseAuth.instance.currentUser;
+    // Get the orders collection for the current user
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(user!.uid)
+      .collection('orders')
+      .get();
+    // Return a list of order data
+    return querySnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+  } catch (e) {
+    // Handle errors
+    ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Delivery requested succesfuly'),
+        content: Text('Error please send us a feedback  code 48'),
       ),
     );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error please send us a feedback  code: 50'),
-        ),
-      );
-    }
+    return []; // Return an empty list if there's an error
   }
 }
+
 
 // Function to calculate total price of an order
 Future<double> calculateOrderTotalPrice(List<Map<String, dynamic>> items, BuildContext context) async {
+  // Initialize total price
   double total = 0;
+  // Iterate through items and calculate total price
   for(int i = 0; i < items.length; i++){
     total = total + (items[i]['unitPrice']*items[i]['quantity']);
   }
+  // Return the total price
   return total;
 }
+

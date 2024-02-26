@@ -4,4 +4,5 @@ class ImagePaths{
   String ad3 = "https://firebasestorage.googleapis.com/v0/b/selaa-93e88.appspot.com/o/ads%2Fads2.jpg?alt=media&token=51fdeb27-b773-44df-bcdb-a4050a4f1400";
   String defaultProfilePicture = "https://firebasestorage.googleapis.com/v0/b/selaa-2ff93.appspot.com/o/profilePicture%2Fkisspng-computer-icons-download-avatar-5b3848b5343f86.741661901530415285214-removebg-preview%20(1).png?alt=media&token=0c01bbf5-f998-4ad9-af94-235ba6fd4ab5";
   String horizontalLogo = "assets/images/2-removebg-preview-removebg-preview.png";
+  String verticalLogo = "assets/images/1-removebg-preview-removebg-preview-removebg-preview.png";
 }

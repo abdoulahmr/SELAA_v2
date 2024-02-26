@@ -129,10 +129,13 @@ Future<List<Map<String, dynamic>>> loadSellerInfo(uid, context) async {
 
 // Load user postes
 Future<List<Map<String, dynamic>>> loadUserPostes() async {
+  User? user = FirebaseAuth.instance.currentUser;
   List<Map<String, dynamic>> result = [];
 
   // Fetch products
-  QuerySnapshot productsSnapshot = await FirebaseFirestore.instance.collection('products').get();
+  QuerySnapshot productsSnapshot = await FirebaseFirestore.instance.collection('products')
+    .where('sellerID', isEqualTo: user?.uid)
+    .get();
   List<DocumentSnapshot> products = productsSnapshot.docs;
 
   // Fetch categories
@@ -433,31 +436,53 @@ Future<List<Map<String, dynamic>>> loadSellerOrders(context) async {
   }
 }
 
-// load order items  
-Future<List<Map<String, dynamic>>> loadOrderItems(context, orderId) async {
+// load order items  49
+Future<List<Map<String, dynamic>>> loadOrderItems(String orderID, context) async {
   User? user = FirebaseAuth.instance.currentUser;
-  try{
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-      .collection('users')
-      .doc(user!.uid)
-      .collection('orders')
-      .where('orderId', isEqualTo: orderId)
-      .get();
+  try {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot1 = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .collection("orders")
+        .where('orderId', isEqualTo: orderID)
+        .get();
 
-    List<Map<String, dynamic>> orderItems = [];
-    for (var doc in querySnapshot.docs) {
-      orderItems.add(doc.data()as Map<String, dynamic>);
+    QuerySnapshot<Map<String, dynamic>> querySnapshot2 = await FirebaseFirestore.instance
+        .collection('orders')
+        .where('orderId', isEqualTo: orderID)
+        .get();
+    // Fetch order details
+    Map<String, dynamic> orderDetails = querySnapshot1.docs.isNotEmpty ? querySnapshot1.docs.first.data() : {};
+    List<Map<String, dynamic>> items = [];
+    for (QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot in querySnapshot2.docs) {
+      Map<String, dynamic> data = documentSnapshot.data();
+      // Fetch product details
+      DocumentSnapshot<Map<String, dynamic>> productSnapshot = await data['productId'].get();
+      Map<String, dynamic> productData = productSnapshot.data()!;
+      items.add({
+        'orderId': data['orderId'],
+        'quantity': data['quantity'],
+        'status': orderDetails['status'],
+        'date': orderDetails['date'],
+        'productDetails': {
+          'productId': productSnapshot.id,
+          'title': productData['title'],
+          'price': productData['price'],
+        },
+      });
     }
-    return orderItems;
-  }catch(e){
+    return items;
+  } catch (e) {
+    // Handle error
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Error please send us a feedback  code 49'),
       ),
     );
-    return []; 
+    return [];
   }
 }
+
 
 // load user name from uid
 Future<String> loadUserName(context, uid) async {
@@ -647,5 +672,23 @@ Future<List<Map<String, dynamic>>> loadProductsByCategory(String categoryID, con
       ),
     );
     return [];
+  }
+}
+
+Future<List<Map<String, dynamic>>> loadProductsCategories(context) async {
+  try {
+    // Fetch products categories from Firestore
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance
+        .collection('productCategory')
+        .get();
+    return querySnapshot.docs.map((doc) => doc.data()).toList();
+  } catch (error) {
+    // Handle any errors
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Error please send us a feedback code 59'),
+      ),
+    );
+    return []; // Return an empty list in case of error
   }
 }

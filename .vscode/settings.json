@@ -1,4 +1,5 @@
 {
     "java.configuration.updateBuildConfiguration": "automatic",
-    "dart.flutterSdkPath": "~/snap/flutter/common/flutter"
+    "dart.flutterSdkPath": "~/snap/flutter/common/flutter",
+    "java.compile.nullAnalysis.mode": "automatic"
 }

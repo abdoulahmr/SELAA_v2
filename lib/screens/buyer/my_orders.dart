@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:selaa/backend-functions/load_data.dart';
-import 'package:selaa/screens/buyer/order_page.dart';
+import 'package:selaa/screens/buyer/order_overview.dart';
 
 class MyOrdersPage extends StatelessWidget {
   const MyOrdersPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pop(context);
+        return true;
+      },
       child: Scaffold(
         appBar: AppBar(
           title: const Text(
@@ -64,7 +67,7 @@ class MyOrdersPage extends StatelessWidget {
                         ),
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => OrderDetailsPage(orderId: orders[index]['orderId']),
+                            builder: (context) => OrderOverView(orderId: orders[index]['orderId']),
                           ));
                         },
                       ),

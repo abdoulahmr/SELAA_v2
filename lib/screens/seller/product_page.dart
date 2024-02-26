@@ -42,8 +42,10 @@ class _ProductPageState extends State<ProductPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PopScope(
-        canPop: false,
+      body: WillPopScope(
+        onWillPop: () async {
+          return false;
+        },
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -247,7 +249,7 @@ class _ProductPageState extends State<ProductPage> {
                           ),
                         ),
                       ),
-                      child: const Text('Add to cart'),
+                      child: const Text('Add to cart',style: TextStyle(color:Colors.white)),
                       onPressed: () async {
                         addItemToCart(
                           posteInfo[0]['sellerID'], 
@@ -264,7 +266,10 @@ class _ProductPageState extends State<ProductPage> {
                     initVal: 1,
                     minVal: 1,
                     steps: 1,
-                    onQtyChanged: (value) => setState(() => quantityValue = int.parse(value.replaceAll(',', '')))
+                    onQtyChanged: (value) {
+                      String intValue = value.toString().split('.')[0];
+                      setState(() => quantityValue = int.parse(intValue));
+                    }
                   ),
                 ],
               ),

@@ -1,10 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:selaa/screens/settings/phone_number.dart';
 import 'package:uuid/uuid.dart';
 import 'package:selaa/backend-functions/data_manipulation.dart';
 import 'package:selaa/backend-functions/load_data.dart';
 import 'package:selaa/screens/buyer/home_buyer.dart';
 import 'package:selaa/screens/buyer/notification.dart';
-import 'package:selaa/screens/buyer/oreder_structure.dart';
+import 'package:selaa/backend-functions/oreder_structure.dart';
 import 'package:selaa/screens/seller/product_page.dart';
 import 'package:selaa/screens/seller/user_page.dart';
 
@@ -16,6 +19,7 @@ class ShoppingCart extends StatefulWidget {
 }
 
 class _ShoppingCartState extends State<ShoppingCart> {
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   List<Map<String, dynamic>> userInfo = [];
   List<Map<String, dynamic>> shoppingCart = [];
   List<OrderItem> orderItems = [];
@@ -58,6 +62,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       body: PopScope(
         canPop: false,
         child: SingleChildScrollView(
@@ -78,15 +83,6 @@ class _ShoppingCartState extends State<ShoppingCart> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text(
-                          userInfo.isNotEmpty
-                              ? "Credit : ${userInfo[0]['balance'].toString()} DZD"
-                              : "Credit : N/A",
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
                           "Total : $totalPrice DZD",
                           style: const TextStyle(
                             fontSize: 20,
@@ -100,7 +96,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                       style: ButtonStyle(
                         fixedSize: MaterialStateProperty.all(
                           Size(
-                            MediaQuery.of(context).size.width * 0.25,
+                            MediaQuery.of(context).size.width * 0.3,
                             MediaQuery.of(context).size.height * 0.06,
                           ),
                         ),
@@ -112,45 +108,98 @@ class _ShoppingCartState extends State<ShoppingCart> {
                           ),
                         ),
                       ),
-                      child: const Text('Confirm Order'),
+                      child: const Text(
+                        'Confirm Order',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15
+                        ),
+                      ),
                       onPressed: () {
                         if(_isClicked == false){
-                          if(totalPrice>userInfo[0]['balance']){
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("You don't have enough credit to confirm this order"),
-                              ),
+                          if(userInfo[0]['phoneNumber'].isEmpty){
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext scaffoldKey) {
+                                return AlertDialog(
+                                  title: const Text('No Phone number'),
+                                  content: const Text('Please update your phone number'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => const AddPhoneNumberPage()
+                                          ),
+                                        );
+                                      },
+                                      child: const Text('OK',style: TextStyle(color: Color(0xFF415B5B))),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('Cancel',style: TextStyle(color: Colors.red)),
+                                    ),
+                                  ],
+                                );
+                              },
                             );
-                          }else{
-                            if(shippingAdress==''){
+                          } else {
+                            if(shippingAdress == ''){
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                  content: Text('Please update shipping adres (settings>shipping adress)'),
+                                  content: Text('Please update shipping address (settings > shipping address)'),
                                 ),
                               );
-                            }else{
-                              String uuid = const Uuid().v4();
-                              for(int index=0;index<shoppingCart.length;index++){
-                                saveOrder(
-                                  shoppingCart[index]['productDetails']['title'],
-                                  shoppingCart[index]['productDetails']['productID'],
-                                  shoppingCart[index]['productDetails']['sellerID'],
-                                  uuid,
-                                  shoppingCart[index]['quantity'],
-                                  double.parse(shoppingCart[index]['productDetails']['price']),
-                                  shippingAdress,
-                                  "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}",
-                                  context
-                                );
-                              }
+                            } else {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext scaffoldKey) {
+                                  bool selectedDelivery = false;
+                                  return AlertDialog(
+                                    title: const Text('Do you want it to be delivered?'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(scaffoldKey);
+                                        },
+                                        child: const Text('Cancel',style: TextStyle(color: Colors.red)),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          Navigator.pop(scaffoldKey);                                          
+                                          String uuid = const Uuid().v4();
+                                          await saveOrder(
+                                            shoppingCart, 
+                                            uuid, 
+                                            selectedDelivery, 
+                                            "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}",
+                                            scaffoldKey
+                                          );
+                                          await saveItemsInOrder(shoppingCart, uuid, scaffoldKey);
+                                          for (var item in shoppingCart) {
+                                            deleteItemFromCart(item['productDetails']['productID'], scaffoldKey);
+                                          }
+                                          setState(() {
+                                            _isClicked = true;
+                                            shoppingCart = [];
+                                            totalPrice = 0;
+                                          });
+                                        },
+                                        child: const Text('OK',style: TextStyle(color: Color(0xFF415B5B))),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                             }
                           }
-                          setState(() {
-                            _isClicked = true;
-                          });
                         }
                       }
-                    ),
+                    )
                   ],
                 ),
               ),

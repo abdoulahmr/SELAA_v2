@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:selaa/backend-functions/load_data.dart';
 import '../../backend-functions/data_manipulation.dart';
 
 class AddPoste extends StatefulWidget {
@@ -12,7 +13,8 @@ class AddPoste extends StatefulWidget {
 }
 
 class _AddPosteState extends State<AddPoste> {
-  String _category = 'Tools';
+  List<Map<String, dynamic>> _categoryList = [];
+  String _category = "";
   final _type = TextEditingController();
   final _selling = TextEditingController();
   final _price = TextEditingController();
@@ -32,6 +34,17 @@ class _AddPosteState extends State<AddPoste> {
   void deleteImage(int index) {
     setState(() {
       _imageFileList.removeAt(index);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadProductsCategories(context).then((value) {
+      setState(() {
+        _categoryList = value;
+        _category = _categoryList[0]['id'];
+      });
     });
   }
 
@@ -193,41 +206,34 @@ class _AddPosteState extends State<AddPoste> {
                 Container(
                   margin: const EdgeInsets.all(20),
                   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  width: MediaQuery.of(context).size.width * 0.90,
+                  width: MediaQuery.of(context).size.width * 0.9,
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: Color(0xFF415B5B),
+                      color: const Color(0xFF415B5B),
                       width: 0.5,
                     ),
                     borderRadius: BorderRadius.circular(15.0),
                   ),
-                  child: DropdownButton<String>(
-                    value: _category,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _category = newValue!;
-                      });
-                    },
-                    items: [
-                      'Tools',
-                      'Garment',
-                      'Electronics',
-                      'Home Appliance',
-                      'House',
-                      'Electric',
-                      'Games',
-                      'Various Products',
-                      'Parapharmacy',
-                      'Baby',
-                      'Sports Products',
-                    ].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  )
+                  child: Expanded(
+                    child: DropdownButton<String>(
+                      value: _category,
+                      underline: Container(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _category = newValue!;
+                        });
+                      },
+                      items: [
+                        for (var category in _categoryList)
+                          DropdownMenuItem<String>(
+                            value: category['id'],
+                            child: Text(category['name']),
+                          )
+                      ],
+                    ),
+                  ),
                 ),
+
                 Container(
                   margin: const EdgeInsets.all(20),
                   child: TextFormField(
