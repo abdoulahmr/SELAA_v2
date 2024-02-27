@@ -53,13 +53,8 @@ class _HomeState extends State<HomeBuyer> {
                     ElevatedButton(
                       style: ButtonStyle(
                         elevation: MaterialStateProperty.all(0),
-                        fixedSize: MaterialStateProperty.all(
-                          Size(
-                            MediaQuery.of(context).size.width * 0.04,
-                            MediaQuery.of(context).size.height * 0.05,
-                          ),
-                        ),
-                        backgroundColor: MaterialStateProperty.all(const Color(0xFF008080)),
+                        
+                        backgroundColor: MaterialStateProperty.all(AppColors().primaryColor),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30.0),
@@ -70,7 +65,7 @@ class _HomeState extends State<HomeBuyer> {
                       onPressed: () {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => const BuyerOptionsMenu()));
                       },
-                      child: const Icon(Icons.menu,color: Colors.white,),
+                      child: const Center(child: Icon(Icons.menu,color: Colors.white,)),
                     ),
                     const Image(
                       image: AssetImage(
@@ -84,7 +79,7 @@ class _HomeState extends State<HomeBuyer> {
                       child: IconButton(
                         icon: const Icon(
                           Icons.notifications,
-                          size: 40,
+                          size: 35,
                           color: Color(0xFF008080),
                           ),
                         onPressed: (){
@@ -177,7 +172,7 @@ class _HomeState extends State<HomeBuyer> {
                             },
                             icon: const Icon(Icons.devices),
                               iconSize: 30,
-                              color: const Color(0xFF008080),
+                              color: AppColors().primaryColor,
                           ),
                         ),
                       ),
@@ -195,7 +190,7 @@ class _HomeState extends State<HomeBuyer> {
                             },
                             icon: const Icon(Icons.fastfood_outlined),
                             iconSize: 30,
-                            color: const Color(0xFF008080),
+                            color: AppColors().primaryColor,
                           ),
                         ),
                       ),
@@ -213,7 +208,7 @@ class _HomeState extends State<HomeBuyer> {
                             },
                             icon: const Icon(Icons.checkroom),
                             iconSize: 30,
-                            color: const Color(0xFF008080),
+                            color: AppColors().primaryColor,
                           ),
                         ),
                       ),
@@ -231,7 +226,7 @@ class _HomeState extends State<HomeBuyer> {
                             },
                             icon : const Icon(Icons.chair_outlined),
                             iconSize: 30,
-                            color: const Color(0xFF008080),
+                            color: AppColors().primaryColor,
                           ),
                         ),
                       ),
@@ -411,13 +406,13 @@ class _HomeState extends State<HomeBuyer> {
       ),
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
-          canvasColor: const Color(0xFFCCE6E6),
+          canvasColor: AppColors().secondaryColor,
         ),
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           currentIndex: _currentIndex,
-          selectedItemColor: const Color(0xFF008080),
-          unselectedItemColor: const Color(0xFF008080),
+          selectedItemColor: AppColors().primaryColor,
+          unselectedItemColor: AppColors().primaryColor,
           onTap: (index) {
             setState(() {
               _currentIndex = index;

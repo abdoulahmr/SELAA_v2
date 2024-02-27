@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:selaa/backend-functions/account_settings.dart';
+import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/backend-functions/load_data.dart';
 
 class AddPhoneNumberPage extends StatefulWidget {
@@ -35,7 +36,7 @@ class _AddPhoneNumberPageState extends State<AddPhoneNumberPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Phone Number',style: TextStyle(color: Colors.white)),
-        backgroundColor: const Color(0xFF008080),
+        backgroundColor: AppColors().primaryColor,
         actions: [
           if (!isEditing)
             IconButton(
@@ -133,7 +134,7 @@ class _AddPhoneNumberPageState extends State<AddPhoneNumberPage> {
                         MediaQuery.of(context).size.height * 0.04,
                       ),
                     ),
-                    backgroundColor: MaterialStateProperty.all(const Color(0xFF008080)),
+                    backgroundColor: MaterialStateProperty.all(AppColors().primaryColor),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),

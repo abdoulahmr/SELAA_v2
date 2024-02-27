@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/backend-functions/load_data.dart';
 
 class SearchOrderPage extends StatefulWidget {
@@ -32,7 +33,7 @@ class _SearchOrderPageState extends State<SearchOrderPage> {
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.07),
           child: AppBar(
-            backgroundColor: const Color(0xFFCCE6E6),
+            backgroundColor: AppColors().secondaryColor,
             iconTheme: const IconThemeData(color: Color(0xFF008080)),
             title: Row(
               children: [

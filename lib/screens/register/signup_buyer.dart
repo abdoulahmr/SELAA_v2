@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:selaa/backend-functions/auth.dart';
+import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/screens/register/login.dart';
 import 'package:selaa/screens/register/pre_register.dart';
 import 'package:selaa/screens/register/signup_seller.dart';
@@ -87,12 +88,12 @@ class _SignUpState extends State<SignUpBuyer> {
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 35, left: 30, right: 30),
-                  child: const Text(
+                  child: Text(
                     "Hello ! Register and start shopping",
                     style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF415B5B)),
+                        color: AppColors().primaryColor),
                   ),
                 ),
                 Container(
@@ -101,14 +102,14 @@ class _SignUpState extends State<SignUpBuyer> {
                     controller: _firstname,
                     decoration: InputDecoration(
                       labelText: 'First Name',
-                      labelStyle: const TextStyle(
-                        color: Color(0xFF415B5B),
+                      labelStyle: TextStyle(
+                        color: AppColors().primaryColor,
                       ),  
                       hintText: 'seller1',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15.0)),
-                      focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF415B5B)))),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: AppColors().borderColor))),
                   ),
                 ),
                 Container(
@@ -117,14 +118,14 @@ class _SignUpState extends State<SignUpBuyer> {
                     controller: _lastname,
                     decoration: InputDecoration(
                       labelText: 'Last Name',
-                      labelStyle: const TextStyle(
-                        color: Color(0xFF415B5B),
+                      labelStyle: TextStyle(
+                        color: AppColors().primaryColor,
                       ),  
                       hintText: 'seller1',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15.0)),
-                      focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF415B5B)))),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: AppColors().borderColor))),
                   ),
                 ),
                 Container(
@@ -134,14 +135,14 @@ class _SignUpState extends State<SignUpBuyer> {
                     controller: _email,
                     decoration: InputDecoration(
                       labelText: 'Email',
-                      labelStyle: const TextStyle(
-                        color: Color(0xFF415B5B),
+                      labelStyle: TextStyle(
+                        color: AppColors().primaryColor,
                       ),  
                       hintText: 'ex : selaa@examle.org',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15.0)),
-                      focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF415B5B)))),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: AppColors().borderColor))),
                   ),
                 ),
                 Container(
@@ -151,14 +152,14 @@ class _SignUpState extends State<SignUpBuyer> {
                     obscureText: true,
                     decoration: InputDecoration(
                       labelText: 'Password',
-                      labelStyle: const TextStyle(
-                        color: Color(0xFF415B5B),
+                      labelStyle: TextStyle(
+                        color: AppColors().primaryColor,
                       ),  
                       hintText: '********',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15.0)),
-                      focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF415B5B)))),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: AppColors().borderColor))),
                   ),
                 ),
                 Container(
@@ -168,14 +169,14 @@ class _SignUpState extends State<SignUpBuyer> {
                     obscureText: true,
                     decoration: InputDecoration(
                       labelText: 'Confirm password',
-                      labelStyle: const TextStyle(
-                        color: Color(0xFF415B5B),
+                      labelStyle: TextStyle(
+                        color: AppColors().primaryColor,
                       ),  
                       hintText: '********',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15.0)),
-                      focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF415B5B)))),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: AppColors().borderColor))),
                   ),
                 ),
                  const SizedBox(
@@ -264,7 +265,9 @@ class _SignUpState extends State<SignUpBuyer> {
                 ),
                 SignInButton(
                   Buttons.google,
-                  onPressed: () {},
+                  onPressed: () {
+                    
+                  },
                 ),
                 const SizedBox(
                   height: 10,

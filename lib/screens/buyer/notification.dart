@@ -1,6 +1,6 @@
-import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:selaa/screens/seller/home_seller.dart';
+import 'package:selaa/backend-functions/links.dart';
+import 'package:selaa/screens/buyer/home_buyer.dart';
 import 'package:selaa/screens/seller/order.dart';
 import 'package:selaa/screens/seller/user_page.dart';
 
@@ -12,8 +12,9 @@ class NotificationPage extends StatefulWidget {
 }
 
 class _NotificationPageState extends State<NotificationPage> {
+  int _currentIndex = 2;
   final List<Widget> _pages = [
-    const HomeSeller(),
+    const HomeBuyer(),
     const UserPage(),
     const NotificationPage(),
     const ListOrderPage(),
@@ -25,27 +26,53 @@ class _NotificationPageState extends State<NotificationPage> {
         icon: const Icon(Icons.arrow_back),
         onPressed: () => Navigator.of(context).pop(),
       ),
-      bottomNavigationBar:Container(
-        decoration: const BoxDecoration(
-            border: Border(
-              top: BorderSide(color: Colors.grey, width: 0.5),
-            ),
-          ),
-        child: FloatingNavbar(
-          selectedItemColor: const Color(0xFF415B5B),
-          unselectedItemColor: const Color(0xFFCCE6E6),
-          backgroundColor: Colors.white,
-          onTap: (int val) {
-            if(val != 1){
-              Navigator.push(context,MaterialPageRoute(builder: (context) => _pages[val]));
-            }
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+          canvasColor: AppColors().secondaryColor,
+        ),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: _currentIndex,
+          selectedItemColor: AppColors().primaryColor,
+          unselectedItemColor: AppColors().primaryColor,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => _pages[index]),
+            );
           },
-          currentIndex: 2,
-          items: [
-            FloatingNavbarItem(icon: Icons.home, title: 'Home'),
-            FloatingNavbarItem(icon: Icons.account_circle, title: 'Profile'),
-            FloatingNavbarItem(icon: Icons.notifications, title: 'Notifications'),
-            FloatingNavbarItem(icon: Icons.all_inbox, title: 'Orders'),
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home,
+                size: 35,
+              ),
+              label: "Home",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.account_circle,
+                size: 35,
+              ),
+              label: "Profile",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.notifications,
+                size: 35,
+              ),
+              label: "Notification",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.shopping_cart,
+                size: 35,
+              ),
+              label: "Cart",
+            ),
           ],
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/backend-functions/load_data.dart';
 import 'package:selaa/screens/buyer/order_overview.dart';
 
@@ -20,7 +21,7 @@ class MyOrdersPage extends StatelessWidget {
               color:  Color(0xFF008080),
             ),
           ),
-          backgroundColor: const Color(0xFFCCE6E6),
+          backgroundColor: AppColors().secondaryColor,
           iconTheme: const IconThemeData(
             color: Color(0xFF008080)
           ),
@@ -30,7 +31,7 @@ class MyOrdersPage extends StatelessWidget {
           future: loadBuyerOrders(context),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator(color: Color(0xFF008080),));
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else {

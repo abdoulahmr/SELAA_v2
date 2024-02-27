@@ -53,10 +53,6 @@ class _MainState extends State<Main> {
         Locale('ar'),
       ],
       locale: _locale,
-      theme: ThemeData(
-        primaryColor: const Color(0xFF008080),
-        hintColor: const Color(0xFFCCE6E6),
-      ),
       debugShowCheckedModeBanner: false,
       home: const Splash()
     );

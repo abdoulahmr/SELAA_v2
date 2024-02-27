@@ -263,7 +263,7 @@ class _HomeState extends State<HomeSeller> {
                           width: MediaQuery.of(context).size.width * 0.4,
                           height: MediaQuery.of(context).size.height * 0.1,
                           decoration: BoxDecoration(
-                            color: const Color(0xFFCCE6E6),
+                            color: AppColors().secondaryColor,
                             borderRadius: BorderRadius.circular(30.0),
                           ),
                           child: Center(
@@ -400,13 +400,13 @@ class _HomeState extends State<HomeSeller> {
       ),
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
-          canvasColor: const Color(0xFFCCE6E6),
+          canvasColor: AppColors().secondaryColor,
         ),
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           currentIndex: _currentIndex,
-          selectedItemColor: const Color(0xFF008080),
-          unselectedItemColor: const Color(0xFF008080),
+          selectedItemColor: AppColors().primaryColor,
+          unselectedItemColor: AppColors().primaryColor,
           onTap: (index) {
             
             setState(() {

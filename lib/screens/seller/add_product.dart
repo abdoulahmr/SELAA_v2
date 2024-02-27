@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/backend-functions/load_data.dart';
 import '../../backend-functions/data_manipulation.dart';
 
@@ -80,7 +81,7 @@ class _AddPosteState extends State<AddPoste> {
                           MediaQuery.of(context).size.height * 0.04,
                         ),
                       ),
-                      backgroundColor: MaterialStateProperty.all(const Color(0xFF008080)),
+                      backgroundColor: MaterialStateProperty.all(AppColors().primaryColor),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
@@ -121,7 +122,7 @@ class _AddPosteState extends State<AddPoste> {
                         MediaQuery.of(context).size.height * 0.07,
                       ),
                     ),
-                    backgroundColor: MaterialStateProperty.all(const Color(0xFF008080)),
+                    backgroundColor: MaterialStateProperty.all(AppColors().primaryColor),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),

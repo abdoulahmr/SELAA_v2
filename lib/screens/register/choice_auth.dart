@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/generated/l10n.dart';
 import 'package:selaa/screens/register/signup_seller.dart';
 import 'login.dart';
@@ -22,9 +23,9 @@ class ChoiceAuthPage extends StatelessWidget {
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height -
                       (MediaQuery.of(context).size.height * 0.3),
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFCCE6E6),
-                    borderRadius: BorderRadius.only(
+                  decoration: BoxDecoration(
+                    color: AppColors().secondaryColor,
+                    borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(60.0),
                       bottomRight: Radius.circular(60.0),
                     ),
@@ -64,7 +65,7 @@ class ChoiceAuthPage extends StatelessWidget {
                       fixedSize: MaterialStateProperty.all(
                         Size(MediaQuery.of(context).size.width*0.8, MediaQuery.of(context).size.height*0.07),
                       ),
-                      backgroundColor: MaterialStateProperty.all(const Color(0xFF415B5B)),
+                      backgroundColor: MaterialStateProperty.all(AppColors().primaryColor),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),

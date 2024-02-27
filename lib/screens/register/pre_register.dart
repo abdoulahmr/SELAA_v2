@@ -2,8 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/generated/l10n.dart';
-import 'package:selaa/main.dart';
+//import 'package:selaa/main.dart';
 import 'package:selaa/screens/register/choice_auth.dart';
 
 class PreRegister extends StatefulWidget {
@@ -51,23 +52,36 @@ class _PreRegisterPageState extends State<PreRegister> {
                     );
                   },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                    backgroundColor: MaterialStateProperty.all(AppColors().secondaryColor),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                     ),
                   ),
-                  child: Text(
-                    'Skip',
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                      fontSize: 16,
-                    ),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Skip',
+                        style: TextStyle(
+                          color: AppColors().primaryColor,
+                          fontSize: 16,
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        color: AppColors().primaryColor,
+                      ),
+                    ],
                   ),
                 ),
                 DropdownButton(
-                  icon: const Icon(Icons.language, color: Color(0xFF415B5B)),
+                  icon: Icon(
+                    Icons.language, 
+                    color: AppColors().primaryColor,
+                    size: 35,
+                  ),
                   underline: Container(),
                   items: const [
                     DropdownMenuItem(
@@ -80,12 +94,12 @@ class _PreRegisterPageState extends State<PreRegister> {
                     ),
                   ], 
                   onChanged: (language){
-                    if(language == 'en'){
-                      Main.setLocale(context, const Locale('en'));
-                    }
-                    if(language == 'ar'){
-                      Main.setLocale(context, const Locale('ar'));
-                    }
+                    // if(language == 'en'){
+                    //   Main.setLocale(context, const Locale('en'));
+                    // }
+                    // if(language == 'ar'){
+                    //   Main.setLocale(context, const Locale('ar'));
+                    // }
                   }
                 ),
               ],
@@ -109,9 +123,9 @@ class _PreRegisterPageState extends State<PreRegister> {
             DotsIndicator(
               dotsCount: 4,
               position: currentStep - 1,
-              decorator: const DotsDecorator(
-                color: Color(0xFFCCE6E6),
-                activeColor: Color(0xFF415B5B),
+              decorator: DotsDecorator(
+                color: AppColors().secondaryColor,
+                activeColor: AppColors().primaryColor,
               ),
             ),
             const SizedBox(
@@ -137,7 +151,7 @@ class _PreRegisterPageState extends State<PreRegister> {
                 }
               },
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(const Color(0xFFCCE6E6)),
+                backgroundColor: MaterialStateProperty.all(AppColors().secondaryColor),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.0),
@@ -147,14 +161,14 @@ class _PreRegisterPageState extends State<PreRegister> {
               child: currentStep == 4
                 ? Text(
                     S.of(context).getStarted,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 20,
-                      color: Color(0xFF415B5B),
+                      color: AppColors().primaryColor,
                     ),
                   )
-                : const Icon(
+                : Icon(
                     Icons.arrow_forward,
-                    color: Color(0xFF415B5B),
+                    color: AppColors().primaryColor,
                   ),
             ),
             const SizedBox(

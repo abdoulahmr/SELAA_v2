@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/backend-functions/load_data.dart';
 import 'package:selaa/screens/seller/add_product.dart';
 import 'package:selaa/screens/seller/edit_profile.dart';
@@ -295,13 +296,13 @@ class _UserPage extends State<UserPage> {
       ),
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
-          canvasColor: const Color(0xFFCCE6E6),
+          canvasColor: AppColors().secondaryColor,
         ),
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           currentIndex: _currentIndex,
-          selectedItemColor: const Color(0xFF008080),
-          unselectedItemColor: const Color(0xFF008080),
+          selectedItemColor: AppColors().primaryColor,
+          unselectedItemColor: AppColors().primaryColor,
           onTap: (index) {
             setState(() {
               _currentIndex = index;

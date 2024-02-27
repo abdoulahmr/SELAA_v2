@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/screens/settings/phone_number.dart';
 import 'package:uuid/uuid.dart';
 import 'package:selaa/backend-functions/data_manipulation.dart';
@@ -100,7 +101,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                             MediaQuery.of(context).size.height * 0.06,
                           ),
                         ),
-                        backgroundColor: MaterialStateProperty.all(const Color(0xFF008080)),
+                        backgroundColor: MaterialStateProperty.all(AppColors().primaryColor),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15.0),
@@ -286,13 +287,13 @@ class _ShoppingCartState extends State<ShoppingCart> {
       ),
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
-          canvasColor: const Color(0xFFCCE6E6),
+          canvasColor: AppColors().secondaryColor,
         ),
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           currentIndex: _currentIndex,
-          selectedItemColor: const Color(0xFF008080),
-          unselectedItemColor: const Color(0xFF008080),
+          selectedItemColor: AppColors().primaryColor,
+          unselectedItemColor: AppColors().primaryColor,
           onTap: (index) {
             setState(() {
               _currentIndex = index;

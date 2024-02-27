@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:selaa/backend-functions/account_settings.dart';
+import 'package:selaa/backend-functions/links.dart';
 
 class ChangePasswordPage extends StatelessWidget {
   ChangePasswordPage({super.key});
@@ -38,7 +39,7 @@ class ChangePasswordPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Update Password'),
-        backgroundColor: const Color(0xFF008080),
+        backgroundColor: AppColors().primaryColor,
       ),
       body: PopScope(
         canPop: false,
@@ -104,7 +105,7 @@ class ChangePasswordPage extends StatelessWidget {
                     Size(MediaQuery.of(context).size.width*0.85, MediaQuery.of(context).size.height*0.06),
                   ),
                   backgroundColor:
-                    MaterialStateProperty.all(const Color(0xFF008080)),
+                    MaterialStateProperty.all(AppColors().primaryColor),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5.0),

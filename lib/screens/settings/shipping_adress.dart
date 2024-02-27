@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:selaa/backend-functions/account_settings.dart';
+import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/backend-functions/load_data.dart';
 
 class ShippingAddressPage extends StatefulWidget {
@@ -30,7 +31,7 @@ class _ShippingAddressPageState extends State<ShippingAddressPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Shipping Address'),
-        backgroundColor: const Color(0xFF008080),
+        backgroundColor: AppColors().primaryColor,
       ),
       body: PopScope(
         canPop: false,
@@ -98,7 +99,7 @@ class _ShippingAddressPageState extends State<ShippingAddressPage> {
                       MediaQuery.of(context).size.height * 0.05,
                     ),
                   ),
-                  backgroundColor: MaterialStateProperty.all(const Color(0xFF008080)),
+                  backgroundColor: MaterialStateProperty.all(AppColors().primaryColor),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),

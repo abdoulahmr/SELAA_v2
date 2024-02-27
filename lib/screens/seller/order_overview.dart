@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/backend-functions/load_data.dart';
 //import 'package:selaa/generated/l10n.dart';
 
@@ -123,7 +124,7 @@ class _SellerOrderOverviewState extends State<SellerOrderOverview> {
                       ? ElevatedButton(
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(const Color(0xFF008080)),
+                              MaterialStateProperty.all(AppColors().primaryColor),
                           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15.0),
@@ -145,7 +146,7 @@ class _SellerOrderOverviewState extends State<SellerOrderOverview> {
                       ? ElevatedButton(
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(const Color(0xFF008080)),
+                              MaterialStateProperty.all(AppColors().primaryColor),
                           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15.0),
@@ -167,7 +168,7 @@ class _SellerOrderOverviewState extends State<SellerOrderOverview> {
                       ? ElevatedButton(
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(const Color(0xFF008080)),
+                              MaterialStateProperty.all(AppColors().primaryColor),
                           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15.0),

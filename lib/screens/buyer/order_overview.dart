@@ -14,6 +14,7 @@ class _OrderOverViewState extends State<OrderOverView> {
   List<Map<String, dynamic>> items = [];
   double total = 0;
   String _status = '';
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -22,6 +23,7 @@ class _OrderOverViewState extends State<OrderOverView> {
       setState(() {
         items = data;
         _status = items[0]['status'];
+        _isLoading = false;
       });
     });
   }
@@ -41,7 +43,13 @@ class _OrderOverViewState extends State<OrderOverView> {
         onWillPop: () async {
           return false;
         },
-        child: Column(
+        child: _isLoading 
+        ? const Center(
+          child: CircularProgressIndicator(
+            color: Color(0xFF008080),
+          ),
+        )
+        :Column(
           children: [
             Container(
               margin: const EdgeInsets.only(top: 30, left: 30),

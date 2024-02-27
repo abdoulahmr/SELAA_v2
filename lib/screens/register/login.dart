@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:selaa/backend-functions/auth.dart';
+import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/screens/register/signup_buyer.dart';
 import 'pre_register.dart';
 import 'forget_password.dart';
@@ -99,7 +100,7 @@ class Login extends StatelessWidget {
                       Size(MediaQuery.of(context).size.width*0.85, MediaQuery.of(context).size.height*0.06),
                     ),
                     backgroundColor:
-                        MaterialStateProperty.all(const Color(0xFF008080)),
+                        MaterialStateProperty.all(AppColors().primaryColor),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),

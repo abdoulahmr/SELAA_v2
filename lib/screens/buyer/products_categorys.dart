@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/backend-functions/load_data.dart';
 import 'package:selaa/screens/buyer/product_category_overview.dart';
 
@@ -100,7 +101,7 @@ class _ProductsCategorysPageState extends State<ProductsCategorysPage> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        color: const Color(0xFFCCE6E6),
+                        color: AppColors().secondaryColor,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       padding: const EdgeInsets.all(10),

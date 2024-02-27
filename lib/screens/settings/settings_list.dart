@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/screens/settings/change_password.dart';
 import 'package:selaa/screens/settings/phone_number.dart';
 import 'package:selaa/screens/settings/shipping_adress.dart';
@@ -15,7 +16,7 @@ class SettingsList extends StatelessWidget {
             return Scaffold(
               appBar: AppBar(
                 title: const Text('Settings',style: TextStyle(color: Colors.white)),
-                backgroundColor: const Color(0xFF008080),
+                backgroundColor: AppColors().primaryColor,
                 leading: IconButton(
                   icon: const Icon(Icons.arrow_back,color: Colors.white),
                   onPressed: () {

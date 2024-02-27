@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/screens/buyer/notification.dart';
 import 'package:selaa/screens/register/redirect_login.dart';
 import 'package:selaa/screens/seller/order_overview.dart';
@@ -30,7 +31,7 @@ class _OrderPageState extends State<ListOrderPage> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          backgroundColor: const Color(0xFFCCE6E6),
+          backgroundColor: AppColors().secondaryColor,
           bottom: const TabBar(
             labelColor: Color(0xFF008080),
             indicatorColor: Color(0xFF008080),
@@ -86,13 +87,13 @@ class _OrderPageState extends State<ListOrderPage> {
         ),
         bottomNavigationBar: Theme(
           data: Theme.of(context).copyWith(
-            canvasColor: const Color(0xFFCCE6E6),
+            canvasColor: AppColors().secondaryColor,
           ),
           child: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             currentIndex: _currentIndex,
-            selectedItemColor: const Color(0xFF008080),
-            unselectedItemColor: const Color(0xFF008080),
+            selectedItemColor: AppColors().primaryColor,
+            unselectedItemColor: AppColors().primaryColor,
             onTap: (index) {
               setState(() {
                 _currentIndex = index;

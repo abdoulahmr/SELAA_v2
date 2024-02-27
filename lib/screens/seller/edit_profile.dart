@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:image_picker/image_picker.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:selaa/backend-functions/account_settings.dart';
+import 'package:selaa/backend-functions/links.dart';
 import 'user_page.dart';
 
 class EditProfile extends StatefulWidget {
@@ -175,7 +176,7 @@ class _EditProfileState extends State<EditProfile> {
                                       MediaQuery.of(context).size.height * 0.04,
                                     ),
                                   ),
-                                  backgroundColor: MaterialStateProperty.all(const Color(0xFF008080)),
+                                  backgroundColor: MaterialStateProperty.all(AppColors().primaryColor),
                                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(15.0),
@@ -226,7 +227,7 @@ class _EditProfileState extends State<EditProfile> {
                             MediaQuery.of(context).size.height * 0.05,
                           ),
                         ),
-                        backgroundColor: MaterialStateProperty.all(const Color(0xFF008080)),
+                        backgroundColor: MaterialStateProperty.all(AppColors().primaryColor),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15.0),
