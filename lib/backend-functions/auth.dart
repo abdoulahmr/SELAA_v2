@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:flutter/material.dart';
+import 'package:selaa/screens/register/complete_info.dart';
 import 'package:selaa/screens/register/redirect_login.dart';
 import '../screens/register/login.dart';
 
@@ -31,20 +34,34 @@ Future<User?> registerWithEmailPassword({
     User? user = userCredential.user;
     if (user != null) {
       // Save additional user data to Firestore
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-        'firstname': firstname,
-        'lastname': lastname,
-        'email': email,
-        'password': password,
-        'username': '',
-        'bio': '',
-        'profilePicture': '',
-        'phoneNumber': '',
-        'address': '',
-        'shippingAdress': '',
-        'accountType': accountType,
-        'balance': 0,
-      });
+      if(accountType == "buyer"){
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'firstname': firstname,
+          'lastname': lastname,
+          'email': email,
+          'password': password,
+          'phoneNumber': '',
+          'shippingAdress': '',
+          'accountType': accountType,
+          'balance': 0,
+          'check': true
+        });
+      }
+      else if(accountType == "seller"){
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'firstname': firstname,
+          'lastname': lastname,
+          'email': email,
+          'password': password,
+          'address': '',
+          'phoneNumber': '',
+          'accountType': accountType,
+          'bio': '',
+          'profilePicture': '',
+          'balance': 0,
+          'check': true
+        });
+      }
     }
     // Dismiss loading alert
     Navigator.pop(context);
@@ -139,7 +156,6 @@ Future<User?> loginWithEmailPassword(
         ),
       );
     } else {
-      print(e);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Error logging in please send us a feedback code 15'),
@@ -187,6 +203,118 @@ Future<void> signOut(context) async {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Error signing out please send us a feedback code 19'),
+      ),
+    );
+  }
+}
+
+// Function to sign up with Google account
+Future<User?> signInWithGoogle(BuildContext context, String accountType, ScaffoldMessengerState scaffoldMessenger) async {
+  try {
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+    await googleSignIn.signOut(); // Sign out the current account
+    final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
+
+    if (googleSignInAccount != null) {
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      final User? user = userCredential.user;
+      if (user != null) {
+        // Check if the user's email already exists in Firestore
+        final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .where('email', isEqualTo: user.email)
+            .get();
+        if (querySnapshot.docs.isEmpty) {
+          await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+            'firstname': user.displayName?.split(' ')[0] ?? '',
+            'lastname': user.displayName?.split(' ')[1] ?? '',
+            'email': user.email,
+            'phoneNumber': '',
+            'shippingAdress': '',
+            'accountType': accountType,
+            'balance': 0,
+            'check': false
+          });
+          // Navigate to user info screen to complete registration
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => CompleteRegistrationPage()));
+          return null;
+        }
+        // Email exists, proceed with sign-in
+        // Dismiss loading alert
+        scaffoldMessenger.hideCurrentSnackBar();
+        // Navigate to home screen after successful login
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const RedirectLogin()),
+        );
+      }
+    }
+  } catch (e) {
+    // Handle exceptions
+    scaffoldMessenger.showSnackBar(
+      const SnackBar(
+        content: Text('Error signing in with Google. Please try again later.'),
+      ),
+    );
+  }
+  return null;
+}
+
+// Function to sign up with Facebook account
+Future<void> signInWithFacebook(BuildContext context, String accountType, ScaffoldMessengerState scaffoldMessenger) async {
+  try {
+    final LoginResult result = await FacebookAuth.instance.login();
+
+    if (result.status == LoginStatus.success) {
+      final AccessToken accessToken = result.accessToken!;
+      final OAuthCredential credential = FacebookAuthProvider.credential(accessToken.token);
+
+      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      final User? user = userCredential.user;
+      
+      if (user != null) {
+        final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .where('email', isEqualTo: user.email)
+            .get();
+        
+        if (querySnapshot.docs.isEmpty) {
+          await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+            'firstname': user.displayName?.split(' ')[0] ?? '',
+            'lastname': user.displayName?.split(' ')[1] ?? '',
+            'email': user.email,
+            'phoneNumber': '',
+            'shippingAdress': '',
+            'accountType': accountType,
+            'balance': 0,
+            'check': false
+          });
+
+          Navigator.push(context, MaterialPageRoute(builder: (context) => CompleteRegistrationPage()));
+        } else {
+          scaffoldMessenger.hideCurrentSnackBar();
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const RedirectLogin()));
+        }
+      }
+    } else {
+      scaffoldMessenger.showSnackBar(
+        const SnackBar(
+          content: Text('Failed to sign in with Facebook. Please try again.'),
+        ),
+      );
+    }
+  } catch (e) {
+    scaffoldMessenger.showSnackBar(
+      const SnackBar(
+        content: Text('Error signing in with Facebook. Please try again later.'),
       ),
     );
   }

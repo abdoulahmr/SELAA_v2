@@ -1,0 +1,5 @@
+add reviews
+add comments
+sign in with google
+sign in with facebook
+stores

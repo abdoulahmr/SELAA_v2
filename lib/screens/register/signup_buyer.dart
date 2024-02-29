@@ -5,7 +5,6 @@ import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/screens/register/login.dart';
 import 'package:selaa/screens/register/pre_register.dart';
 import 'package:selaa/screens/register/signup_seller.dart';
-import 'package:sign_in_button/sign_in_button.dart';
 
 class SignUpBuyer extends StatefulWidget {
   const SignUpBuyer({Key? key}) : super(key: key);
@@ -259,15 +258,6 @@ class _SignUpState extends State<SignUpBuyer> {
                       color: Colors.black,
                     ),
                   ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                SignInButton(
-                  Buttons.google,
-                  onPressed: () {
-                    
-                  },
                 ),
                 const SizedBox(
                   height: 10,

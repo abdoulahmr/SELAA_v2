@@ -128,7 +128,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                                   actions: <Widget>[
                                     TextButton(
                                       onPressed: () {
-                                        Navigator.pop(context);
+                                        Navigator.pop(scaffoldKey);
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -140,7 +140,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                                     ),
                                     TextButton(
                                       onPressed: () {
-                                        Navigator.pop(context);
+                                        Navigator.pop(scaffoldKey);
                                       },
                                       child: const Text('Cancel',style: TextStyle(color: Colors.red)),
                                     ),

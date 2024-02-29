@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/backend-functions/load_data.dart';
 import 'package:selaa/screens/buyer/home_buyer.dart';
+import 'package:selaa/screens/register/complete_info.dart';
 import 'package:selaa/screens/seller/home_seller.dart';
 
 class RedirectLogin extends StatefulWidget {
@@ -12,19 +13,17 @@ class RedirectLogin extends StatefulWidget {
 }
 
 class _PreLoginState extends State<RedirectLogin> {
-  String userType = "none";
+  Map<String, dynamic> _userDetails = {};
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    loadAccountType().then((String? data) {
-      if (data != null) {
-        setState(() {
-          userType = data;
-          isLoading = false;
-        });
-      }
+    loadAccountDetails().then((data) {
+      setState(() {
+        _userDetails = data;
+        isLoading = false;
+      });
     });
   }
 
@@ -34,19 +33,21 @@ class _PreLoginState extends State<RedirectLogin> {
       debugShowCheckedModeBanner: false,
       home: isLoading
           ? Scaffold(
-            body: Center(
-              child: Image(
-                image: AssetImage(ImagePaths().verticalLogo),
-                width: 150,
-                height: 150,  
+              body: Center(
+                child: Image(
+                  image: AssetImage(ImagePaths().verticalLogo),
+                  width: 150,
+                  height: 150,
+                ),
               ),
-            ),
-          )
-          : userType == "buyer"
-              ? const HomeBuyer()
-              : userType == "seller"
-                  ? const HomeSeller()
-                  : Container(),
+            )
+           : !_userDetails['check']
+              ? CompleteRegistrationPage()
+              : _userDetails['accountType'] == "buyer"
+                  ? const HomeBuyer()
+                  : _userDetails['accountType'] == "seller"
+                      ? const HomeSeller()
+                      : Container(),
     );
   }
 }

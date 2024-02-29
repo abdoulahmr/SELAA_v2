@@ -4,8 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-// Function to get account type (buyer,seller)
-Future<String?> loadAccountType() async {
+// Function to get account type (buyer,seller) and check for infos
+Future<Map<String, dynamic>> loadAccountDetails() async {
   try {
     // Get the current user from FirebaseAuth
     User? user = FirebaseAuth.instance.currentUser;
@@ -14,15 +14,24 @@ Future<String?> loadAccountType() async {
         await FirebaseFirestore.instance.collection('users').doc(user?.uid).get();
     // Check if the document exists in the 'users' collection
     if (documentSnapshot.exists) {
-      // Return the 'accountType' field from the document
-      return documentSnapshot.data()!['accountType'];
+      // Return the 'accountType' field from the document and a check value
+      return {
+        'accountType': documentSnapshot.data()!['accountType'],
+        'check': documentSnapshot.data()!['check'], // Add your check value here
+      };
     } else {
       // Return null if the document does not exist
-      return null;
+      return {
+        'accountType': null,
+        'check': 'value', // Add your check value here
+      };
     }
   } catch (e) {
     // Handle exceptions and return null in case of an error
-    return null;
+    return {
+      'accountType': null,
+      'check': 'value', // Add your check value here
+    };
   }
 }
 
