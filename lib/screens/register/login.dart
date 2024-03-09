@@ -175,73 +175,7 @@ class Login extends StatelessWidget {
                       child: IconButton(
                         icon: const FaIcon(FontAwesomeIcons.facebookF),
                         onPressed: () {
-                          showModalBottomSheet<void>(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return SizedBox(
-                                height: 200,
-                                child: Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      ElevatedButton(
-                                        style: ButtonStyle(
-                                          elevation: MaterialStateProperty.all(0),
-                                          fixedSize: MaterialStateProperty.all(
-                                            Size(MediaQuery.of(context).size.width*0.6, MediaQuery.of(context).size.height*0.05),
-                                          ),
-                                          backgroundColor: MaterialStateProperty.all(const Color(0xFFFFFFFF)),
-                                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(  
-                                            RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(15.0),
-                                              side: const BorderSide(color: Color(0xFF415B5B)),
-                                            ),
-                                          ),
-                                        ),
-                                        onPressed: () {
-                                          signInWithFacebook(context,"buyer",ScaffoldMessenger.of(context));
-                                        },
-                                        child: const Text(
-                                          'Register as a Buyer',
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            color: Color(0xFF415B5B),
-                                          )
-                                        )
-                                      ),
-                                      const SizedBox(height: 20,),
-                                      ElevatedButton(
-                                        style: ButtonStyle(
-                                          elevation: MaterialStateProperty.all(0),
-                                          fixedSize: MaterialStateProperty.all(
-                                            Size(MediaQuery.of(context).size.width*0.6, MediaQuery.of(context).size.height*0.05),
-                                          ),
-                                          backgroundColor: MaterialStateProperty.all(const Color(0xFFFFFFFF)),
-                                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(  
-                                            RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(15.0),
-                                              side: const BorderSide(color: Color(0xFF415B5B)),
-                                            ),
-                                          ),
-                                        ),
-                                        child: const Text(
-                                          'Register as a Seller',
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            color: Color(0xFF415B5B),
-                                          )
-                                        ),
-                                        onPressed: () {
-                                          signInWithFacebook(context,"seller",ScaffoldMessenger.of(context));
-                                        }
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          );
+                          signInWithFacebook(context,"default",ScaffoldMessenger.of(context));
                         },
                         color: Colors.blue,
                       ),
@@ -254,73 +188,7 @@ class Login extends StatelessWidget {
                       child: IconButton(
                         icon: const FaIcon(FontAwesomeIcons.google),
                         onPressed: () {
-                          showModalBottomSheet<void>(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return SizedBox(
-                                height: 200,
-                                child: Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      ElevatedButton(
-                                        style: ButtonStyle(
-                                          elevation: MaterialStateProperty.all(0),
-                                          fixedSize: MaterialStateProperty.all(
-                                            Size(MediaQuery.of(context).size.width*0.6, MediaQuery.of(context).size.height*0.05),
-                                          ),
-                                          backgroundColor: MaterialStateProperty.all(const Color(0xFFFFFFFF)),
-                                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(  
-                                            RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(15.0),
-                                              side: const BorderSide(color: Color(0xFF415B5B)),
-                                            ),
-                                          ),
-                                        ),
-                                        onPressed: () {
-                                          signInWithGoogle(context,"buyer",ScaffoldMessenger.of(context));
-                                        },
-                                        child: const Text(
-                                          'Register as a Buyer',
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            color: Color(0xFF415B5B),
-                                          )
-                                        )
-                                      ),
-                                      const SizedBox(height: 20,),
-                                      ElevatedButton(
-                                        style: ButtonStyle(
-                                          elevation: MaterialStateProperty.all(0),
-                                          fixedSize: MaterialStateProperty.all(
-                                            Size(MediaQuery.of(context).size.width*0.6, MediaQuery.of(context).size.height*0.05),
-                                          ),
-                                          backgroundColor: MaterialStateProperty.all(const Color(0xFFFFFFFF)),
-                                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(  
-                                            RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(15.0),
-                                              side: const BorderSide(color: Color(0xFF415B5B)),
-                                            ),
-                                          ),
-                                        ),
-                                        child: const Text(
-                                          'Register as a Seller',
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            color: Color(0xFF415B5B),
-                                          )
-                                        ),
-                                        onPressed: () {
-                                          signInWithGoogle(context,"seller",ScaffoldMessenger.of(context));
-                                        }
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          );
+                          signInWithGoogle(context,"default",ScaffoldMessenger.of(context));
                         },
                         color: Colors.red,
                       ),

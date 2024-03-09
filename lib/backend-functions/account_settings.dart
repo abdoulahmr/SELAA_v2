@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:flutter/material.dart';
 import 'package:selaa/backend-functions/auth.dart';
@@ -25,11 +26,15 @@ Future<void> resetPassword(String email, context) async {
     Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
   } catch (e) {
     // Handle errors
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error sending password reset email please send us a feedback code: 1'),
-      ),
-    );
+    Fluttertoast.showToast(
+        msg: "Error logging in please send us a feedback code 2-1-1",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
   }
 }
 
@@ -67,10 +72,14 @@ Future<void> updateUserInfo(
       );
     }
   } catch (error) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Error updating user information: $error code: 2'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 2-2-1",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
   }
 }
@@ -92,17 +101,25 @@ Future<void> updateUserShippingAddress(String shippingAddress, context) async {
       );
       Navigator.pop(context);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error please send us a feedback code: 3'),
-        ),
+      Fluttertoast.showToast(
+        msg: "Error logging in please send us a feedback code 2-3-1",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
       );
     }
   } else {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error please send us a feedback code: 4'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 2-3-2",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
   }
 }
@@ -128,17 +145,25 @@ Future<void> updateUserPhoneNumber(String phoneNumber, context) async {
       await Future.delayed(const Duration(seconds: 2));
       Navigator.pop(context);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error please send us a feedback code: 5'),
-        ),
+      Fluttertoast.showToast(
+        msg: "Error logging in please send us a feedback code 2-4-1",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
       );
     }
   } else {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error please send us a feedback code: 6'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 2-4-2",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
   }
 }
@@ -154,10 +179,14 @@ Future<void> updatePassword(String currentPassword, String newPassword, context)
   } catch (e) {
     // Handle reauthentication failure
     // Check the specific error and provide a more user-friendly message
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Please check your current password and try again. code: 7'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 2-5-1",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
     return;
   }
@@ -174,10 +203,14 @@ Future<void> updatePassword(String currentPassword, String newPassword, context)
   } catch (e) {
     // Handle password update failure
     // Check the specific error and provide a more user-friendly message
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Please try again or send us feedback if the issue persists. code: 8'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 2-5-2",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
   }
 }

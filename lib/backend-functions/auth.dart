@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:quickalert/quickalert.dart';
@@ -80,25 +81,37 @@ Future<User?> registerWithEmailPassword({
   } on FirebaseAuthException catch (e) {
     // Handle FirebaseAuth exceptions
     if (e.code == 'weak-password') {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Password should be at least 8 characters. code 9'),
-        ),
+      Fluttertoast.showToast(
+        msg: "Password should be at least 8 characters. code 1-1-1",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.yellow,
+        textColor: Colors.black,
+        fontSize: 16.0,
       );
     } else if (e.code == 'email-already-in-use') {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('The account already exists for that email. code 10'),
-        ),
+      Fluttertoast.showToast(
+        msg: "The account already exists for that email. code 1-1-2",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.yellow,
+        textColor: Colors.black,
+        fontSize: 16.0,
       );
     }
   } catch (e) {
     // Handle other exceptions
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error creating account please send us a feedback code 11'),
-      ),
-    );
+    Fluttertoast.showToast(
+        msg: "Error creating account please send us a feedback code 1-1-3",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
   }
   return null;
 }
@@ -126,16 +139,14 @@ Future<User?> loginWithEmailPassword(
     if (user != null && !user.emailVerified) {
       Navigator.pop(context);
       // Show info alert if email is not verified
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Please confirm your email address! code 12'),
-          action: SnackBarAction(
-            label: 'Resend',
-            onPressed: () {
-              resendEmailVerification(user, context);
-            },
-          ),
-        ),
+      Fluttertoast.showToast(
+        msg: "Please confirm your email address! code 1-2-1",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.yellow,
+        textColor: Colors.black,
+        fontSize: 16.0,
       );
     } else {
       // Navigate to home screen after successful login
@@ -144,31 +155,46 @@ Future<User?> loginWithEmailPassword(
   } on FirebaseAuthException catch (e) {
     // Handle FirebaseAuth exceptions
     if (e.code == 'user-not-found') {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('No user found for $email. code 13'),
-        ),
+      Fluttertoast.showToast(
+        msg: "No user found for $email. code 1-2-2",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
       );
     } else if (e.code == 'wrong-password') {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Wrong password provided for that user. code 14'),
-        ),
-      );
+      Fluttertoast.showToast(
+        msg: "Wrong password provided for that user. code 1-2-3",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );    
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error logging in please send us a feedback code 15'),
-        ),
+      Fluttertoast.showToast(
+        msg: "Error logging in please send us a feedback code 1-2-4",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
       );
     }
   } catch (e) {
-    // Handle other exceptions
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error logging in please send us a feedback code 16'),
-      ),
-    );
+    Fluttertoast.showToast(
+        msg: "Error logging in please send us a feedback code 1-2-5",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
   }
   return null;
 }
@@ -177,17 +203,25 @@ Future<User?> loginWithEmailPassword(
 Future<void> resendEmailVerification(User user, context) async {
   try {
     await user.sendEmailVerification();
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Verification email sent. Please check your inbox.  code 17'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 1-3-1",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.yellow,
+      textColor: Colors.black,
+      fontSize: 16.0,
     );
   } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error sending verification email. Please try again.  code 18'),
-      ),
-    );
+    Fluttertoast.showToast(
+        msg: "Error logging in please send us a feedback code 1-3-2",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
   }
 }
 
@@ -200,10 +234,14 @@ Future<void> signOut(context) async {
     Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
   } catch (e) {
     // Handle errors
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error signing out please send us a feedback code 19'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 1-4-1",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
   }
 }
@@ -258,12 +296,15 @@ Future<User?> signInWithGoogle(BuildContext context, String accountType, Scaffol
       }
     }
   } catch (e) {
-    // Handle exceptions
-    scaffoldMessenger.showSnackBar(
-      const SnackBar(
-        content: Text('Error signing in with Google. Please try again later.'),
-      ),
-    );
+    Fluttertoast.showToast(
+        msg: "Error logging in please send us a feedback code 1-5-1",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
   }
   return null;
 }
@@ -305,17 +346,25 @@ Future<void> signInWithFacebook(BuildContext context, String accountType, Scaffo
         }
       }
     } else {
-      scaffoldMessenger.showSnackBar(
-        const SnackBar(
-          content: Text('Failed to sign in with Facebook. Please try again.'),
-        ),
+      Fluttertoast.showToast(
+        msg: "Error logging in please send us a feedback code 1-6-1",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
       );
     }
   } catch (e) {
-    scaffoldMessenger.showSnackBar(
-      const SnackBar(
-        content: Text('Error signing in with Facebook. Please try again later.'),
-      ),
-    );
+    Fluttertoast.showToast(
+        msg: "Error logging in please send us a feedback code 1-6-2",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
   }
 }

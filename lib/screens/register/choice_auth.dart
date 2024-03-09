@@ -1,6 +1,8 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:selaa/backend-functions/auth.dart';
 import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/generated/l10n.dart';
 import 'package:selaa/screens/register/signup_seller.dart';
@@ -22,7 +24,7 @@ class ChoiceAuthPage extends StatelessWidget {
                 Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height -
-                      (MediaQuery.of(context).size.height * 0.3),
+                      (MediaQuery.of(context).size.height * 0.35),
                   decoration: BoxDecoration(
                     color: AppColors().secondaryColor,
                     borderRadius: const BorderRadius.only(
@@ -33,7 +35,7 @@ class ChoiceAuthPage extends StatelessWidget {
                   child: Column(
                     children: [
                       const SizedBox(
-                        height: 100,
+                        height: 80,
                       ),
                       const Image(
                         image: AssetImage(
@@ -171,6 +173,75 @@ class ChoiceAuthPage extends StatelessWidget {
                       color: Color(0xFF001A1A),
                     ),
                   ),
+                ),
+                const SizedBox(height: 10,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 100,
+                      height: 1,
+                      color: Colors.black,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        "Or continue with",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 100,
+                      height: 1,
+                      color: Colors.black,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.blue),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: IconButton(
+                        icon: const FaIcon(FontAwesomeIcons.facebookF),
+                        onPressed: () {
+                          signInWithFacebook(context,"default",ScaffoldMessenger.of(context));
+                        },
+                        color: Colors.blue,
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.red),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: IconButton(
+                        icon: const FaIcon(FontAwesomeIcons.google),
+                        onPressed: () {
+                          signInWithGoogle(context,"default",ScaffoldMessenger.of(context));
+                        },
+                        color: Colors.red,
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: IconButton(
+                        icon: const FaIcon(FontAwesomeIcons.apple),
+                        onPressed: () {},
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

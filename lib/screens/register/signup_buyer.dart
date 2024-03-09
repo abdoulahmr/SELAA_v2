@@ -259,9 +259,7 @@ class _SignUpState extends State<SignUpBuyer> {
                     ),
                   ],
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const SignUpSeller()));
@@ -287,6 +285,49 @@ class _SignUpState extends State<SignUpBuyer> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.blue),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: IconButton(
+                        icon: const FaIcon(FontAwesomeIcons.facebookF),
+                        onPressed: () {
+                          signInWithFacebook(context,"default",ScaffoldMessenger.of(context));
+                        },
+                        color: Colors.blue,
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.red),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: IconButton(
+                        icon: const FaIcon(FontAwesomeIcons.google),
+                        onPressed: () {
+                          signInWithGoogle(context,"default",ScaffoldMessenger.of(context));
+                        },
+                        color: Colors.red,
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: IconButton(
+                        icon: const FaIcon(FontAwesomeIcons.apple),
+                        onPressed: () {},
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
                 const SizedBox(
                   height: 30,
                 ),
@@ -304,11 +345,11 @@ class _SignUpState extends State<SignUpBuyer> {
                       onTap: () {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
                       },
-                      child: const Text(
+                      child: Text(
                         " Login Now",
                         style: TextStyle(
                           fontSize: 16,
-                          color: Color(0xFFCCE6E6),
+                          color: AppColors().primaryColor,
                         ),
                       ),
                     ),

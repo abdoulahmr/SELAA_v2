@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ Future<void> addProduct(
   String location,
   String description,
   List<XFile> images,
+  int quantity,
   context,
 ) async {
   try {
@@ -54,6 +56,7 @@ Future<void> addProduct(
       'location': location,
       'description': description,
       'imageUrls': imageUrls,
+      'minQuantity': quantity,
       'createdAt': DateTime.now(),
     };
     // Add the post data to Firestore and get the document reference
@@ -78,10 +81,14 @@ Future<void> addProduct(
       MaterialPageRoute(builder: (context) => const UserPage()),
     );
   } catch (error) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Error adding post: $error code: 20'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 3-1-1",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
   }
 }
@@ -120,10 +127,14 @@ Future<void> deletePoste(String productID, context) async {
       MaterialPageRoute(builder: (context) => const UserPage()),
     );
   } catch (error) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error deleting post please send us a feedback  code: 21'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 3-2-1",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
   }
 }
@@ -141,39 +152,24 @@ Future<void> addItemToCart(
   int totalPrice = int.parse(price) * quantityValue;
   if (user != null) {
     try {
-      // Check if the product already exists in the user's cart
-      QuerySnapshot<Map<String, dynamic>> existingProductsSnapshot =
-          await FirebaseFirestore.instance
-              .collection('cart')
-              .where('buyerID', isEqualTo: user.uid)
-              .where('productID', isEqualTo: productID)
-              .get();
-      List<DocumentSnapshot<Map<String, dynamic>>> existingProducts = existingProductsSnapshot.docs;
-      if (existingProducts.isNotEmpty) {
-        // If the product exists, update the quantity
-        await FirebaseFirestore.instance
-            .collection('cart')
-            .doc(existingProducts[0].id)
-            .update({
-          'quantity': existingProducts[0]['quantity'] + quantityValue,
-          'totalPrice': totalPrice + (existingProducts[0]['quantity'] * price),
-        });
-      } else {
-        // If the product does not exist, add a new item
-        await FirebaseFirestore.instance.collection('cart').doc().set({
-          'sellerID': sellerID,
-          'buyerID': user.uid,
-          'productID': productID,
+      await FirebaseFirestore.instance.collection('users').doc(user.uid)
+        .collection("cart").doc().set({
+          'seller': FirebaseFirestore.instance.collection('users').doc(sellerID),
+          'buyer': FirebaseFirestore.instance.collection('users').doc(user.uid),
+          'product': FirebaseFirestore.instance.collection('products').doc(productID),
           'quantity': quantityValue,
           'totalPrice': totalPrice,
         });
-      }
       Navigator.pop(context);
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error adding to cart please send us a feedback code: 22'),
-        ),
+      Fluttertoast.showToast(
+        msg: "Error logging in please send us a feedback code 3-3-1",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
       );
     }
   }
@@ -188,8 +184,9 @@ Future<double> calculateTotalPrice(context) async {
       // Fetch user cart items from Firestore
       QuerySnapshot<Map<String, dynamic>> querySnapshot =
           await FirebaseFirestore.instance
+              .collection("users")
+              .doc(user.uid)
               .collection('cart')
-              .where('buyerID', isEqualTo: user.uid)
               .get();
       // Extract the data from the documents in the query snapshot
       List<Map<String, dynamic>> userCart =
@@ -203,43 +200,55 @@ Future<double> calculateTotalPrice(context) async {
       }
     } catch (error) {
       // Handle any errors that may occur during the process
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error please send us a feedback  code: 23'),
-        ),
+      Fluttertoast.showToast(
+        msg: "Error logging in please send us a feedback code 3-4-1",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
       );
     }
   } else {
     // Handle case when the user is null
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error please send us a feedback  code: 24'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 3-4-2",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
   }
   return total;
 }
 
 // Function to delete item from cart
-Future<void> deleteItemFromCart(String productID, context) async {
+Future<void> deleteItemFromCart(context) async {
   User? user = FirebaseAuth.instance.currentUser;
   try {
     // Fetch items to delete from Firestore
-    QuerySnapshot<Map<String, dynamic>> itemsToDeleteSnapshot = await FirebaseFirestore.instance
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(user!.uid)
         .collection('cart')
-        .where('productID', isEqualTo: productID)
-        .where('buyerID', isEqualTo: user!.uid)
         .get();
-    // Iterate through the documents and delete each one
-    for (QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot in itemsToDeleteSnapshot.docs) {
-      await documentSnapshot.reference.delete();
+     WriteBatch batch = FirebaseFirestore.instance.batch();
+     for (var doc in querySnapshot.docs) {
+      batch.delete(doc.reference);
     }
+    await batch.commit();
   } catch (error) {
-    // Handle errors
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error please send us a feedback  code: 25'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 3-6-1",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
   }
 }
@@ -254,7 +263,15 @@ Future<void> saveOrder(
 ) async {
   User? user = FirebaseAuth.instance.currentUser;
   if (user == null) {
-    // Handle the case where the user is null (not signed in)
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 3-7-1",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
     return;
   }
   try{
@@ -270,17 +287,17 @@ Future<void> saveOrder(
         });
     
     // Save order for each seller
-    Set<String> sellerIds = Set<String>();
+    Set<String> sellerIds = <String>{};
     for (var orderDetail in orderDetails) {
-      String sellerID = orderDetail['productDetails']['sellerID'];
+      String sellerID = orderDetail['product']['sellerID'];
       // Check if an order for the same seller already exists
       if (!sellerIds.contains(sellerID)) {
         await FirebaseFirestore.instance.collection('users')
             .doc(sellerID)
             .collection("orders")
             .add({
-              "orderId": orderID,
-              "buyerId": user.uid,
+              "orderID": orderID,
+              "buyer": FirebaseFirestore.instance.collection('users').doc(user.uid),
               "deliveryOption": deliveryOption,
               "date": date,
               "status": "Pending"
@@ -289,40 +306,46 @@ Future<void> saveOrder(
       }
     }
   } catch(e){
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error please send us a feedback  code: 26'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 3-7-2",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
   }
 }
 
-// Function to save items in an order
+// save items in orders
 Future<void> saveItemsInOrder(
   List<Map<String, dynamic>> items,
-  String orderID,
-  context
-) async {
+  String orderID) async {
   try {
     // Save items in the order
-    for (var item in items) {
-      await FirebaseFirestore.instance.collection('orders')
+    for(var t in items) {
+      FirebaseFirestore.instance.collection('orders')
         .add({
-          "orderId": orderID,
-          "productId": FirebaseFirestore.instance.collection('products').doc(item['productDetails']['productID']),
-          "sellerId": FirebaseFirestore.instance.collection('users').doc(item['productDetails']['sellerID']),
-          "quantity": item['quantity'],
+          "orderID": orderID,
+          "product": FirebaseFirestore.instance.collection('products').doc(t["product"]["productID"]),
+          "quantity": t["quantity"],
         });
     }
   } catch (error) {
-    // Handle the error
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error please send us a feedback  code: 61'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 3-8-1",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
+    
   }
 }
+
 
 // Future function to load buyer's orders
 Future<List<Map<String, dynamic>>> loadBuyerOrders(context) async {
@@ -339,10 +362,14 @@ Future<List<Map<String, dynamic>>> loadBuyerOrders(context) async {
     return querySnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
   } catch (e) {
     // Handle errors
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error please send us a feedback  code 48'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 3-9-1",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
     return []; // Return an empty list if there's an error
   }
@@ -361,3 +388,74 @@ Future<double> calculateOrderTotalPrice(List<Map<String, dynamic>> items, BuildC
   return total;
 }
 
+// add product rating
+Future<void> addProductRating(
+  String productID,
+  double rating,
+  context
+) async {
+  User? user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    try {
+      // Add the rating and review to the product document
+      await FirebaseFirestore.instance.collection('products').doc(productID).collection('ratings').doc(user.uid).set({
+        'rating': rating,
+        'buyer':  FirebaseFirestore.instance.collection('users').doc(user.uid),
+        'createdAt': DateTime.now(),
+      });
+    } catch (error) {
+      Fluttertoast.showToast(
+        msg: "Error logging in please send us a feedback code 3-10-1",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+  }
+}
+
+// add product rating
+Future<void> addProductReview(
+  String productID,
+  String review,
+  context
+) async {
+  User? user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    try {
+      // Add the rating and review to the product document
+      await FirebaseFirestore.instance.collection('products').doc(productID).collection('reviews').doc(user.uid).set({
+        'review': review,
+        'buyer': FirebaseFirestore.instance.collection('users').doc(user.uid),
+        'createdAt': DateTime.now(),
+      });
+    } catch (error) {
+      // Handle errors
+      Fluttertoast.showToast(
+        msg: "Error logging in please send us a feedback code 3-11-1",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+  }
+}
+
+// calculate average rating
+double calculateAverageRating(List<Map<String, dynamic>> reviews) {
+  if (reviews.isNotEmpty) {
+    double totalRating = 0;
+    for (var review in reviews) {
+      totalRating += review['rating'];
+    }
+    return totalRating / reviews.length;
+  } else {
+    return 0;
+  }
+}

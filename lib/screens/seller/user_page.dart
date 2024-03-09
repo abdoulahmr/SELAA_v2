@@ -34,7 +34,7 @@ class _UserPage extends State<UserPage> {
         userInfo = user;
       });
     });
-    loadUserPostes().then((List<Map<String, dynamic>> postes) {
+    fetchProducts().then((List<Map<String, dynamic>> postes) {
       setState(() {
         userPostes = postes;
       });

@@ -3,6 +3,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 // Function to get account type (buyer,seller) and check for infos
 Future<Map<String, dynamic>> loadAccountDetails() async {
@@ -50,20 +51,27 @@ Future<List<Map<String, dynamic>>> loadUserInfo(context) async {
         return [documentSnapshot.data()!];
       } else {
         // Handle case when document does not exist
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Error please send us a feedback  code 28'),
-          ),
+        Fluttertoast.showToast(
+          msg: "Error logging in please send us a feedback code 4-1-1",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
         );
         return [];
       }
     } catch (error) {
-      // Handle errors
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Error please send us a feedback code 29'),
-          ),
-        );
+      Fluttertoast.showToast(
+        msg: "Error logging in please send us a feedback code 4-2-1",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
       return [];
     }
   } else {
@@ -88,19 +96,27 @@ Future loadProfilePicture(context) async {
         final data = snapshot.data();
         return data?['profilePicture'];
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Error please send us a feedback  code 31'),
-          ),
+        Fluttertoast.showToast(
+          msg: "Error logging in please send us a feedback code 4-3-1",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
         );
         return '';
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error please send us a feedback  code 32'),
-        ),
-      ); 
+      Fluttertoast.showToast(
+        msg: "Error logging in please send us a feedback code 4-3-2",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
       return '';   
     }
   }
@@ -118,55 +134,76 @@ Future<List<Map<String, dynamic>>> loadSellerInfo(uid, context) async {
       return [documentSnapshot.data()!];
     } else {
       // Handle case when document does not exist
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error please send us a feedback  code 33'),
-        ),
+      Fluttertoast.showToast(
+        msg: "Error logging in please send us a feedback code 4-4-1",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
       );
       return [];
     }
   } catch (error) {
     // Handle errors
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error please send us a feedback  code 34'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 4-4-2",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
     return [];
   }
 }
 
 // Load user postes
-Future<List<Map<String, dynamic>>> loadUserPostes() async {
-  User? user = FirebaseAuth.instance.currentUser;
+Future<List<Map<String, dynamic>>> fetchProducts() async {
   List<Map<String, dynamic>> result = [];
+  User? user = FirebaseAuth.instance.currentUser;
+  try {
+    // Fetch products
+    QuerySnapshot productsSnapshot = await FirebaseFirestore.instance.collection('products')
+      .where('sellerID', isEqualTo: user?.uid)
+      .get();
+    List<DocumentSnapshot> products = productsSnapshot.docs;
 
-  // Fetch products
-  QuerySnapshot productsSnapshot = await FirebaseFirestore.instance.collection('products')
-    .where('sellerID', isEqualTo: user?.uid)
-    .get();
-  List<DocumentSnapshot> products = productsSnapshot.docs;
-
-  // Fetch categories
-  Map<String, String> categoryMap = {};
-  QuerySnapshot categoriesSnapshot = await FirebaseFirestore.instance.collection('productCategory').get();
-  for (var categoryDoc in categoriesSnapshot.docs) {
-    categoryMap[categoryDoc.id] = categoryDoc['name'];
-  }
-
-  // Combine product and category information
-  for (var product in products) {
-    Map<String, dynamic> productData = product.data() as Map<String, dynamic>;
-    String categoryId = productData['category'];
-
-    // Check if category exists
-    if (categoryMap.containsKey(categoryId)) {
-      productData['categoryName'] = categoryMap[categoryId];
-      result.add(productData);
+    // Fetch categories
+    Map<String, String> categoryMap = {};
+    QuerySnapshot categoriesSnapshot = await FirebaseFirestore.instance.collection('productCategory').get();
+    for (var categoryDoc in categoriesSnapshot.docs) {
+      categoryMap[categoryDoc.id] = categoryDoc['name'];
     }
+
+    // Combine product and category information
+    for (var product in products) {
+      Map<String, dynamic> productData = product.data() as Map<String, dynamic>;
+      String categoryId = productData['category'];
+
+      // Check if category exists
+      if (categoryMap.containsKey(categoryId)) {
+        productData['categoryName'] = categoryMap[categoryId];
+        result.add(productData);
+      }
+    }
+  } catch (error) {
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 4-5-1",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
   }
+
   return result;
 }
+
 
 // load poste information
 Future<List<Map<String, dynamic>>> loadPosteInfo(String productID, context) async {
@@ -192,19 +229,27 @@ Future<List<Map<String, dynamic>>> loadPosteInfo(String productID, context) asyn
       return result;
     } else {
       // Handle case when product document does not exist
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error loading product. Please send us feedback.  code 35'),
-        ),
+      Fluttertoast.showToast(
+        msg: "Error logging in please send us a feedback code 4-6-1",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
       );
       return [];
     }
   } catch (error) {
     // Handle errors
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error please send us a feedback  code 36'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 4-6-2",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
     return [];
   }
@@ -221,16 +266,19 @@ Future<List<Map<String, dynamic>>> loadAllPostes(context) async {
     return querySnapshot.docs.map((doc) => doc.data()).toList();
   } catch (error) {
     // Handle errors
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error please send us a feedback  code 37'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 4-7-1",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
     return [];
   }
 }
 
-// get items from cart
 Future<List<Map<String, dynamic>>> loadCartItems(context) async {
   User? user = FirebaseAuth.instance.currentUser;
   List<Map<String, dynamic>> userCart = [];
@@ -239,64 +287,49 @@ Future<List<Map<String, dynamic>>> loadCartItems(context) async {
       // Fetch user cart items from Firestore
       QuerySnapshot<Map<String, dynamic>> cartSnapshot =
           await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
               .collection('cart')
-              .where('buyerID', isEqualTo: user.uid)
               .get();
-      List<Map<String, dynamic>> cartItems =
-          cartSnapshot.docs.map((doc) => doc.data()).toList();
-      // Fetch products with the same productID from the postes collection
-      List productIDs =
-          cartItems.map((item) => item['productID']).toList();
-      QuerySnapshot<Map<String, dynamic>> productsSnapshot =
-          await FirebaseFirestore.instance
-              .collection('products')
-              .where('productID', whereIn: productIDs)
-              .get();
-      // Extract the data from the documents in the products snapshot
-      userCart = productsSnapshot.docs.map((doc) {
-        if (doc.exists) {
-          // Find the corresponding cart item for the product
-          Map<String, dynamic>? cartItem = cartItems.firstWhere(
-            (item) => item['productID'] == doc.id,
-            orElse: () => {},
-          );
-          if (cartItem.isNotEmpty) {
-            // Include both product details and quantity
-            return {
-              'productDetails': doc.data(),
-              'quantity': cartItem['quantity'],
-            };
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Error please send us a feedback  code 38'),
-              ),
-            );
-            return null;
-          }
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Error please send us a feedback  code 39'),
-            ),
-          );
-          return null;
-        }
-      }).where((item) => item != null).toList().cast<Map<String, dynamic>>();
+
+      // Iterate over the cart items and construct a list
+      for (var cartItem in cartSnapshot.docs) {
+        // Get the referenced documents
+        DocumentSnapshot<Map<String, dynamic>> buyerDocSnapshot = await cartItem['buyer'].get();
+        DocumentSnapshot<Map<String, dynamic>> productDocSnapshot = await cartItem['product'].get();
+        DocumentSnapshot<Map<String, dynamic>> sellerDocSnapshot = await cartItem['seller'].get();
+
+        // Construct the cart item data
+        userCart.add({
+          'buyer': buyerDocSnapshot.data(),
+          'product': productDocSnapshot.data(),
+          'quantity': cartItem['quantity'],
+          'seller': sellerDocSnapshot.data(),
+          'totalPrice': cartItem['totalPrice'],
+        });
+      }
     } catch (error) {
       // Handle any errors that may occur during the process
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error please send us a feedback  code 40'),
-        ),
+      Fluttertoast.showToast(
+        msg: "Error logging in please send us a feedback code 4-8-1",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
       );
     }
   } else {
     // Handle case when user is null
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error please send us a feedback  code 41'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 4-8-2",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
   }
   return userCart;
@@ -317,26 +350,38 @@ Future<String> loadUserShippingAddress(context) async {
         String shippingAddress = (documentSnapshot.data() as Map<String, dynamic>)['shippingAddress'] ?? '';
         return shippingAddress;
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Error please send us a feedback  code 42'),
-          ),
+        Fluttertoast.showToast(
+          msg: "Error logging in please send us a feedback code 4-9-1",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
         );
         return 'User document does not exist.';
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error please send us a feedback  code 43'),
-        ),
+      Fluttertoast.showToast(
+        msg: "Error logging in please send us a feedback code 4-9-2",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
       );
       return 'Error getting user shipping address.';
     }
   } else {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error please send us a feedback  code 44'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 4-9-3",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
     return 'User not authenticated.';
   }
@@ -355,26 +400,38 @@ Future<String> loadUserPhoneNumber(context) async {
         String phoneNumber = (documentSnapshot.data() as Map<String, dynamic>)['phoneNumber'] ?? '';
         return phoneNumber;
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Error please send us a feedback  code 45'),
-          ),
+        Fluttertoast.showToast(
+          msg: "Error logging in please send us a feedback code 4-10-1",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
         );
         return 'User document does not exist.';
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error please send us a feedback  code 46'),
-        ),
+      Fluttertoast.showToast(
+        msg: "Error logging in please send us a feedback code 4-10-2",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
       );
       return 'Error getting user phone number.';
     }
   } else {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error please send us a feedback  code 47'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 4-10-3",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
     return 'User not authenticated.';
   }
@@ -403,10 +460,14 @@ Future<List<Map<String, dynamic>>> loadBuyerOrders(context) async {
     }
     return orders;
   } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error please send us a feedback  code 48'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 4-11-1",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
     return []; 
   }
@@ -436,10 +497,14 @@ Future<List<Map<String, dynamic>>> loadSellerOrders(context) async {
     }
     return orders;
   } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error please send us a feedback  code 52'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 4-12-1",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
     return []; 
   }
@@ -454,6 +519,7 @@ Future<List<Map<String, dynamic>>> loadOrderItems(String orderID, context) async
         .doc(user!.uid)
         .collection("orders")
         .where('orderId', isEqualTo: orderID)
+        
         .get();
 
     QuerySnapshot<Map<String, dynamic>> querySnapshot2 = await FirebaseFirestore.instance
@@ -482,11 +548,14 @@ Future<List<Map<String, dynamic>>> loadOrderItems(String orderID, context) async
     }
     return items;
   } catch (e) {
-    // Handle error
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error please send us a feedback  code 49'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 4-13-1",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
     return [];
   }
@@ -503,18 +572,26 @@ Future<String> loadUserName(context, uid) async {
     if (documentSnapshot.exists) {
       return documentSnapshot.data()!['firstname']+" "+documentSnapshot.data()!['lastname'];
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error please send us a feedback  code 50'),
-        ),
+      Fluttertoast.showToast(
+        msg: "Error logging in please send us a feedback code 4-14-1",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
       );
       return 'User not found';
     }
   } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error please send us a feedback  code 51'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 4-14-2",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
     return 'Error getting user name';
   }
@@ -529,10 +606,14 @@ Future<Map<String, dynamic>> loadBuyerInfo(BuildContext context, String buyerId)
         .get();
     return documentSnapshot.data() ?? {};
   } catch (error) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error please send us a feedback  code 53'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 4-15-1",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
     return {};
   }
@@ -574,10 +655,14 @@ Future<Map<String, dynamic>> loadSellerOrdersInfo(BuildContext context) async {
       'canceledOrders': canceledOrders,
     };
   } catch (error) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error please send us a feedback code 54'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 4-16-1",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
     return {};
   }
@@ -608,10 +693,14 @@ Future<Map<String, dynamic>> loadSellerProductsInfo(BuildContext context) async 
       'totalCategories': totalCategories,
     };
   } catch (error) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error please send us a feedback code 55'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 4-17-1",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
     return {};
   }
@@ -630,18 +719,26 @@ Future<String> loadSellerBalanceInfo(BuildContext context) async {
     if (documentSnapshot.exists) {
       return documentSnapshot.data()!['balance'].toString();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error please send us a feedback code 56'),
-        ),
+      Fluttertoast.showToast(
+        msg: "Error logging in please send us a feedback code 4-18-1",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
       );
       return "0";
     }
   } catch (error) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error please send us a feedback code 57'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 4-18-2",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
     return "0";
   }
@@ -656,10 +753,14 @@ Future<List<Map<String, dynamic>>> loadProductsCategorys(context) async {
         .get();
     return querySnapshot.docs.map((doc) => doc.data()).toList();
   } catch (error) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error please send us a feedback code 58'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 4-19-1",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
     return [];
   }
@@ -675,10 +776,14 @@ Future<List<Map<String, dynamic>>> loadProductsByCategory(String categoryID, con
         .get();
     return querySnapshot.docs.map((doc) => doc.data()).toList();
   } catch (error) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error please send us a feedback code 59'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 4-20-1",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
     return [];
   }
@@ -693,11 +798,110 @@ Future<List<Map<String, dynamic>>> loadProductsCategories(context) async {
     return querySnapshot.docs.map((doc) => doc.data()).toList();
   } catch (error) {
     // Handle any errors
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error please send us a feedback code 59'),
-      ),
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 4-21-1",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
     return []; // Return an empty list in case of error
+  }
+}
+
+// load product review
+Future<List<Map<String, dynamic>>> loadProductReviews(BuildContext context, String productID) async {
+  User? user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    try {
+      // Fetch product reviews from Firestore
+      QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+          .collection('products')
+          .doc(productID)
+          .collection('reviews')
+          .get();
+
+      List<Map<String, dynamic>> reviews = [];
+      for (QueryDocumentSnapshot<Map<String, dynamic>> doc in snapshot.docs) {
+        Map<String, dynamic> reviewData = doc.data();
+        // Check if 'buyer' field is not null
+        if (reviewData['buyer'] != null) {
+          DocumentSnapshot<Map<String, dynamic>> userSnapshot = await reviewData['buyer'].get();
+          Map<String, dynamic> userData = userSnapshot.data() ?? {};
+          reviewData['buyerInfo'] = userData;
+          reviews.add(reviewData);
+        }
+      }
+
+      return reviews;
+    } catch (error) {
+      // Handle any errors
+      Fluttertoast.showToast(
+        msg: "Error please send us a feedback code 4-22-1",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return []; // Return an empty list in case of error
+    }
+  } else {
+    // Handle case when user is null
+    Fluttertoast.showToast(
+        msg: "Error please send us a feedback code 4-22-2",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    return [];
+  }
+}
+
+
+// load product rating
+Future<List<Map<String, dynamic>>> loadProductRating(context, String productID) async {
+  User? user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    try {
+      // Fetch product reviews from Firestore
+      QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+          .collection('products')
+          .doc(productID)
+          .collection('ratings')
+          .get();
+
+      return snapshot.docs.map((doc) => doc.data()).toList();
+    } catch (error) {
+      // Handle any errors
+      Fluttertoast.showToast(
+        msg: "Error please send us a feedback code 4-23-1",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return []; // Return 0 in case of error
+    }
+  } else {
+    // Handle case when user is null
+    Fluttertoast.showToast(
+        msg: "Error please send us a feedback code 4-23-2",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    return [];
   }
 }

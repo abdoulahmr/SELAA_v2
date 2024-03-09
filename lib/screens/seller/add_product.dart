@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:input_quantity/input_quantity.dart';
 import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/backend-functions/load_data.dart';
 import '../../backend-functions/data_manipulation.dart';
@@ -22,6 +23,7 @@ class _AddPosteState extends State<AddPoste> {
   final _location = TextEditingController();
   final _description = TextEditingController();
   final List<XFile> _imageFileList = [];
+  int _minQuantity = 0;
 
   void selectImages() async {
     XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -98,6 +100,7 @@ class _AddPosteState extends State<AddPoste> {
                         _location.text,
                         _description.text,
                         _imageFileList,
+                        _minQuantity,
                         context
                       );
                     },
@@ -312,6 +315,16 @@ class _AddPosteState extends State<AddPoste> {
                       focusedBorder: const OutlineInputBorder(
                         borderSide: BorderSide(color: Color(0xFF415B5B)))),
                   ),
+                ),
+                InputQty(
+                  maxVal: 10000,
+                  initVal: 1,
+                  minVal: 1,
+                  steps: 1,
+                  onQtyChanged: (value) {
+                    String intValue = value.toString().split('.')[0];
+                    setState(() => _minQuantity = int.parse(intValue));
+                  }
                 ),
               ]
             ),

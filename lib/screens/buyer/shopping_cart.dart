@@ -159,31 +159,43 @@ class _ShoppingCartState extends State<ShoppingCart> {
                               showDialog(
                                 context: context,
                                 builder: (BuildContext scaffoldKey) {
-                                  bool selectedDelivery = false;
                                   return AlertDialog(
                                     title: const Text('Do you want it to be delivered?'),
                                     actions: <Widget>[
                                       TextButton(
                                         onPressed: () {
-                                          Navigator.pop(scaffoldKey);
+                                          Navigator.pop(scaffoldKey);                                          
+                                          String uuid = const Uuid().v4();
+                                          saveOrder(
+                                            shoppingCart, 
+                                            uuid, 
+                                            false, 
+                                            "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}",
+                                            scaffoldKey
+                                          );
+                                          saveItemsInOrder(shoppingCart, uuid);
+                                          deleteItemFromCart(scaffoldKey);
+                                          setState(() {
+                                            _isClicked = true;
+                                            shoppingCart = [];
+                                            totalPrice = 0;
+                                          });
                                         },
-                                        child: const Text('Cancel',style: TextStyle(color: Colors.red)),
+                                        child: const Text('No',style: TextStyle(color: Colors.red)),
                                       ),
                                       TextButton(
                                         onPressed: () async {
                                           Navigator.pop(scaffoldKey);                                          
                                           String uuid = const Uuid().v4();
-                                          await saveOrder(
+                                          saveOrder(
                                             shoppingCart, 
                                             uuid, 
-                                            selectedDelivery, 
+                                            true, 
                                             "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}",
                                             scaffoldKey
                                           );
-                                          await saveItemsInOrder(shoppingCart, uuid, scaffoldKey);
-                                          for (var item in shoppingCart) {
-                                            deleteItemFromCart(item['productDetails']['productID'], scaffoldKey);
-                                          }
+                                          saveItemsInOrder(shoppingCart, uuid);
+                                          deleteItemFromCart(scaffoldKey);
                                           setState(() {
                                             _isClicked = true;
                                             shoppingCart = [];
@@ -214,7 +226,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ProductPage(productID: shoppingCart[index]['productDetails']['productID']),
+                          builder: (context) => ProductPage(productID: shoppingCart[index]['product']['productID']),
                         ),
                       );
                     },
@@ -231,7 +243,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                           ClipRRect(
                             borderRadius: const BorderRadius.all(Radius.circular(25.0)),
                             child: Image.network(
-                              shoppingCart[index]['productDetails']['imageUrls'][0],
+                              shoppingCart[index]['product']['imageUrls'][0],
                               height: MediaQuery.of(context).size.height * 0.1,
                               width: MediaQuery.of(context).size.width * 0.2,
                               fit: BoxFit.cover,
@@ -241,7 +253,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                           SizedBox(
                             width: MediaQuery.of(context).size.width * 0.4,
                             child: Text(
-                              shoppingCart[index]['productDetails']["title"],
+                              shoppingCart[index]['product']["title"],
                               style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -259,7 +271,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                           IconButton(
                             onPressed: () {
                               if (index < shoppingCart.length) {
-                                deleteItemFromCart(shoppingCart[index]['productDetails']['productID'],context);
+                                deleteItemFromCart(context);
                                 setState(() {
                                   shoppingCart.removeAt(index);
                                   calculateTotalPrice(context).then((double price) {
