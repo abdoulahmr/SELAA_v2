@@ -510,43 +510,57 @@ Future<List<Map<String, dynamic>>> loadSellerOrders(context) async {
   }
 }
 
-// load order items  49
-Future<List<Map<String, dynamic>>> loadOrderItems(String orderID, context) async {
-  User? user = FirebaseAuth.instance.currentUser;
+// load order items
+Future<List<Map<String, dynamic>>> loadOrderInfo(String orderID) async {
   try {
-    QuerySnapshot<Map<String, dynamic>> querySnapshot1 = await FirebaseFirestore.instance
+    User? user = FirebaseAuth.instance.currentUser;
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance
         .collection('users')
         .doc(user!.uid)
-        .collection("orders")
-        .where('orderId', isEqualTo: orderID)
-        
-        .get();
-
-    QuerySnapshot<Map<String, dynamic>> querySnapshot2 = await FirebaseFirestore.instance
         .collection('orders')
         .where('orderId', isEqualTo: orderID)
         .get();
-    // Fetch order details
-    Map<String, dynamic> orderDetails = querySnapshot1.docs.isNotEmpty ? querySnapshot1.docs.first.data() : {};
-    List<Map<String, dynamic>> items = [];
-    for (QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot in querySnapshot2.docs) {
-      Map<String, dynamic> data = documentSnapshot.data();
-      // Fetch product details
-      DocumentSnapshot<Map<String, dynamic>> productSnapshot = await data['productId'].get();
-      Map<String, dynamic> productData = productSnapshot.data()!;
-      items.add({
-        'orderId': data['orderId'],
-        'quantity': data['quantity'],
-        'status': orderDetails['status'],
-        'date': orderDetails['date'],
-        'productDetails': {
-          'productId': productSnapshot.id,
-          'title': productData['title'],
-          'price': productData['price'],
-        },
-      });
+    
+    List<Map<String, dynamic>> documentsData = querySnapshot.docs.map((doc) => doc.data()).toList();
+    return documentsData;
+  } catch (e) {
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 4-24-1",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );    
+    return [];
+  }
+}
+
+
+// load order items
+Future<List<Map<String, dynamic>>> loadOrderItems(String orderID) async {
+  try {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance
+        .collection('orders')
+        .where('orderID', isEqualTo: orderID)
+        .get();
+    
+    List<Map<String, dynamic>> documentsData = [];
+    for (var doc in querySnapshot.docs) {
+      Map<String, dynamic> data = doc.data();
+      // Get the product reference
+      DocumentReference<Map<String, dynamic>> productRef = data['product'];
+      // Load the product document
+      DocumentSnapshot<Map<String, dynamic>> productSnapshot = await productRef.get();
+      // Get the product data
+      Map<String, dynamic>? productData = productSnapshot.data();
+      // Add the product data to the order item data
+      data['product'] = productData;
+      documentsData.add(data);
     }
-    return items;
+
+    return documentsData;
   } catch (e) {
     Fluttertoast.showToast(
       msg: "Error logging in please send us a feedback code 4-13-1",
@@ -556,11 +570,10 @@ Future<List<Map<String, dynamic>>> loadOrderItems(String orderID, context) async
       backgroundColor: Colors.red,
       textColor: Colors.white,
       fontSize: 16.0,
-    );
+    );    
     return [];
   }
 }
-
 
 // load user name from uid
 Future<String> loadUserName(context, uid) async {

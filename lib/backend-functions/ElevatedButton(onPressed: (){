@@ -1,0 +1,3 @@
+ElevatedButton(onPressed: (){
+                print(shoppingCart);
+              }, child: Text("test")),

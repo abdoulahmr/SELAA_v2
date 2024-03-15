@@ -22,7 +22,7 @@ class _SellerOrderOverviewState extends State<SellerOrderOverview> {
   @override
   void initState() { 
     super.initState();
-    loadOrderItems(widget.orderId,context).then((data) {
+    loadOrderItems(widget.orderId).then((data) {
       setState(() {
         items = data;
         _status = items[0]["status"];

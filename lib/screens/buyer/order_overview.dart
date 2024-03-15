@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/backend-functions/load_data.dart';
 
 class OrderOverView extends StatefulWidget {
@@ -11,29 +12,50 @@ class OrderOverView extends StatefulWidget {
 }
 
 class _OrderOverViewState extends State<OrderOverView> {
+  List<Map<String, dynamic>> order = [];
   List<Map<String, dynamic>> items = [];
   double total = 0;
-  String _status = '';
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    loadOrderItems(widget.orderId, context).then((data){
+    loadOrderInfo(widget.orderId).then((value) {
       setState(() {
-        items = data;
-        _status = items[0]['status'];
+        order = value;
+      });
+    });
+    loadOrderItems(widget.orderId).then((value) {
+      setState(() {
+        items = value;
         _isLoading = false;
       });
+    });
+    calculateOrderTotalPrice().then((value){
+      total = value;
     });
   }
 
   Future<double> calculateOrderTotalPrice() async {
-    double total = 0;
     for (int i = 0; i < items.length; i++) {
-      total = total + (int.parse(items[i]['productDetails']['price']) * items[i]['quantity']);
+      total = total + (items[i]['quantity']*double.parse(items[i]['product']['price']));
     }
     return total;
+  }
+
+  Color _getStatusColor(String? status) {
+    switch (status) {
+      case 'Pending':
+        return Colors.orange;
+      case 'In Progress':
+        return Colors.blue;
+      case 'Delivered':
+        return Colors.green;
+      case 'Canceled':
+        return Colors.red;
+      default:
+        return Colors.black;
+    }
   }
 
   @override
@@ -44,9 +66,9 @@ class _OrderOverViewState extends State<OrderOverView> {
           return false;
         },
         child: _isLoading 
-        ? const Center(
+        ? Center(
           child: CircularProgressIndicator(
-            color: Color(0xFF008080),
+            color: AppColors().primaryColor,
           ),
         )
         :Column(
@@ -82,13 +104,9 @@ class _OrderOverViewState extends State<OrderOverView> {
                           style: const TextStyle(color: Colors.black),
                           children: <TextSpan>[
                             TextSpan(
-                              text: _status,
+                              text: order.isNotEmpty ? order[0]['status'] ?? "Pending" : "Pending",
                               style: TextStyle(
-                                color: _status == 'Pending' ? Colors.orange : 
-                                      _status == 'In Progress' ? Colors.blue :
-                                      _status == 'Delivered' ? Colors.green :
-                                      _status == 'Canceled' ? Colors.red :
-                                      Colors.black,
+                                color: order.isNotEmpty ? _getStatusColor(order[0]['status']) : Colors.black,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -96,7 +114,7 @@ class _OrderOverViewState extends State<OrderOverView> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      Text(items.isNotEmpty ? "date: ${items[0]['date']}" : ""),
+                      Text(items.isNotEmpty ? "date: ${order[0]['date']}" : ""),
                       const SizedBox(height: 10),
                       FutureBuilder<double>(
                         future: calculateOrderTotalPrice(),
@@ -148,7 +166,7 @@ class _OrderOverViewState extends State<OrderOverView> {
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.4,
                               child: Text(
-                                items[index]['productDetails']['title'],
+                                items[index]['product']['title'],
                                 style: const TextStyle(
                                   overflow: TextOverflow.fade,
                                 ),
@@ -166,7 +184,7 @@ class _OrderOverViewState extends State<OrderOverView> {
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.1,
                               child: Text(
-                                "${items[index]['productDetails']['price']} DZD",
+                                "${items[index]['product']['price']} DZD",
                                 style: const TextStyle(
                                   overflow: TextOverflow.fade,
                                 )
