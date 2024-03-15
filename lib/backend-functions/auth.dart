@@ -136,22 +136,25 @@ Future<User?> loginWithEmailPassword(
       password: password,
     );
     User? user = userCredential.user;
-    if (user != null && !user.emailVerified) {
-      Navigator.pop(context);
-      // Show info alert if email is not verified
-      Fluttertoast.showToast(
-        msg: "Please confirm your email address! code 1-2-1",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.yellow,
-        textColor: Colors.black,
-        fontSize: 16.0,
-      );
-    } else {
-      // Navigate to home screen after successful login
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const RedirectLogin()));
-    }
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const RedirectLogin()));
+    // remove the comment to check email
+    ////////////////////////////////////////////////
+    // if (user != null && !user.emailVerified) {
+    //   Navigator.pop(context);
+    //   // Show info alert if email is not verified
+    //   Fluttertoast.showToast(
+    //     msg: "Please confirm your email address! code 1-2-1",
+    //     toastLength: Toast.LENGTH_SHORT,
+    //     gravity: ToastGravity.BOTTOM,
+    //     timeInSecForIosWeb: 1,
+    //     backgroundColor: Colors.yellow,
+    //     textColor: Colors.black,
+    //     fontSize: 16.0,
+    //   );
+    // } else {
+    //   // Navigate to home screen after successful login
+    //   Navigator.push(context, MaterialPageRoute(builder: (context) => const RedirectLogin()));
+    // }
   } on FirebaseAuthException catch (e) {
     // Handle FirebaseAuth exceptions
     if (e.code == 'user-not-found') {

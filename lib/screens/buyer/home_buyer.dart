@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/backend-functions/load_data.dart';
+import 'package:selaa/backend-functions/test.dart';
 import 'package:selaa/screens/buyer/notification.dart';
 import 'package:selaa/screens/buyer/product_category_overview.dart';
 import 'package:selaa/screens/buyer/products_categorys.dart';
@@ -18,6 +19,7 @@ class HomeBuyer extends StatefulWidget {
 }
 
 class _HomeState extends State<HomeBuyer> {
+  List<Map<String, dynamic>?> stores = [];
   int _currentIndex = 0;
   final List<Widget> _pages = [
     const HomeBuyer(),
@@ -33,6 +35,11 @@ class _HomeState extends State<HomeBuyer> {
     loadAllPostes(context).then((List<Map<String, dynamic>> data) {
       setState(() {
         postes = data;
+      });
+    });
+    loadStores().then((data){
+      setState(() {
+        stores = data;
       });
     });
   }
@@ -91,7 +98,7 @@ class _HomeState extends State<HomeBuyer> {
               ),
               Container(
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.25,
+                height: MediaQuery.of(context).size.height * 0.17,
                 decoration: const BoxDecoration(
                   color: Color(0xFFCCE6E6),
                 ),
@@ -108,7 +115,7 @@ class _HomeState extends State<HomeBuyer> {
                     ),
                   ],
                   options: CarouselOptions(
-                    height: MediaQuery.of(context).size.height * 0.25,
+                    height: MediaQuery.of(context).size.height * 0.15,
                     enlargeCenterPage: true,
                     autoPlay: true,
                     autoPlayCurve: Curves.fastOutSlowIn,
@@ -250,7 +257,7 @@ class _HomeState extends State<HomeBuyer> {
                         )
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
               Container(

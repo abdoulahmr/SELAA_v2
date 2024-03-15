@@ -477,7 +477,7 @@ Future<List<Map<String, dynamic>>> loadBuyerOrders(context) async {
 Future<List<Map<String, dynamic>>> loadSellerOrders(context) async {
   try {
     User? user = FirebaseAuth.instance.currentUser;
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance
       .collection('users')
       .doc(user!.uid)
       .collection('orders')
@@ -485,15 +485,19 @@ Future<List<Map<String, dynamic>>> loadSellerOrders(context) async {
 
     List<Map<String, dynamic>> orders = [];
     for (var doc in querySnapshot.docs) {
-      Map<String, dynamic> orderData = {
-        'orderId': doc['orderId'],
-        'date': doc['date'],
-        'buyerID': doc['buyerID'],
-        'status': doc['status']
+      Map<String, dynamic> data = doc.data();
+      // Get the buyer reference
+      DocumentReference<Map<String, dynamic>> buyerRef = data['buyer'];
+      // Load the buyer document
+      DocumentSnapshot<Map<String, dynamic>> buyerSnapshot = await buyerRef.get();
+      // Get the buyer data
+      Map<String, dynamic>? buyerData = buyerSnapshot.data();
+      // Add the buyer data to the order item data
+      data['buyer'] = {
+        'firstname': buyerData!['firstname'],
+        'lastname': buyerData['lastname'],
       };
-      if (!orders.any((order) => order['orderId'] == doc['orderId'])) {
-        orders.add(orderData);
-      }
+      orders.add(data);
     }
     return orders;
   } catch (e) {
@@ -509,6 +513,7 @@ Future<List<Map<String, dynamic>>> loadSellerOrders(context) async {
     return []; 
   }
 }
+
 
 // load order items
 Future<List<Map<String, dynamic>>> loadOrderInfo(String orderID) async {
@@ -648,10 +653,10 @@ Future<Map<String, dynamic>> loadSellerOrdersInfo(BuildContext context) async {
     
     // Filter out duplicate orders with the same orderId
     List<QueryDocumentSnapshot<Map<String, dynamic>>> uniqueOrders = ordersSnapshot.docs.where((doc) {
-      if (uniqueOrderIds.contains(doc['orderId'])) {
+      if (uniqueOrderIds.contains(doc['orderID'])) {
         return false;
       } else {
-        uniqueOrderIds.add(doc['orderId']);
+        uniqueOrderIds.add(doc['orderID']);
         return true;
       }
     }).toList();
@@ -915,6 +920,24 @@ Future<List<Map<String, dynamic>>> loadProductRating(context, String productID) 
         textColor: Colors.white,
         fontSize: 16.0,
       );
+    return [];
+  }
+}
+
+// load stores
+Future<List<Map<String, dynamic>?>> loadStores() async {
+  try {
+    // Get a reference to the collection
+     QuerySnapshot<Map<String, dynamic>> storesSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('accountType', isEqualTo: 'seller')
+        .get();
+
+    // Convert the documents to a list of data maps
+    return storesSnapshot.docs.map((doc) => doc.data()).toList();
+  } catch (error) {
+    // Handle any errors
+    print("Error loading stores: $error");
     return [];
   }
 }

@@ -51,7 +51,7 @@ class _HomeState extends State<HomeSeller> {
         balanceInfo = data;
       });
     });
-    loadSellerOrders(context).then((List<Map<String, dynamic>> data) {
+    loadSellerOrders(context).then((data) {
       setState(() {
         ordersPreview = data;
       });
@@ -74,13 +74,8 @@ class _HomeState extends State<HomeSeller> {
                     ElevatedButton(
                       style: ButtonStyle(
                         elevation: MaterialStateProperty.all(0),
-                        fixedSize: MaterialStateProperty.all(
-                          Size(
-                            MediaQuery.of(context).size.width * 0.04,
-                            MediaQuery.of(context).size.height * 0.05,
-                          ),
-                        ),
-                        backgroundColor: MaterialStateProperty.all(const Color(0xFF415B5B)),
+                        
+                        backgroundColor: MaterialStateProperty.all(AppColors().primaryColor),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30.0),
@@ -88,13 +83,10 @@ class _HomeState extends State<HomeSeller> {
                           ),
                         ),
                       ),
-                      onPressed: (){          
+                      onPressed: () {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => const OptionsMenu()));
                       },
-                      child: const Icon(
-                        Icons.menu,
-                        color: Colors.white,
-                      ),
+                      child: const Center(child: Icon(Icons.menu,color: Colors.white,)),
                     ),
                     Image(
                       image: AssetImage(ImagePaths().horizontalLogo),
@@ -166,7 +158,6 @@ class _HomeState extends State<HomeSeller> {
                   Container(
                     padding: const EdgeInsets.all(20),
                     width: MediaQuery.of(context).size.width * 0.4,
-                    height: MediaQuery.of(context).size.height * 0.15,
                     decoration: const BoxDecoration(
                       color: Color(0xFFCCE6E6),
                       borderRadius: BorderRadius.all(Radius.circular(30.0)),
@@ -205,7 +196,6 @@ class _HomeState extends State<HomeSeller> {
                   Container(
                     padding: const EdgeInsets.all(20),
                     width: MediaQuery.of(context).size.width * 0.4,
-                    height: MediaQuery.of(context).size.height * 0.15,
                     decoration: const BoxDecoration(
                       color: Color(0xFFCCE6E6),
                       borderRadius: BorderRadius.all(Radius.circular(30.0)),
@@ -259,9 +249,8 @@ class _HomeState extends State<HomeSeller> {
                         ),
                         const SizedBox(height: 10,),
                         Container(
-                          padding: const EdgeInsets.all(20),
+                          padding: const EdgeInsets.all(30),
                           width: MediaQuery.of(context).size.width * 0.4,
-                          height: MediaQuery.of(context).size.height * 0.1,
                           decoration: BoxDecoration(
                             color: AppColors().secondaryColor,
                             borderRadius: BorderRadius.circular(30.0),
@@ -293,7 +282,6 @@ class _HomeState extends State<HomeSeller> {
                         Container(
                           padding: const EdgeInsets.all(20),
                           width: MediaQuery.of(context).size.width * 0.4,
-                          height: MediaQuery.of(context).size.height * 0.1,
                           decoration: const BoxDecoration(
                             color: Color(0xFFCCE6E6),
                             borderRadius: BorderRadius.all(Radius.circular(30.0)),
@@ -365,33 +353,25 @@ class _HomeState extends State<HomeSeller> {
                 child: ordersPreview.isEmpty
                   ? const Center(child: Text('No recent orders'))
                   : ListView.builder(
-                  itemCount: ordersPreview.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return FutureBuilder<String>(
-                      future: loadUserName(context, ordersPreview[index]["buyerID"]),
-                      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        } else {
-                          if (snapshot.hasError) {
-                            return const Text('Error loading user name');
-                          } else {
-                            return ListTile(
-                              title: Text(snapshot.data ?? 'Unknown'),
-                              subtitle: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(ordersPreview[index]["status"]),
-                                  Text(ordersPreview[index]["date"])
-                                ],
-                              ),
-                            );
-                          }
-                        }
-                      },
-                    );
-                  },
-                ),
+                    itemCount: ordersPreview.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Column(
+                        children: [
+                          ListTile(
+                            title: Text(ordersPreview[index]["buyer"]["firstname"]+" "+ordersPreview[index]["buyer"]["lastname"] ?? 'Unknown'),
+                            subtitle: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(ordersPreview[index]["date"] ?? ''),
+                                Text(ordersPreview[index]["status"] ?? 'Unknown'),
+                              ],
+                            ),
+                          ),
+                          Divider(color: AppColors().primaryColor, thickness: 1, height: 1, indent: 10, endIndent: 10,),
+                        ],
+                      );
+                    },
+                  ),
               ),
               const SizedBox(height: 10),
             ],            
