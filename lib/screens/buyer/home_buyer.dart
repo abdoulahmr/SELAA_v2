@@ -2,7 +2,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/backend-functions/load_data.dart';
-import 'package:selaa/backend-functions/test.dart';
 import 'package:selaa/screens/buyer/notification.dart';
 import 'package:selaa/screens/buyer/product_category_overview.dart';
 import 'package:selaa/screens/buyer/products_categorys.dart';

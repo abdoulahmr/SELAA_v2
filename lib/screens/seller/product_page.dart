@@ -1,6 +1,8 @@
 // ignore_for_file: deprecated_member_use, must_be_immutable
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:input_quantity/input_quantity.dart';
@@ -96,6 +98,17 @@ class _ProductPageState extends State<ProductPage> {
                 ],
               ),
             ),
+            actions: [
+              Visibility(
+                visible: userInfo.isNotEmpty && FirebaseAuth.instance.currentUser?.uid == posteInfo[0]['sellerID'],
+                child: IconButton(
+                  icon: const Icon(Icons.delete,color: Colors.red,),
+                  onPressed: () {
+                    deletePoste(widget.productID, context);
+                  },
+                ),
+              )
+            ],
             automaticallyImplyLeading: false,
             backgroundColor: AppColors().secondaryColor,
             bottom: TabBar(
@@ -121,6 +134,7 @@ class _ProductPageState extends State<ProductPage> {
                 ProductReview(
                   productID: widget.productID, 
                   productReviews: productReviews, 
+                  sellerID: posteInfo[0]['sellerID'],
                 ),
               ],
             ),
@@ -315,7 +329,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             ),
             const SizedBox(height: 10),
             Visibility(
-              visible: widget.posteInfo.isNotEmpty && FirebaseAuth.instance.currentUser?.uid != widget.posteInfo[0]['userId'],
+              visible: widget.posteInfo.isNotEmpty && FirebaseAuth.instance.currentUser?.uid != widget.posteInfo[0]['sellerID'],
               child: ElevatedButton(
                 style: ButtonStyle(
                   fixedSize: MaterialStateProperty.all(
@@ -413,8 +427,10 @@ class ProductReview extends StatefulWidget {
   ProductReview({Key? key, 
             required this.productID, 
             required this.productReviews, 
+            required this.sellerID, 
                       }) : super(key: key);
   final String productID;
+  final String sellerID;
   List<Map<String, dynamic>> productReviews;
 
   @override
@@ -435,125 +451,132 @@ class _Tab2ContentState extends State<ProductReview> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 10),
-            Container(
-              padding: const EdgeInsets.all(20),
-              width: MediaQuery.of(context).size.width * 0.9,
-              decoration: BoxDecoration(
-                color: const Color(0xFFF2F4F4),
-                borderRadius: const  BorderRadius.all(Radius.circular(20.0)),
-                border: Border.all(
-                  color: AppColors().borderColor,
-                ),
-              ),
+            Visibility(
+              visible: FirebaseAuth.instance.currentUser?.uid != widget.sellerID,
               child: Column(
                 children: [
-                  Text(
-                    label,
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: AppColors().primaryColor,
+                  const SizedBox(height: 10),
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF2F4F4),
+                      borderRadius: const  BorderRadius.all(Radius.circular(20.0)),
+                      border: Border.all(
+                        color: AppColors().borderColor,
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          label,
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: AppColors().primaryColor,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            AnimatedRatingStars(
+                              initialRating: 0,
+                              filledColor: AppColors().primaryColor,
+                              emptyColor: Colors.grey,
+                              emptyIcon: Icons.star_border,
+                              onChanged: (double rating) {
+                                setState(() {
+                                  userRating = rating;
+                                  label = "Thank you for your review!";
+                                });
+                                addProductRating( widget.productID, userRating, context);
+                              },
+                              displayRatingValue: true,
+                              interactiveTooltips: true,
+                              customFilledIcon: Icons.star,
+                              customHalfFilledIcon: Icons.star_half,
+                              customEmptyIcon: Icons.star_border,
+                              starSize: 20.0,
+                              readOnly: false,
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              userRating.toString(),
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: AppColors().primaryColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      AnimatedRatingStars(
-                        initialRating: 0,
-                        filledColor: AppColors().primaryColor,
-                        emptyColor: Colors.grey,
-                        emptyIcon: Icons.star_border,
-                        onChanged: (double rating) {
-                          setState(() {
-                            userRating = rating;
-                            label = "Thank you for your review!";
-                          });
-                          addProductRating( widget.productID, userRating, context);
-                        },
-                        displayRatingValue: true,
-                        interactiveTooltips: true,
-                        customFilledIcon: Icons.star,
-                        customHalfFilledIcon: Icons.star_half,
-                        customEmptyIcon: Icons.star_border,
-                        starSize: 20.0,
-                        readOnly: false,
-                      ),
-                      const SizedBox(width: 10),
-                      Text(
-                        userRating.toString(),
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: AppColors().primaryColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 10),
-            Container(
-              padding: const EdgeInsets.all(20),
-              width: MediaQuery.of(context).size.width * 0.9,
-              decoration: BoxDecoration(
-                color: const Color(0xFFF2F4F4),
-                borderRadius: const  BorderRadius.all(Radius.circular(20.0)),
-                border: Border.all(
-                  color: AppColors().borderColor,
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  TextField(
-                    controller: _commentController,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white,
-                      labelText: 'Add a comment',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0)),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors().borderColor))),
-                      maxLines: 3,
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      elevation: MaterialStateProperty.all(0),
-                      fixedSize: MaterialStateProperty.all(
-                        Size(MediaQuery.of(context).size.width*0.6, MediaQuery.of(context).size.height*0.05),
-                      ),
-                      backgroundColor: MaterialStateProperty.all(AppColors().primaryColor),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(  
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                          side: BorderSide(color: AppColors().primaryColor),
-                        ),
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF2F4F4),
+                      borderRadius: const  BorderRadius.all(Radius.circular(20.0)),
+                      border: Border.all(
+                        color: AppColors().borderColor,
                       ),
                     ),
-                    onPressed: () async{
-                      await addProductReview(widget.productID, _commentController.text, context);
-                      setState(() {
-                        _commentController.clear();
-                        // Reload the product reviews after adding a new review
-                        loadProductReviews(context, widget.productID).then((List<Map<String, dynamic>> reviews){
-                          setState(() {
-                            widget.productReviews = reviews;
-                          });
-                        });
-                      });
-                    },
-                    child: const Text(
-                      'Submit Comment',
-                      style: TextStyle(
-                        color: Colors.white
-                      ),
-                    ),
-                  ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        TextField(
+                          controller: _commentController,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            labelText: 'Add a comment',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15.0)),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: AppColors().borderColor))),
+                            maxLines: 3,
+                        ),
+                        const SizedBox(height: 10),
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            elevation: MaterialStateProperty.all(0),
+                            fixedSize: MaterialStateProperty.all(
+                              Size(MediaQuery.of(context).size.width*0.6, MediaQuery.of(context).size.height*0.05),
+                            ),
+                            backgroundColor: MaterialStateProperty.all(AppColors().primaryColor),
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(  
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                                side: BorderSide(color: AppColors().primaryColor),
+                              ),
+                            ),
+                          ),
+                          onPressed: () async{
+                            await addProductReview(widget.productID, _commentController.text, context);
+                            setState(() {
+                              _commentController.clear();
+                              // Reload the product reviews after adding a new review
+                              loadProductReviews(context, widget.productID).then((List<Map<String, dynamic>> reviews){
+                                setState(() {
+                                  widget.productReviews = reviews;
+                                });
+                              });
+                            });
+                          },
+                          child: const Text(
+                            'Submit Comment',
+                            style: TextStyle(
+                              color: Colors.white
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ),                  
                 ],
-              )
+              ),
             ),
             const SizedBox(height: 10),
             Container(
@@ -584,7 +607,7 @@ class _Tab2ContentState extends State<ProductReview> {
                   },
                 )
                 : const Center(child: Text('No reviews available')),
-            )
+            ),
           ],
         ),
       ),

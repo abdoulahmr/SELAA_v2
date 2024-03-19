@@ -87,7 +87,7 @@ class _AddPosteState extends State<AddPoste> {
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
-                          side: const BorderSide(color: Color(0xFF415B5B)),
+                          side: BorderSide(color: AppColors().borderColor),
                         ),
                       ),
                     ),
@@ -109,6 +109,7 @@ class _AddPosteState extends State<AddPoste> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
+                        color: Colors.white
                       ),
                     ),
                   ),
@@ -129,7 +130,7 @@ class _AddPosteState extends State<AddPoste> {
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),
-                        side: const BorderSide(color: Color(0xFF415B5B)),
+                        side: BorderSide(color: AppColors().borderColor),
                       ),
                     ),
                   ),
@@ -137,13 +138,17 @@ class _AddPosteState extends State<AddPoste> {
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      FaIcon(FontAwesomeIcons.camera),
+                      FaIcon(
+                        FontAwesomeIcons.camera,
+                        color: Colors.white,
+                      ),
                       SizedBox(width: 10),
                       Text(
                         "Add Images",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
+                          color: Colors.white
                         ),
                       ),
                     ],
@@ -210,31 +215,29 @@ class _AddPosteState extends State<AddPoste> {
                 Container(
                   margin: const EdgeInsets.all(20),
                   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  width: MediaQuery.of(context).size.width * 0.9,
+                  width: MediaQuery.of(context).size.width * 0.95, // Adjusted width
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: const Color(0xFF415B5B),
+                      color: AppColors().borderColor,
                       width: 0.5,
                     ),
                     borderRadius: BorderRadius.circular(15.0),
                   ),
-                  child: Expanded(
-                    child: DropdownButton<String>(
-                      value: _category,
-                      underline: Container(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _category = newValue!;
-                        });
-                      },
-                      items: [
-                        for (var category in _categoryList)
-                          DropdownMenuItem<String>(
-                            value: category['id'],
-                            child: Text(category['name']),
-                          )
-                      ],
-                    ),
+                  child: DropdownButton<String>(
+                    value: _category,
+                    underline: Container(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _category = newValue!;
+                      });
+                    },
+                    items: [
+                      for (var category in _categoryList)
+                        DropdownMenuItem<String>(
+                          value: category['id'],
+                          child: Text(category['name']),
+                        )
+                    ],
                   ),
                 ),
 

@@ -73,3 +73,29 @@ void saveData() async {
     print('Error saving data: $e');
   }
 }
+
+void saveProducts() async {
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  DocumentReference docRef = firestore.collection('products').doc();
+  String docId = docRef.id; 
+
+  await docRef.set({
+    'productID': docId,
+    'category': 'Xdk6BS0tiQjCgCNEEORK',
+    'createdAt': Timestamp.now(),
+    'imageUrls': [
+      'https://source.unsplash.com/random/?product',
+      'https://source.unsplash.com/random/?product',
+      'https://source.unsplash.com/random/?product'
+    ],
+    'location': 'Algiers - Bab El Oued',
+    'minQuantity': 80,
+    'price': '700',
+    'sellerID': 'iwBX09tcVOXXiqceN1A9d5Cm8r92',
+    'title': 'Cozy Hoodie',
+    'description': 'Stay warm and cozy with this stylish hoodie.',
+  });
+  
+  print('Document with ID $docId saved successfully');
+}
+

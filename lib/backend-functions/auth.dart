@@ -158,6 +158,7 @@ Future<User?> loginWithEmailPassword(
   } on FirebaseAuthException catch (e) {
     // Handle FirebaseAuth exceptions
     if (e.code == 'user-not-found') {
+      Navigator.pop(context);
       Fluttertoast.showToast(
         msg: "No user found for $email. code 1-2-2",
         toastLength: Toast.LENGTH_SHORT,
@@ -168,6 +169,7 @@ Future<User?> loginWithEmailPassword(
         fontSize: 16.0,
       );
     } else if (e.code == 'wrong-password') {
+      Navigator.pop(context);
       Fluttertoast.showToast(
         msg: "Wrong password provided for that user. code 1-2-3",
         toastLength: Toast.LENGTH_SHORT,
@@ -178,6 +180,7 @@ Future<User?> loginWithEmailPassword(
         fontSize: 16.0,
       );    
     } else {
+      Navigator.pop(context);
       Fluttertoast.showToast(
         msg: "Error logging in please send us a feedback code 1-2-4",
         toastLength: Toast.LENGTH_SHORT,
@@ -189,6 +192,7 @@ Future<User?> loginWithEmailPassword(
       );
     }
   } catch (e) {
+    Navigator.pop(context);
     Fluttertoast.showToast(
         msg: "Error logging in please send us a feedback code 1-2-5",
         toastLength: Toast.LENGTH_SHORT,

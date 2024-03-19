@@ -1,11 +1,9 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:selaa/screens/splash.dart';
-
 import 'firebase_options.dart';
 import 'package:selaa/generated/l10n.dart';
 
