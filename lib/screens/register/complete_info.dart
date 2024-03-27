@@ -165,10 +165,6 @@ class CompleteRegistrationPage extends StatelessWidget {
                 decoration: const InputDecoration(labelText: 'Last Name'),
               ),
               TextField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
-              ),
-              TextField(
                 controller: _usernameController,
                 decoration: const InputDecoration(labelText: 'Username'),
               ),
