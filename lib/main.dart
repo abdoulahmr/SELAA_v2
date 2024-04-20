@@ -19,7 +19,7 @@ class Main extends StatefulWidget {
   @override
   State<Main> createState() => _MainState();
 
-  static final GlobalKey<_MainState> mainStateKey = GlobalKey<_MainState>();
+  static final mainStateKey = GlobalKey<_MainState>();
 
   static void setLocale(BuildContext context, Locale newLocale) {
     final _MainState state = mainStateKey.currentState!;
