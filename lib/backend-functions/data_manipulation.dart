@@ -2,6 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:flutter/material.dart';
@@ -457,5 +458,37 @@ double calculateAverageRating(List<Map<String, dynamic>> reviews) {
     return totalRating / reviews.length;
   } else {
     return 0;
+  }
+}
+
+// request delivery
+Future<void> requestDelivery(String agentId,LatLng position, String orderID)async{
+  User? user = FirebaseAuth.instance.currentUser;
+  QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+    .collection('users')
+    .doc(agentId)
+    .collection('request')
+    .where('buyer', isEqualTo: user!.uid)
+    .get();
+  if(snapshot.docs.isEmpty){
+    await FirebaseFirestore.instance.collection('users')
+        .doc(agentId)
+        .collection('request')
+        .doc().set({
+          'location': GeoPoint(position.latitude, position.longitude),
+          'buyer': user.uid,
+          'createdAt': DateTime.now(),
+          'status': 'pending',
+          'orderID': orderID
+      });
+  }
+  else{
+    await snapshot.docs[0].reference.update({
+      'location': GeoPoint(position.latitude, position.longitude),
+      'buyer':  user.uid,
+      'createdAt': DateTime.now(),
+      'status': 'pending',
+      'orderID': orderID
+    });
   }
 }

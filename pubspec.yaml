@@ -61,6 +61,7 @@ dependencies:
   flutter_facebook_auth: ^6.1.1
   animated_rating_stars: ^1.0.1
   fluttertoast: ^8.2.4
+  google_maps_flutter: ^2.6.1
 
 dev_dependencies:
   flutter_test:
@@ -91,6 +92,11 @@ flutter:
     - assets/gifs/pallets.gif
     - assets/gifs/megaphone.gif
     - assets/gifs/delivery-truck.gif
+    - assets/images/4-Photoroom.png-Photoroom.png
+    - assets/images/3-Photoroom.png-Photoroom.png
+    - assets/images/car_icon.png
+    - assets/images/motorcycle_icon.png
+    - assets/images/truck_icon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

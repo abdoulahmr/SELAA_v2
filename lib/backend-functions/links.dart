@@ -7,9 +7,17 @@ class ImagePaths{
   String defaultProfilePicture = "https://firebasestorage.googleapis.com/v0/b/selaa-2ff93.appspot.com/o/profilePicture%2Fkisspng-computer-icons-download-avatar-5b3848b5343f86.741661901530415285214-removebg-preview%20(1).png?alt=media&token=0c01bbf5-f998-4ad9-af94-235ba6fd4ab5";
   String horizontalLogo = "assets/images/2-removebg-preview-removebg-preview.png";
   String verticalLogo = "assets/images/1-removebg-preview-removebg-preview-removebg-preview.png";
+  String blackhorizontalLogo = "assets/images/4-Photoroom.png-Photoroom.png";
+  String blackverticalLogo = "assets/images/3-Photoroom.png-Photoroom.png";
+  String carIcon = "assets/images/car_icon.png";
+  String truckIcon = "assets/images/truck_icon.png";
+  String motorcycleIcon = "assets/images/motorcycle_icon.png";
 }
 class AppColors{
   Color primaryColor = const Color(0xFF008080);
   Color secondaryColor = const Color(0xFFCCE6E6);
   Color borderColor = const Color(0xFF415B5B);
+}
+class MapLinks{
+  String apiKey = "AIzaSyDDkKi-2GtUrhDbp03eWE-mXmgYozspDWI";
 }

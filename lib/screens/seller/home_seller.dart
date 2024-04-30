@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/backend-functions/load_data.dart';
-import 'package:selaa/screens/buyer/notification.dart';
 import 'package:selaa/screens/seller/order.dart';
 import 'package:selaa/screens/seller/user_page.dart';
 import 'package:selaa/screens/settings/seller_option_menu.dart';
@@ -24,7 +23,7 @@ class _HomeState extends State<HomeSeller> {
   final List<Widget> _pages = [
     const HomeSeller(),
     const UserPage(),
-    const NotificationPage(),
+    const HomeSeller(),
     const ListOrderPage(),
   ];
 

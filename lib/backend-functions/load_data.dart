@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -496,6 +498,7 @@ Future<List<Map<String, dynamic>>> loadSellerOrders(context) async {
       data['buyer'] = {
         'firstname': buyerData!['firstname'],
         'lastname': buyerData['lastname'],
+        'buyerID': buyerSnapshot.id // Add document id here,
       };
       orders.add(data);
     }
@@ -523,7 +526,7 @@ Future<List<Map<String, dynamic>>> loadOrderInfo(String orderID) async {
         .collection('users')
         .doc(user!.uid)
         .collection('orders')
-        .where('orderId', isEqualTo: orderID)
+        .where('orderID', isEqualTo: orderID)
         .get();
     
     List<Map<String, dynamic>> documentsData = querySnapshot.docs.map((doc) => doc.data()).toList();
@@ -590,15 +593,6 @@ Future<String> loadUserName(context, uid) async {
     if (documentSnapshot.exists) {
       return documentSnapshot.data()!['firstname']+" "+documentSnapshot.data()!['lastname'];
     } else {
-      Fluttertoast.showToast(
-        msg: "Error logging in please send us a feedback code 4-14-1",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
       return 'User not found';
     }
   } catch (e) {
@@ -941,3 +935,35 @@ Future<List<Map<String, dynamic>?>> loadStores() async {
     return [];
   }
 }
+
+Future<List<Map<String, dynamic>>> loadAgents() async {
+  try {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('status', isEqualTo: true)
+        .get();
+
+    return snapshot.docs.map((doc) {
+      // Get data as a new map
+      Map<String, dynamic> data = doc.data();
+      // Add document ID to the map
+      data['agentId'] = doc.id;
+      return data;
+    }).toList();
+  } catch (error) {
+    // Handle any errors
+    print("Error loading store products: $error");
+    return [];
+  }
+}
+
+  Stream<List<dynamic>> getRequestStatusStream(String agentId) {
+    User? user = FirebaseAuth.instance.currentUser;
+    return FirebaseFirestore.instance
+      .collection('users')
+      .doc(agentId)
+      .collection('request')
+      .where('buyer', isEqualTo: user!.uid)
+      .snapshots()
+      .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
+  }

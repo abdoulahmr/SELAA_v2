@@ -162,73 +162,61 @@ class _AllOrdersTabState extends State<AllOrdersTab> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: orders.isEmpty
-          ? const Center(child: Text('No orders available'))
-          : ListView.builder(
-        itemCount: orders.length,
-        itemBuilder: (BuildContext context, int index) {
-          Color textColor = Colors.black;
-          if (orders[index]["status"] == "Pending") {
-            textColor = Colors.orange;
-          } else if (orders[index]["status"] == "In Progress") {
-            textColor = Colors.blue;
-          } else if (orders[index]["status"] == "Delivered") {
-            textColor = Colors.green;
-          } else if (orders[index]["status"] == "Canceled"){
-            textColor = Colors.red;
-          }
-          return Column(
-            children: [
-              GestureDetector(
-                onTap: (){
-                  Navigator.push(
-                    context, 
-                    MaterialPageRoute(
-                      builder: (context) => SellerOrderOverview(
-                        orderId: orders[index]["orderId"],
-                        buyerId: orders[index]["buyerID"],
-                      )
-                    )
-                  );
-                },
-                child: FutureBuilder<String>(
-                  future: loadUserName(context, orders[index]["buyerID"]),
-                  builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
-                    } else {
-                      if (snapshot.hasError) {
-                        return const Text('Error loading user name');
-                      } else {
-                        return ListTile(
-                          title: Text(snapshot.data ?? 'Unknown'),
-                          subtitle: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                orders[index]["status"],
-                                style: TextStyle(
-                                  color: textColor
-                                ),
-                              ),
-                              Text(orders[index]["date"])
-                            ],
-                          ),
-                        );
-                      }
-                    }
-                  },
+Widget build(BuildContext context) {
+  return Scaffold(
+    body: orders.isEmpty
+    ? const Center(child: Text('No orders available'))
+    : ListView.builder(
+      itemCount: orders.length,
+      itemBuilder: (BuildContext context, int index) {
+        Color textColor = Colors.black;
+        if (orders[index]["status"] == "Pending") {
+          textColor = Colors.orange;
+        } else if (orders[index]["status"] == "In Progress") {
+          textColor = Colors.blue;
+        } else if (orders[index]["status"] == "Delivered") {
+          textColor = Colors.green;
+        } else if (orders[index]["status"] == "Canceled") {
+          textColor = Colors.red;
+        }
+        return Column(
+          children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SellerOrderOverview(
+                      orderId: orders[index]["orderID"],
+                      buyerId: orders[index]['buyer']["buyerID"],
+                    ),
+                  ),
+                );
+              },
+              child: ListTile(
+                title: Text(
+                  '${orders[index]['buyer']['firstname']} ${orders[index]['buyer']['lastname']}'
+                ),
+                subtitle: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      orders[index]["status"],
+                      style: TextStyle(color: textColor),
+                    ),
+                    Text(orders[index]["date"]),
+                  ],
                 ),
               ),
-              const Divider(),
-            ],
-          );
-        },
-      )
-    );
-  }
+            ),
+            const Divider(),
+          ],
+        );
+      },
+    ),
+  );
+}
+
 }
 
 // Pending orders class
@@ -268,7 +256,17 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
             return Column(
               children: [
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SellerOrderOverview(
+                          orderId: orders[index]["orderID"],
+                          buyerId: orders[index]['buyer']["buyerID"],
+                        ),
+                      ),
+                    );
+                  },
                   child: FutureBuilder<String>(
                     future: loadUserName(context, orders[index]["buyerID"]),
                     builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
@@ -279,7 +277,7 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
                           return const Text('Error loading user name');
                         } else {
                         return ListTile(
-                          title: Text(snapshot.data ?? 'Unknown'),
+                          title: Text('${orders[index]['buyer']['firstname']} ${orders[index]['buyer']['lastname']}'),
                           subtitle: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -343,7 +341,17 @@ class _InProgressOrdersTabState extends State<InProgressOrdersTab> {
             return Column(
               children: [
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SellerOrderOverview(
+                          orderId: orders[index]["orderID"],
+                          buyerId: orders[index]['buyer']["buyerID"],
+                        ),
+                      ),
+                    );
+                  },
                   child: FutureBuilder<String>(
                     future: loadUserName(context, orders[index]["buyerID"]),
                     builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
@@ -354,7 +362,7 @@ class _InProgressOrdersTabState extends State<InProgressOrdersTab> {
                         return const Text('Error loading user name');
                       } else {
                         return ListTile(
-                          title: Text(snapshot.data ?? 'Unknown'),
+                          title: Text('${orders[index]['buyer']['firstname']} ${orders[index]['buyer']['lastname']}'),
                           subtitle: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -418,7 +426,17 @@ class _CompletedOrdersTabState extends State<CompletedOrdersTab> {
             return Column(
               children: [
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SellerOrderOverview(
+                          orderId: orders[index]["orderID"],
+                          buyerId: orders[index]['buyer']["buyerID"],
+                        ),
+                      ),
+                    );
+                  },
                   child: FutureBuilder<String>(
                     future: loadUserName(context, orders[index]["buyerID"]),
                     builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
@@ -429,7 +447,7 @@ class _CompletedOrdersTabState extends State<CompletedOrdersTab> {
                         return const Text('Error loading user name');
                       } else {
                         return ListTile(
-                          title: Text(snapshot.data ?? 'Unknown'),
+                          title: Text('${orders[index]['buyer']['firstname']} ${orders[index]['buyer']['lastname']}'),
                           subtitle: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [

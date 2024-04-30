@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -57,6 +58,7 @@ Future<User?> registerWithEmailPassword({
           'address': '',
           'phoneNumber': '',
           'accountType': accountType,
+          'username': firstname + " " + lastname,
           'bio': '',
           'profilePicture': '',
           'balance': 0,
@@ -136,6 +138,13 @@ Future<User?> loginWithEmailPassword(
       password: password,
     );
     User? user = userCredential.user;
+    // Get the FCM token
+    String? fcmToken = await FirebaseMessaging.instance.getToken();
+    // Save the FCM token to the user's document in Firestore
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .update({'fcmToken': fcmToken});
     Navigator.push(context, MaterialPageRoute(builder: (context) => const RedirectLogin()));
     // remove the comment to check email
     ////////////////////////////////////////////////
@@ -277,6 +286,8 @@ Future<User?> signInWithGoogle(BuildContext context, String accountType, Scaffol
             .where('email', isEqualTo: user.email)
             .get();
         if (querySnapshot.docs.isEmpty) {
+          // Get the FCM token
+          String? fcmToken = await FirebaseMessaging.instance.getToken();
           await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
             'firstname': user.displayName?.split(' ')[0] ?? '',
             'lastname': user.displayName?.split(' ')[1] ?? '',
@@ -285,7 +296,8 @@ Future<User?> signInWithGoogle(BuildContext context, String accountType, Scaffol
             'shippingAdress': '',
             'accountType': accountType,
             'balance': 0,
-            'check': false
+            'check': false,
+            'fcmToken': fcmToken
           });
           // Navigate to user info screen to complete registration
           Navigator.push(
@@ -295,6 +307,12 @@ Future<User?> signInWithGoogle(BuildContext context, String accountType, Scaffol
         // Email exists, proceed with sign-in
         // Dismiss loading alert
         scaffoldMessenger.hideCurrentSnackBar();
+        String? fcmToken = await FirebaseMessaging.instance.getToken();
+        // Save the FCM token to the user's document in Firestore
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user!.uid)
+            .update({'fcmToken': fcmToken});
         // Navigate to home screen after successful login
         Navigator.push(
           context,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/backend-functions/load_data.dart';
-//import 'package:selaa/generated/l10n.dart';
+import 'package:selaa/screens/seller/order_delivery.dart';
 
 class SellerOrderOverview extends StatefulWidget {
   const SellerOrderOverview({Key? key, required this.orderId, required this.buyerId}) : super(key: key);
@@ -16,8 +16,7 @@ class SellerOrderOverview extends StatefulWidget {
 class _SellerOrderOverviewState extends State<SellerOrderOverview> {
   Map<String, dynamic> buyerInfo = {};
   List<Map<String, dynamic>> items = [];
-  String? _status;
-  bool? _reqDel;
+  List<Map<String, dynamic>> orderInfo = [];
 
   @override
   void initState() { 
@@ -25,8 +24,11 @@ class _SellerOrderOverviewState extends State<SellerOrderOverview> {
     loadOrderItems(widget.orderId).then((data) {
       setState(() {
         items = data;
-        _status = items[0]["status"];
-        _reqDel = items[0]["delivery"];
+      });
+    });
+    loadOrderInfo(widget.orderId).then((data){
+      setState(() {
+        orderInfo = data;
       });
     });
     loadBuyerInfo(context, widget.buyerId).then((data) {
@@ -39,7 +41,7 @@ class _SellerOrderOverviewState extends State<SellerOrderOverview> {
   Future<double> calculateOrderTotalPrice() async {
     double total = 0;
     for (int i = 0; i < items.length; i++) {
-      total = total + (items[i]['unitPrice'] * items[i]['quantity']);
+      total = total + (double.parse(items[i]['product']['price']) * items[i]['quantity']);
     }
     return total;
   }
@@ -76,125 +78,121 @@ class _SellerOrderOverviewState extends State<SellerOrderOverview> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        RichText(
-                          text: TextSpan(
-                            text: 'Status: ',
-                            style: const TextStyle(color: Colors.black),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: _status,
-                                style: TextStyle(
-                                  color: _status == 'Pending' ? Colors.orange : 
-                                        _status == 'In Progress' ? Colors.blue :
-                                        _status == 'Delivered' ? Colors.green :
-                                        _status == 'Canceled' ? Colors.red :
-                                        Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                         Row(
                           children: [
-                            Text(buyerInfo["firstname"] ?? ""),
+                            Text(
+                              buyerInfo["firstname"] ?? "",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                            ),
                             const SizedBox(width: 10),
-                            Text(buyerInfo["lastname"] ?? ""),
+                            Text(
+                              buyerInfo["lastname"] ?? "",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                            ),
                           ],
                         ),
                         Text(buyerInfo["shippingAddress"] ?? ""),
                         Text(buyerInfo["email"] ?? ""),
                         Text(buyerInfo["phoneNumber"] ?? ""),
-                        FutureBuilder<double>(
-                          future: calculateOrderTotalPrice(),
-                          builder: (BuildContext context, AsyncSnapshot<double> snapshot) {
-                            if (snapshot.hasData) {
-                              return Text("${snapshot.data} DZD");
-                            } else {
-                              return const CircularProgressIndicator();
-                            }
-                          },
-                        ),
                       ],
                     ),
                   ),
                   Column(
                     children: [
-                      _reqDel == false && _status == "Pending"
-                      ? ElevatedButton(
+                      if (orderInfo.isNotEmpty && orderInfo[0]['deliveryOption'] == true && orderInfo[0]['status'] == 'Pending')
+                      ElevatedButton(
                         style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(AppColors().primaryColor),
+                          fixedSize: MaterialStateProperty.all(
+                            Size(
+                              MediaQuery.of(context).size.width * 0.4,
+                              MediaQuery.of(context).size.height * 0.05,
+                            ),
+                          ),
+                          backgroundColor: MaterialStateProperty.all(AppColors().primaryColor),
                           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15.0),
-                              side: const BorderSide(color: Color(0xFF415B5B)),
+                              side: BorderSide(color: AppColors().borderColor),
                             ),
                           ),
                         ),
-                        onPressed: (){}, 
+                        onPressed: () {
+                          Navigator.push(
+                            context, 
+                            MaterialPageRoute(builder: (context) => OrderDelivery(
+                              orderID: widget.orderId,
+                              selected: false,
+                              )
+                            )
+                          );
+                        },
                         child: const Text(
-                          "ask for delivery",
+                          "Request Delivery",
                           style: TextStyle(
-                            fontSize: 15,
                             color: Colors.white,
-                          ),
-                        )
-                      ) 
-                      : const SizedBox(),
-                      _status == "Canceled"
-                      ? ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(AppColors().primaryColor),
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                              side: const BorderSide(color: Color(0xFF415B5B)),
-                            ),
                           ),
                         ),
-                        onPressed: (){}, 
-                        child: const Text(
-                          "View rapport",
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.white,
-                          ),
-                        )
-                      ) 
-                      : const SizedBox(),
-                      _status == "In Progress"
-                      ? ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(AppColors().primaryColor),
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                              side: const BorderSide(color: Color(0xFF415B5B)),
-                            ),
-                          ),
-                        ),
-                        onPressed: (){}, 
-                        child: const Text(
-                          "Track order",
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.white,
-                          ),
-                        )
-                      ) 
-                      : const SizedBox(),
+                      ),
+                      if (orderInfo.isNotEmpty && orderInfo[0]['deliveryOption'] == true && orderInfo[0]['status'] == 'Canceled')
+                      ElevatedButton(
+                        onPressed: () {
+                          
+                        },
+                        child: const Text("View Report"),
+                      ),
+                      if (orderInfo.isNotEmpty && orderInfo[0]['deliveryOption'] == true && orderInfo[0]['status'] == 'In Progress')
+                      ElevatedButton(
+                        onPressed: () {
+                          
+                        },
+                        child: const Text("Track Delivery"),
+                      ),
                       QrImageView(
                         data: widget.orderId,
                         version: QrVersions.auto,
-                        size: MediaQuery.of(context).size.width * 0.3,
+                        size: MediaQuery.of(context).size.width * 0.35,
                       ),
                     ],
                   ),
                 ],
               ),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.9,
+              margin: const EdgeInsets.only(left: 20, right: 20),
+              padding: const EdgeInsets.all(20),
+              decoration: const BoxDecoration(
+                color: Color(0xFFCCE6E6),
+                borderRadius: BorderRadius.all(Radius.circular(20.0)),
+              ),
+              child: FutureBuilder<double>(
+                future: calculateOrderTotalPrice(),
+                builder: (BuildContext context, AsyncSnapshot<double> snapshot) {
+                if (snapshot.hasData) {
+                  return Text(
+                    "Total ${snapshot.data.toString()} DZD",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  );
+                } else {
+                    return const CircularProgressIndicator();
+                  }
+                },
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Divider(
+              endIndent: 20,
+              indent: 20,
+              thickness: 2,
             ),
             Expanded(
               child: Container(
@@ -224,7 +222,7 @@ class _SellerOrderOverviewState extends State<SellerOrderOverview> {
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.4,
                               child: Text(
-                                items[index]['productName'],
+                                items[index]['product']['title'],
                                 style: const TextStyle(
                                   overflow: TextOverflow.fade,
                                 ),
@@ -242,7 +240,7 @@ class _SellerOrderOverviewState extends State<SellerOrderOverview> {
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.1,
                               child: Text(
-                                "${items[index]['unitPrice']} DZD",
+                                "${items[index]['product']['price']} DZD",
                                 style: const TextStyle(
                                   overflow: TextOverflow.fade,
                                 )

@@ -188,8 +188,8 @@ class Step1Widget extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Image(
-          image: AssetImage('assets/images/1-removebg-preview-removebg-preview-removebg-preview.png'),
+        Image(
+          image: AssetImage(ImagePaths().blackverticalLogo),
           width: 250,
           height: 250,
         ),
