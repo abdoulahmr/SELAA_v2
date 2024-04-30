@@ -39,7 +39,7 @@ class _NotificationPageState extends State<NotificationPage> {
             setState(() {
               _currentIndex = index;
             });
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => _pages[index]),
             );

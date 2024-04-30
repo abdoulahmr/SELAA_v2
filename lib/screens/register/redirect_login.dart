@@ -35,7 +35,7 @@ class _PreLoginState extends State<RedirectLogin> {
           ? Scaffold(
               body: Center(
                 child: Image(
-                  image: AssetImage(ImagePaths().verticalLogo),
+                  image: AssetImage(ImagePaths().blackverticalLogo),
                   width: 150,
                   height: 150,
                 ),

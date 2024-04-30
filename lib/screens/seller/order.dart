@@ -98,7 +98,7 @@ class _OrderPageState extends State<ListOrderPage> {
               setState(() {
                 _currentIndex = index;
               });
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => _pages[index]),
               );
@@ -162,61 +162,60 @@ class _AllOrdersTabState extends State<AllOrdersTab> {
   }
 
   @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    body: orders.isEmpty
-    ? const Center(child: Text('No orders available'))
-    : ListView.builder(
-      itemCount: orders.length,
-      itemBuilder: (BuildContext context, int index) {
-        Color textColor = Colors.black;
-        if (orders[index]["status"] == "Pending") {
-          textColor = Colors.orange;
-        } else if (orders[index]["status"] == "In Progress") {
-          textColor = Colors.blue;
-        } else if (orders[index]["status"] == "Delivered") {
-          textColor = Colors.green;
-        } else if (orders[index]["status"] == "Canceled") {
-          textColor = Colors.red;
-        }
-        return Column(
-          children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SellerOrderOverview(
-                      orderId: orders[index]["orderID"],
-                      buyerId: orders[index]['buyer']["buyerID"],
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: orders.isEmpty
+      ? const Center(child: Text('No orders available'))
+      : ListView.builder(
+        itemCount: orders.length,
+        itemBuilder: (BuildContext context, int index) {
+          Color textColor = Colors.black;
+          if (orders[index]["status"] == "Pending") {
+            textColor = Colors.orange;
+          } else if (orders[index]["status"] == "In Progress") {
+            textColor = Colors.blue;
+          } else if (orders[index]["status"] == "Delivered") {
+            textColor = Colors.green;
+          } else if (orders[index]["status"] == "Canceled") {
+            textColor = Colors.red;
+          }
+          return Column(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SellerOrderOverview(
+                        orderId: orders[index]["orderID"],
+                        buyerId: orders[index]['buyer']["buyerID"],
+                      ),
                     ),
+                  );
+                },
+                child: ListTile(
+                  title: Text(
+                    '${orders[index]['buyer']['firstname']} ${orders[index]['buyer']['lastname']}'
                   ),
-                );
-              },
-              child: ListTile(
-                title: Text(
-                  '${orders[index]['buyer']['firstname']} ${orders[index]['buyer']['lastname']}'
-                ),
-                subtitle: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      orders[index]["status"],
-                      style: TextStyle(color: textColor),
-                    ),
-                    Text(orders[index]["date"]),
-                  ],
+                  subtitle: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        orders[index]["status"],
+                        style: TextStyle(color: textColor),
+                      ),
+                      Text(orders[index]["date"]),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const Divider(),
-          ],
-        );
-      },
-    ),
-  );
-}
-
+              const Divider(),
+            ],
+          );
+        },
+      ),
+    );
+  }
 }
 
 // Pending orders class

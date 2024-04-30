@@ -1,7 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
-import 'dart:math';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -526,7 +523,7 @@ Future<List<Map<String, dynamic>>> loadOrderInfo(String orderID) async {
         .collection('users')
         .doc(user!.uid)
         .collection('orders')
-        .where('orderID', isEqualTo: orderID)
+        .where('orderId', isEqualTo: orderID)
         .get();
     
     List<Map<String, dynamic>> documentsData = querySnapshot.docs.map((doc) => doc.data()).toList();
@@ -952,18 +949,33 @@ Future<List<Map<String, dynamic>>> loadAgents() async {
     }).toList();
   } catch (error) {
     // Handle any errors
-    print("Error loading store products: $error");
     return [];
   }
 }
 
-  Stream<List<dynamic>> getRequestStatusStream(String agentId) {
-    User? user = FirebaseAuth.instance.currentUser;
+Stream<List<dynamic>> getRequestStatusStream(String orderID) {
+  try{
     return FirebaseFirestore.instance
-      .collection('users')
-      .doc(agentId)
-      .collection('request')
-      .where('buyer', isEqualTo: user!.uid)
-      .snapshots()
-      .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
+    .collection('requests')
+    .where("orderID", isEqualTo: orderID)
+    .snapshots()
+    .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
+  } catch (error) {
+    return Stream.value([]);
   }
+}
+
+
+Future<List<Map<String, dynamic>>> loadRequestStatus(String agentID, String orderID) async {
+  try {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(agentID)
+      .collection("request")
+      .where('orderID', isEqualTo: orderID)
+      .get();
+    return snapshot.docs.map((doc) => doc.data()).toList();
+  } catch (error) {
+    return [];
+  }
+}

@@ -145,7 +145,7 @@ Future<User?> loginWithEmailPassword(
         .collection('users')
         .doc(user!.uid)
         .update({'fcmToken': fcmToken});
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const RedirectLogin()));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const RedirectLogin()));
     // remove the comment to check email
     ////////////////////////////////////////////////
     // if (user != null && !user.emailVerified) {
@@ -247,7 +247,7 @@ Future<void> signOut(context) async {
     // Sign out user
     await FirebaseAuth.instance.signOut();
     // Navigate to login screen after sign out
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login()));
   } catch (e) {
     // Handle errors
     Fluttertoast.showToast(
@@ -300,7 +300,7 @@ Future<User?> signInWithGoogle(BuildContext context, String accountType, Scaffol
             'fcmToken': fcmToken
           });
           // Navigate to user info screen to complete registration
-          Navigator.push(
+          Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => CompleteRegistrationPage()));
           return null;
         }
@@ -314,7 +314,7 @@ Future<User?> signInWithGoogle(BuildContext context, String accountType, Scaffol
             .doc(user!.uid)
             .update({'fcmToken': fcmToken});
         // Navigate to home screen after successful login
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const RedirectLogin()),
         );

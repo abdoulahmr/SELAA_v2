@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:selaa/backend-functions/links.dart';
@@ -17,6 +19,7 @@ class _SellerOrderOverviewState extends State<SellerOrderOverview> {
   Map<String, dynamic> buyerInfo = {};
   List<Map<String, dynamic>> items = [];
   List<Map<String, dynamic>> orderInfo = [];
+  User? user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() { 
@@ -105,53 +108,81 @@ class _SellerOrderOverviewState extends State<SellerOrderOverview> {
                   ),
                   Column(
                     children: [
-                      if (orderInfo.isNotEmpty && orderInfo[0]['deliveryOption'] == true && orderInfo[0]['status'] == 'Pending')
-                      ElevatedButton(
-                        style: ButtonStyle(
-                          fixedSize: MaterialStateProperty.all(
-                            Size(
-                              MediaQuery.of(context).size.width * 0.4,
-                              MediaQuery.of(context).size.height * 0.05,
-                            ),
-                          ),
-                          backgroundColor: MaterialStateProperty.all(AppColors().primaryColor),
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                              side: BorderSide(color: AppColors().borderColor),
-                            ),
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context, 
-                            MaterialPageRoute(builder: (context) => OrderDelivery(
-                              orderID: widget.orderId,
-                              selected: false,
-                              )
-                            )
-                          );
+                      StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                          .collection('requests')
+                          .where('orderID', isEqualTo: widget.orderId)
+                          .snapshots()
+                          .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList()), 
+                        builder: (context, snapshot) {
+                          if(snapshot.hasData && snapshot.data!.isNotEmpty) {
+                            return ElevatedButton(
+                              style: ButtonStyle(
+                                fixedSize: MaterialStateProperty.all(
+                                  Size(
+                                    MediaQuery.of(context).size.width * 0.4,
+                                    MediaQuery.of(context).size.height * 0.05,
+                                  ),
+                                ),
+                                backgroundColor: MaterialStateProperty.all(AppColors().primaryColor),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    side: BorderSide(color: AppColors().borderColor),
+                                  ),
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context, 
+                                  MaterialPageRoute(builder: (context) => OrderDelivery(
+                                    orderID: widget.orderId,
+                                    selected: true,
+                                  ))
+                                );
+                              },
+                              child: const Text(
+                                "Track Order ",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            );
+                          } else {
+                            return ElevatedButton(
+                              style: ButtonStyle(
+                                fixedSize: MaterialStateProperty.all(
+                                  Size(
+                                    MediaQuery.of(context).size.width * 0.4,
+                                    MediaQuery.of(context).size.height * 0.05,
+                                  ),
+                                ),
+                                backgroundColor: MaterialStateProperty.all(AppColors().primaryColor),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    side: BorderSide(color: AppColors().borderColor),
+                                  ),
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context, 
+                                  MaterialPageRoute(builder: (context) => OrderDelivery(
+                                    orderID: widget.orderId,
+                                    selected: false,
+                                  ))
+                                );
+                              },
+                              child: const Text(
+                                "Request Delivery",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            );
+                          }
                         },
-                        child: const Text(
-                          "Request Delivery",
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      if (orderInfo.isNotEmpty && orderInfo[0]['deliveryOption'] == true && orderInfo[0]['status'] == 'Canceled')
-                      ElevatedButton(
-                        onPressed: () {
-                          
-                        },
-                        child: const Text("View Report"),
-                      ),
-                      if (orderInfo.isNotEmpty && orderInfo[0]['deliveryOption'] == true && orderInfo[0]['status'] == 'In Progress')
-                      ElevatedButton(
-                        onPressed: () {
-                          
-                        },
-                        child: const Text("Track Delivery"),
                       ),
                       QrImageView(
                         data: widget.orderId,

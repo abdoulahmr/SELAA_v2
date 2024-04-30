@@ -27,107 +27,104 @@ class _SearchOrderPageState extends State<SearchOrderPage> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.07),
-          child: AppBar(
-            backgroundColor: AppColors().secondaryColor,
-            iconTheme: const IconThemeData(color: Color(0xFF008080)),
-            title: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  width: MediaQuery.of(context).size.width * 0.65,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF4F4F4),
-                    borderRadius: BorderRadius.circular(30),
-                    border: Border.all(
-                      color: const Color(0xFF415B5B),
-                      width: 1,
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: TextField(
-                          controller: _search,
-                          decoration: const InputDecoration(
-                            hintText: 'Search order',
-                            border: InputBorder.none,
-                          ),
-                          onChanged: (value) {
-                            setState(() {
-                              filteredOrders = orders.where((order) =>
-                                  order['orderId'].toLowerCase().contains(value.toLowerCase())).toList();
-                            });
-                          },
-                        ),
-                      ),
-                      const Icon(Icons.search, color: Color(0xFF415B5B)),
-                    ],
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.07),
+        child: AppBar(
+          backgroundColor: AppColors().secondaryColor,
+          iconTheme: const IconThemeData(color: Color(0xFF008080)),
+          title: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                width: MediaQuery.of(context).size.width * 0.65,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF4F4F4),
+                  borderRadius: BorderRadius.circular(30),
+                  border: Border.all(
+                    color: const Color(0xFF415B5B),
+                    width: 1,
                   ),
                 ),
-              ],
-            ),
-            actions: [
-              IconButton(
-                onPressed: () async {},
-                icon: const Icon(
-                  Icons.qr_code_scanner,
-                  color: Color(0xFF008080),
+                child: Row(
+                  children: [
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: TextField(
+                        controller: _search,
+                        decoration: const InputDecoration(
+                          hintText: 'Search order',
+                          border: InputBorder.none,
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            filteredOrders = orders.where((order) =>
+                                order['orderId'].toLowerCase().contains(value.toLowerCase())).toList();
+                          });
+                        },
+                      ),
+                    ),
+                    const Icon(Icons.search, color: Color(0xFF415B5B)),
+                  ],
                 ),
               ),
             ],
           ),
-        ),
-        body: Column(
-          children: [
-            const SizedBox(height: 20),
-            Expanded(
-              child: ListView.builder(
-                itemCount: filteredOrders.length,
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {},
-                        child: FutureBuilder<String>(
-                          future: loadUserName(context, orders[index]["buyerID"]),
-                          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return const CircularProgressIndicator();
-                          } else {
-                            if (snapshot.hasError) {
-                              return const Text('Error loading user name');
-                            } else {
-                              return ListTile(
-                                title: Text(snapshot.data ?? 'Unknown'),
-                                subtitle: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      orders[index]["status"],
-                                    ),
-                                    Text(orders[index]["date"]),
-                                  ],
-                                ),
-                              );
-                            }
-                          }
-                        },
-                      ),
-                    ),
-                    const Divider(),
-                  ],
-                );
-                },
+          actions: [
+            IconButton(
+              onPressed: () async {},
+              icon: const Icon(
+                Icons.qr_code_scanner,
+                color: Color(0xFF008080),
               ),
             ),
           ],
         ),
+      ),
+      body: Column(
+        children: [
+          const SizedBox(height: 20),
+          Expanded(
+            child: ListView.builder(
+              itemCount: filteredOrders.length,
+              itemBuilder: (context, index) {
+                return Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () {},
+                      child: FutureBuilder<String>(
+                        future: loadUserName(context, orders[index]["buyerID"]),
+                        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else {
+                          if (snapshot.hasError) {
+                            return const Text('Error loading user name');
+                          } else {
+                            return ListTile(
+                              title: Text(snapshot.data ?? 'Unknown'),
+                              subtitle: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    orders[index]["status"],
+                                  ),
+                                  Text(orders[index]["date"]),
+                                ],
+                              ),
+                            );
+                          }
+                        }
+                      },
+                    ),
+                  ),
+                  const Divider(),
+                ],
+              );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

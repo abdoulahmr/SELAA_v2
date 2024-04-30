@@ -76,9 +76,7 @@ class _UserPage extends State<UserPage> {
                               radius: 60,
                               backgroundImage: userInfo[0]['profilePicture'] != null
                                   ? NetworkImage(userInfo[0]['profilePicture'])
-                                  : const NetworkImage(
-                                'https://firebasestorage.googleapis.com/v0/b/selaa-2ff93.appspot.com/o/profilePicture%2Fkisspng-computer-icons-download-avatar-5b3848b5343f86.741661901530415285214-removebg-preview%20(1).png?alt=media&token=0c01bbf5-f998-4ad9-af94-235ba6fd4ab5',
-                              ),
+                                  : NetworkImage(ImagePaths().defaultProfilePicture),
                             ),
                           ],
                         ),
@@ -307,7 +305,7 @@ class _UserPage extends State<UserPage> {
             setState(() {
               _currentIndex = index;
             });
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => _pages[index]),
             );

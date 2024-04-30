@@ -21,7 +21,7 @@ class BuyerOptionsMenu extends StatelessWidget {
                 height: MediaQuery.of(context).size.height * 0.1,
                 child: OutlinedButton(
                   onPressed: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => const RedirectLogin()),
                     );

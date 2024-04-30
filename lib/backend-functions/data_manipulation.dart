@@ -462,33 +462,15 @@ double calculateAverageRating(List<Map<String, dynamic>> reviews) {
 }
 
 // request delivery
-Future<void> requestDelivery(String agentId,LatLng position, String orderID)async{
+Future<void> requestDelivery(String agentID,LatLng position, String orderID)async{
   User? user = FirebaseAuth.instance.currentUser;
-  QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
-    .collection('users')
-    .doc(agentId)
-    .collection('request')
-    .where('buyer', isEqualTo: user!.uid)
-    .get();
-  if(snapshot.docs.isEmpty){
-    await FirebaseFirestore.instance.collection('users')
-        .doc(agentId)
-        .collection('request')
-        .doc().set({
-          'location': GeoPoint(position.latitude, position.longitude),
-          'buyer': user.uid,
-          'createdAt': DateTime.now(),
-          'status': 'pending',
-          'orderID': orderID
-      });
-  }
-  else{
-    await snapshot.docs[0].reference.update({
-      'location': GeoPoint(position.latitude, position.longitude),
-      'buyer':  user.uid,
-      'createdAt': DateTime.now(),
-      'status': 'pending',
-      'orderID': orderID
-    });
-  }
+  await FirebaseFirestore.instance.collection('requests')
+    .doc().set({
+    'location': GeoPoint(position.latitude, position.longitude),
+    'seller': user!.uid,
+    'createdAt': DateTime.now(),
+    'status': 'pending',
+    'orderID': orderID,
+    'agentID': agentID
+  });
 }

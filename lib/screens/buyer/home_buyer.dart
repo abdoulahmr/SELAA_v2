@@ -22,7 +22,7 @@ class _HomeState extends State<HomeBuyer> {
   int _currentIndex = 0;
   final List<Widget> _pages = [
     const HomeBuyer(),
-    const HomeBuyer(),
+    const ProductSearchPage(),
     const NotificationPage(),
     const ShoppingCart(),
   ];
@@ -59,11 +59,10 @@ class _HomeState extends State<HomeBuyer> {
                     ElevatedButton(
                       style: ButtonStyle(
                         elevation: MaterialStateProperty.all(0),
-                        
                         backgroundColor: MaterialStateProperty.all(AppColors().primaryColor),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
+                            borderRadius: BorderRadius.circular(15.0),
                             side: const BorderSide(color: Color(0xFF415B5B)),
                           ),
                         ),
@@ -73,10 +72,8 @@ class _HomeState extends State<HomeBuyer> {
                       },
                       child: const Center(child: Icon(Icons.menu,color: Colors.white,)),
                     ),
-                    const Image(
-                      image: AssetImage(
-                        'assets/images/2-removebg-preview-removebg-preview.png',
-                      ),
+                    Image(
+                      image: AssetImage(ImagePaths().blackhorizontalLogo),
                       width: 120,
                       height: 120,
                     ),
@@ -296,8 +293,8 @@ class _HomeState extends State<HomeBuyer> {
                               children: [
                                 ClipRRect(
                                   borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(25.0),
-                                    topRight: Radius.circular(25.0),
+                                    topLeft: Radius.circular(20.0),
+                                    topRight: Radius.circular(20.0),
                                   ),
                                   child: Image.network(
                                     postes[startIndex]['imageUrls'][0],
@@ -360,8 +357,8 @@ class _HomeState extends State<HomeBuyer> {
                               children: [
                                 ClipRRect(
                                   borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(25.0),
-                                    topRight: Radius.circular(25.0),
+                                    topLeft: Radius.circular(20.0),
+                                    topRight: Radius.circular(20.0),
                                   ),
                                   child: Image.network(
                                     postes[endIndex]['imageUrls']?[0] ?? 'fallback_url',
@@ -423,7 +420,7 @@ class _HomeState extends State<HomeBuyer> {
             setState(() {
               _currentIndex = index;
             });
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => _pages[index]),
             );
@@ -431,28 +428,28 @@ class _HomeState extends State<HomeBuyer> {
           items: const [
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.home,
+                Icons.home_outlined,
                 size: 35,
               ),
               label: "Home",
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.account_circle,
+                Icons.search_outlined,
                 size: 35,
               ),
-              label: "Profile",
+              label: "Search",
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.notifications,
+                Icons.notifications_none_outlined,
                 size: 35,
               ),
               label: "Notification",
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.shopping_cart,
+                Icons.shopping_cart_outlined,
                 size: 35,
               ),
               label: "Cart",

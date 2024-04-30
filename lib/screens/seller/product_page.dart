@@ -1,8 +1,5 @@
 // ignore_for_file: deprecated_member_use, must_be_immutable
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:input_quantity/input_quantity.dart';
@@ -60,85 +57,80 @@ class _ProductPageState extends State<ProductPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        return false;
-      },
-      child: DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back,color: AppColors().primaryColor),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            title: GestureDetector(
-              onTap: (){
-                print('User ID: ' + posteInfo[0]['sellerID']);
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.values[2],
-                children: [
-                  CircleAvatar(
-                    radius: 20,
-                    backgroundImage: userInfo.isNotEmpty && userInfo[0]['profilePicture'] != null
-                      ? NetworkImage(userInfo[0]['profilePicture'])
-                      : NetworkImage(ImagePaths().defaultProfilePicture),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    userInfo.isNotEmpty ? userInfo[0]['username'] ?? '' : '',
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            actions: [
-              Visibility(
-                visible: userInfo.isNotEmpty && FirebaseAuth.instance.currentUser?.uid == posteInfo[0]['sellerID'],
-                child: IconButton(
-                  icon: const Icon(Icons.delete,color: Colors.red,),
-                  onPressed: () {
-                    deletePoste(widget.productID, context);
-                  },
-                ),
-              )
-            ],
-            automaticallyImplyLeading: false,
-            backgroundColor: AppColors().secondaryColor,
-            bottom: TabBar(
-                labelColor: AppColors().primaryColor,
-                indicatorColor: AppColors().primaryColor,
-                tabs: const [
-                  Tab(text: "Product Details"),
-                  Tab(text: "Reviews"),
-                ],
-              ),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back,color: AppColors().primaryColor),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
-          body: _isloading
-            ? const Center(child: CircularProgressIndicator())
-            : TabBarView(
+          title: GestureDetector(
+            onTap: (){
+              print('User ID: ' + posteInfo[0]['sellerID']);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.values[2],
               children: [
-                ProductDetails(
-                  productID: widget.productID,
-                  userInfo: userInfo, 
-                  posteInfo: posteInfo,
-                  review: _review,
-                  numRating: numRating,
+                CircleAvatar(
+                  radius: 20,
+                  backgroundImage: userInfo.isNotEmpty && userInfo[0]['profilePicture'] != null
+                    ? NetworkImage(userInfo[0]['profilePicture'])
+                    : NetworkImage(ImagePaths().defaultProfilePicture),
                 ),
-                ProductReview(
-                  productID: widget.productID, 
-                  productReviews: productReviews, 
-                  sellerID: posteInfo[0]['sellerID'],
+                const SizedBox(width: 10),
+                Text(
+                  userInfo.isNotEmpty ? userInfo[0]['username'] ?? '' : '',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
+          ),
+          actions: [
+            Visibility(
+              visible: userInfo.isNotEmpty && FirebaseAuth.instance.currentUser?.uid == posteInfo[0]['sellerID'],
+              child: IconButton(
+                icon: const Icon(Icons.delete,color: Colors.red,),
+                onPressed: () {
+                  deletePoste(widget.productID, context);
+                },
+              ),
+            )
+          ],
+          automaticallyImplyLeading: false,
+          backgroundColor: AppColors().secondaryColor,
+          bottom: TabBar(
+              labelColor: AppColors().primaryColor,
+              indicatorColor: AppColors().primaryColor,
+              tabs: const [
+                Tab(text: "Product Details"),
+                Tab(text: "Reviews"),
+              ],
+            ),
         ),
+        body: _isloading
+          ? const Center(child: CircularProgressIndicator())
+          : TabBarView(
+            children: [
+              ProductDetails(
+                productID: widget.productID,
+                userInfo: userInfo, 
+                posteInfo: posteInfo,
+                review: _review,
+                numRating: numRating,
+              ),
+              ProductReview(
+                productID: widget.productID, 
+                productReviews: productReviews, 
+                sellerID: posteInfo[0]['sellerID'],
+              ),
+            ],
+          ),
       ),
     );
   }

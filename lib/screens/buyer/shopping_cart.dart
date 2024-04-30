@@ -310,7 +310,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
             setState(() {
               _currentIndex = index;
             });
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => _pages[index]),
             );

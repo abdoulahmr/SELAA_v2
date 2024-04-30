@@ -40,7 +40,8 @@ class _SplashState extends State<Splash> {
       );
     } else {
       await Future.delayed(const Duration(milliseconds: 200));
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const AfterSplash()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const AfterSplash()));
+      //Navigator.push(context, MaterialPageRoute(builder: (context) => const AfterSplash()));
     }
   }
 
@@ -49,7 +50,7 @@ class _SplashState extends State<Splash> {
     return Scaffold(
       body: Center(
         child: Image(
-          image: AssetImage(ImagePaths().verticalLogo),
+          image: AssetImage(ImagePaths().blackverticalLogo),
           width: 150,
           height: 150,  
         ),
