@@ -2,15 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:selaa/backend-functions/links.dart';
+import 'package:selaa/screens/buyer/product_search_list.dart';
 import 'package:selaa/screens/settings/phone_number.dart';
 import 'package:uuid/uuid.dart';
 import 'package:selaa/backend-functions/data_manipulation.dart';
 import 'package:selaa/backend-functions/load_data.dart';
 import 'package:selaa/screens/buyer/home_buyer.dart';
-import 'package:selaa/screens/buyer/notification.dart';
 import 'package:selaa/backend-functions/oreder_structure.dart';
 import 'package:selaa/screens/seller/product_page.dart';
-import 'package:selaa/screens/seller/user_page.dart';
 
 class ShoppingCart extends StatefulWidget {
   const ShoppingCart({Key? key}) : super(key: key);
@@ -30,8 +29,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
   bool _isClicked = false;
   final List<Widget> _pages = [
     const HomeBuyer(),
-    const UserPage(),
-    const NotificationPage(),
+    const ProductSearchPage(),
     const ShoppingCart(),
   ];
   
@@ -93,29 +91,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        fixedSize: MaterialStateProperty.all(
-                          Size(
-                            MediaQuery.of(context).size.width * 0.3,
-                            MediaQuery.of(context).size.height * 0.06,
-                          ),
-                        ),
-                        backgroundColor: MaterialStateProperty.all(AppColors().primaryColor),
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                            side: const BorderSide(color: Color(0xFF415B5B)),
-                          ),
-                        ),
-                      ),
-                      child: const Text(
-                        'Confirm Order',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15
-                        ),
-                      ),
+                    IconButton(
                       onPressed: () {
                         if(_isClicked == false){
                           if(userInfo[0]['phoneNumber'].isEmpty){
@@ -165,6 +141,12 @@ class _ShoppingCartState extends State<ShoppingCart> {
                                       TextButton(
                                         onPressed: () {
                                           Navigator.pop(scaffoldKey);                                          
+                                        },
+                                        child: const Text('Cancel',style: TextStyle(color: Colors.red)),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(scaffoldKey);                                          
                                           String uuid = const Uuid().v4();
                                           saveOrder(
                                             shoppingCart, 
@@ -181,7 +163,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                                             totalPrice = 0;
                                           });
                                         },
-                                        child: const Text('No',style: TextStyle(color: Colors.red)),
+                                        child: const Text('No',style: TextStyle(color: Color(0xFF415B5B))),
                                       ),
                                       TextButton(
                                         onPressed: () async {
@@ -202,7 +184,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                                             totalPrice = 0;
                                           });
                                         },
-                                        child: const Text('OK',style: TextStyle(color: Color(0xFF415B5B))),
+                                        child: const Text('Yes',style: TextStyle(color: Color(0xFF415B5B))),
                                       ),
                                     ],
                                   );
@@ -211,8 +193,27 @@ class _ShoppingCartState extends State<ShoppingCart> {
                             }
                           }
                         }
-                      }
-                    )
+                      }, 
+                      icon: Icon(
+                        Icons.check,
+                        color: AppColors().primaryColor,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: (){
+                        for(var item in shoppingCart){
+                          deleteItemFromCart(context);
+                          setState(() {
+                            shoppingCart.remove(item);
+                            totalPrice = 0;
+                          });
+                        }
+                      }, 
+                      icon: const Icon(
+                        Icons.cancel_outlined,
+                        color: Colors.red,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -318,28 +319,21 @@ class _ShoppingCartState extends State<ShoppingCart> {
           items: const [
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.home,
+                Icons.home_outlined,
                 size: 35,
               ),
               label: "Home",
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.account_circle,
+                Icons.search_outlined,
                 size: 35,
               ),
-              label: "Profile",
+              label: "Search",
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.notifications,
-                size: 35,
-              ),
-              label: "Notification",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.shopping_cart,
+                Icons.shopping_cart_outlined,
                 size: 35,
               ),
               label: "Cart",

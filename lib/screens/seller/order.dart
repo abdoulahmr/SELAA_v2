@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:selaa/backend-functions/links.dart';
-import 'package:selaa/screens/buyer/notification.dart';
 import 'package:selaa/screens/register/redirect_login.dart';
 import 'package:selaa/screens/seller/order_overview.dart';
 import 'package:selaa/screens/seller/order_search.dart';
@@ -20,7 +19,6 @@ class _OrderPageState extends State<ListOrderPage> {
   final List<Widget> _pages = [
     const RedirectLogin(),
     const UserPage(),
-    const NotificationPage(),
     const ListOrderPage()
   ];
 
@@ -30,53 +28,54 @@ class _OrderPageState extends State<ListOrderPage> {
       length: 4,
       child: Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: AppColors().secondaryColor,
-          bottom: const TabBar(
-            labelColor: Color(0xFF008080),
-            indicatorColor: Color(0xFF008080),
-            tabs: [
-              Tab(text: "All"),
-              Tab(text: "Pending"),
-              Tab(text: "In Progress"),
-              Tab(text: "Completed"),
-            ],
-          ),
-          title: GestureDetector(
-            onTap: () {
-              Navigator.push(context , MaterialPageRoute(builder: (context) => const SearchOrderPage()));
-            },
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.9,
-              height: MediaQuery.of(context).size.height * 0.05,
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF4F4F4),
-                borderRadius: BorderRadius.circular(30),
-                border: Border.all(
-                  color: const Color(0xFF415B5B),
-                  width: 1,
-                ),
-              ),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Search...",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Color(0xFF415B5B),
+            automaticallyImplyLeading: false,
+            backgroundColor: AppColors().secondaryColor,
+            bottom: TabBar(
+              labelColor: AppColors().primaryColor,
+              indicatorColor: AppColors().primaryColor,
+              tabs: const [
+                Tab(text: "All"),
+                Tab(text: "Pending"),
+                Tab(text: "In Progress"),
+                Tab(text: "Completed"),
+              ],
+            ),
+            title: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SearchOrderPage()));
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: MediaQuery.of(context).size.height * 0.05,
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF4F4F4),
+                    borderRadius: BorderRadius.circular(30),
+                    border: Border.all(
+                      color: const Color(0xFF415B5B),
+                      width: 1,
                     ),
                   ),
-                  Icon(
-                    Icons.search,
-                    color: Color(0xFF415B5B),
-                  )
-                ],
-              ),
-            )
-          )
-        ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Search...",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Color(0xFF415B5B),
+                        ),
+                      ),
+                      Icon(
+                        Icons.search,
+                        color: Color(0xFF415B5B),
+                      )
+                    ],
+                  ),
+                ))),
         body: const TabBarView(
           children: [
             AllOrdersTab(),
@@ -120,13 +119,6 @@ class _OrderPageState extends State<ListOrderPage> {
               ),
               BottomNavigationBarItem(
                 icon: Icon(
-                  Icons.notifications_active,
-                  size: 30,
-                ),
-                label: "Notification",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(
                   Icons.sort,
                   size: 30,
                 ),
@@ -165,55 +157,54 @@ class _AllOrdersTabState extends State<AllOrdersTab> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: orders.isEmpty
-      ? const Center(child: Text('No orders available'))
-      : ListView.builder(
-        itemCount: orders.length,
-        itemBuilder: (BuildContext context, int index) {
-          Color textColor = Colors.black;
-          if (orders[index]["status"] == "Pending") {
-            textColor = Colors.orange;
-          } else if (orders[index]["status"] == "In Progress") {
-            textColor = Colors.blue;
-          } else if (orders[index]["status"] == "Delivered") {
-            textColor = Colors.green;
-          } else if (orders[index]["status"] == "Canceled") {
-            textColor = Colors.red;
-          }
-          return Column(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SellerOrderOverview(
-                        orderId: orders[index]["orderID"],
-                        buyerId: orders[index]['buyer']["buyerID"],
+          ? const Center(child: Text('No orders available'))
+          : ListView.builder(
+              itemCount: orders.length,
+              itemBuilder: (BuildContext context, int index) {
+                Color textColor = Colors.black;
+                if (orders[index]["status"] == "Pending") {
+                  textColor = Colors.orange;
+                } else if (orders[index]["status"] == "In Progress") {
+                  textColor = Colors.blue;
+                } else if (orders[index]["status"] == "Delivered") {
+                  textColor = Colors.green;
+                } else if (orders[index]["status"] == "Canceled") {
+                  textColor = Colors.red;
+                }
+                return Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SellerOrderOverview(
+                              orderId: orders[index]["orderID"],
+                              buyerId: orders[index]['buyer']["buyerID"],
+                            ),
+                          ),
+                        );
+                      },
+                      child: ListTile(
+                        title: Text(
+                            '${orders[index]['buyer']['firstname']} ${orders[index]['buyer']['lastname']}'),
+                        subtitle: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              orders[index]["status"],
+                              style: TextStyle(color: textColor),
+                            ),
+                            Text(orders[index]["date"]),
+                          ],
+                        ),
                       ),
                     ),
-                  );
-                },
-                child: ListTile(
-                  title: Text(
-                    '${orders[index]['buyer']['firstname']} ${orders[index]['buyer']['lastname']}'
-                  ),
-                  subtitle: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        orders[index]["status"],
-                        style: TextStyle(color: textColor),
-                      ),
-                      Text(orders[index]["date"]),
-                    ],
-                  ),
-                ),
-              ),
-              const Divider(),
-            ],
-          );
-        },
-      ),
+                    const Divider(),
+                  ],
+                );
+              },
+            ),
     );
   }
 }
@@ -244,62 +235,66 @@ class _PendingOrdersTabState extends State<PendingOrdersTab> {
     return Scaffold(
       body: orders.isEmpty
           ? const Center(
-          child:  Text('No pending orders'),
-        )
+              child: Text('No pending orders'),
+            )
           : ListView.builder(
-          itemCount: orders.length,
-          itemBuilder: (BuildContext context, int index) {
-            if (orders[index]["status"] != "Pending") {
-              return const SizedBox();
-            }
-            return Column(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SellerOrderOverview(
-                          orderId: orders[index]["orderID"],
-                          buyerId: orders[index]['buyer']["buyerID"],
-                        ),
-                      ),
-                    );
-                  },
-                  child: FutureBuilder<String>(
-                    future: loadUserName(context, orders[index]["buyerID"]),
-                    builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
-                      } else {
-                        if (snapshot.hasError) {
-                          return const Text('Error loading user name');
-                        } else {
-                        return ListTile(
-                          title: Text('${orders[index]['buyer']['firstname']} ${orders[index]['buyer']['lastname']}'),
-                          subtitle: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                orders[index]["status"],
-                                style: const TextStyle(
-                                  color: Colors.orange,
-                                ),
-                              ),
-                              Text(orders[index]["date"]),
-                            ],
+              itemCount: orders.length,
+              itemBuilder: (BuildContext context, int index) {
+                if (orders[index]["status"] != "Pending") {
+                  return const SizedBox();
+                }
+                return Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SellerOrderOverview(
+                              orderId: orders[index]["orderID"],
+                              buyerId: orders[index]['buyer']["buyerID"],
+                            ),
                           ),
                         );
-                      }
-                    }
-                  },
-                ),
-              ),
-              const Divider(),
-            ],
-          );
-        },
-      ),
+                      },
+                      child: FutureBuilder<String>(
+                        future: loadUserName(context, orders[index]["buyerID"]),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<String> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else {
+                            if (snapshot.hasError) {
+                              return const Text('Error loading user name');
+                            } else {
+                              return ListTile(
+                                title: Text(
+                                    '${orders[index]['buyer']['firstname']} ${orders[index]['buyer']['lastname']}'),
+                                subtitle: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      orders[index]["status"],
+                                      style: const TextStyle(
+                                        color: Colors.orange,
+                                      ),
+                                    ),
+                                    Text(orders[index]["date"]),
+                                  ],
+                                ),
+                              );
+                            }
+                          }
+                        },
+                      ),
+                    ),
+                    const Divider(),
+                  ],
+                );
+              },
+            ),
     );
   }
 }
@@ -332,59 +327,63 @@ class _InProgressOrdersTabState extends State<InProgressOrdersTab> {
               child: Text('No in progress orders'),
             )
           : ListView.builder(
-          itemCount: orders.length,
-          itemBuilder: (BuildContext context, int index) {
-            if (orders[index]["status"] != "In Progress") {
-              return const SizedBox();
-            }
-            return Column(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SellerOrderOverview(
-                          orderId: orders[index]["orderID"],
-                          buyerId: orders[index]['buyer']["buyerID"],
-                        ),
-                      ),
-                    );
-                  },
-                  child: FutureBuilder<String>(
-                    future: loadUserName(context, orders[index]["buyerID"]),
-                    builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
-                    } else {
-                      if (snapshot.hasError) {
-                        return const Text('Error loading user name');
-                      } else {
-                        return ListTile(
-                          title: Text('${orders[index]['buyer']['firstname']} ${orders[index]['buyer']['lastname']}'),
-                          subtitle: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                orders[index]["status"],
-                                style: const TextStyle(
-                                  color: Colors.blue,
-                                ),
-                              ),
-                              Text(orders[index]["date"]),
-                            ],
+              itemCount: orders.length,
+              itemBuilder: (BuildContext context, int index) {
+                if (orders[index]["status"] != "In Progress") {
+                  return const SizedBox();
+                }
+                return Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SellerOrderOverview(
+                              orderId: orders[index]["orderID"],
+                              buyerId: orders[index]['buyer']["buyerID"],
+                            ),
                           ),
                         );
-                      }
-                    }
-                  },
-                ),
-              ),
-              const Divider(),
-            ],
-          );
-        },
-      ),
+                      },
+                      child: FutureBuilder<String>(
+                        future: loadUserName(context, orders[index]["buyerID"]),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<String> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else {
+                            if (snapshot.hasError) {
+                              return const Text('Error loading user name');
+                            } else {
+                              return ListTile(
+                                title: Text(
+                                    '${orders[index]['buyer']['firstname']} ${orders[index]['buyer']['lastname']}'),
+                                subtitle: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      orders[index]["status"],
+                                      style: const TextStyle(
+                                        color: Colors.blue,
+                                      ),
+                                    ),
+                                    Text(orders[index]["date"]),
+                                  ],
+                                ),
+                              );
+                            }
+                          }
+                        },
+                      ),
+                    ),
+                    const Divider(),
+                  ],
+                );
+              },
+            ),
     );
   }
 }
@@ -417,59 +416,63 @@ class _CompletedOrdersTabState extends State<CompletedOrdersTab> {
               child: Text('No completed orders'),
             )
           : ListView.builder(
-          itemCount: orders.length,
-          itemBuilder: (BuildContext context, int index) {
-            if (orders[index]["status"] != "Completed") {
-              return const SizedBox();
-            }
-            return Column(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SellerOrderOverview(
-                          orderId: orders[index]["orderID"],
-                          buyerId: orders[index]['buyer']["buyerID"],
-                        ),
-                      ),
-                    );
-                  },
-                  child: FutureBuilder<String>(
-                    future: loadUserName(context, orders[index]["buyerID"]),
-                    builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
-                    } else {
-                      if (snapshot.hasError) {
-                        return const Text('Error loading user name');
-                      } else {
-                        return ListTile(
-                          title: Text('${orders[index]['buyer']['firstname']} ${orders[index]['buyer']['lastname']}'),
-                          subtitle: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                orders[index]["status"],
-                                style: const TextStyle(
-                                  color: Colors.green,
-                                ),
-                              ),
-                              Text(orders[index]["date"]),
-                            ],
+              itemCount: orders.length,
+              itemBuilder: (BuildContext context, int index) {
+                if (orders[index]["status"] != "Completed") {
+                  return const SizedBox();
+                }
+                return Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SellerOrderOverview(
+                              orderId: orders[index]["orderID"],
+                              buyerId: orders[index]['buyer']["buyerID"],
+                            ),
                           ),
                         );
-                      }
-                    }
-                  },
-                ),
-              ),
-              const Divider(),
-            ],
-          );
-        },
-      ),
+                      },
+                      child: FutureBuilder<String>(
+                        future: loadUserName(context, orders[index]["buyerID"]),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<String> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else {
+                            if (snapshot.hasError) {
+                              return const Text('Error loading user name');
+                            } else {
+                              return ListTile(
+                                title: Text(
+                                    '${orders[index]['buyer']['firstname']} ${orders[index]['buyer']['lastname']}'),
+                                subtitle: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      orders[index]["status"],
+                                      style: const TextStyle(
+                                        color: Colors.green,
+                                      ),
+                                    ),
+                                    Text(orders[index]["date"]),
+                                  ],
+                                ),
+                              );
+                            }
+                          }
+                        },
+                      ),
+                    ),
+                    const Divider(),
+                  ],
+                );
+              },
+            ),
     );
   }
 }

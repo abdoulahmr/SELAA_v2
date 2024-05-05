@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/backend-functions/load_data.dart';
 import 'package:selaa/screens/buyer/home_buyer.dart';
-import 'package:selaa/screens/buyer/notification.dart';
 import 'package:selaa/screens/buyer/shopping_cart.dart';
 import 'package:selaa/screens/seller/product_page.dart';
 
@@ -22,7 +21,6 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
   final List<Widget> _pages = [
     const HomeBuyer(),
     const ProductSearchPage(),
-    const NotificationPage(),
     const ShoppingCart(),
   ];
 
@@ -129,13 +127,6 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                 size: 35,
               ),
               label: "Search",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.notifications_none_outlined,
-                size: 35,
-              ),
-              label: "Notification",
             ),
             BottomNavigationBarItem(
               icon: Icon(

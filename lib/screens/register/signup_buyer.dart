@@ -5,6 +5,7 @@ import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/screens/register/login.dart';
 import 'package:selaa/screens/register/pre_register.dart';
 import 'package:selaa/screens/register/signup_seller.dart';
+import 'package:sign_in_button/sign_in_button.dart';
 
 class SignUpBuyer extends StatefulWidget {
   const SignUpBuyer({Key? key}) : super(key: key);
@@ -286,47 +287,12 @@ class _SignUpState extends State<SignUpBuyer> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blue),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      child: IconButton(
-                        icon: const FaIcon(FontAwesomeIcons.facebookF),
-                        onPressed: () {
-                          signInWithFacebook(context,"default",ScaffoldMessenger.of(context));
-                        },
-                        color: Colors.blue,
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.red),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      child: IconButton(
-                        icon: const FaIcon(FontAwesomeIcons.google),
-                        onPressed: () {
-                          signInWithGoogle(context,"default",ScaffoldMessenger.of(context));
-                        },
-                        color: Colors.red,
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      child: IconButton(
-                        icon: const FaIcon(FontAwesomeIcons.apple),
-                        onPressed: () {},
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
+                SignInButton(
+                  Buttons.google,
+                  text: "Sign up with Google",
+                  onPressed: () {
+                    signInWithGoogle(context);
+                  },
                 ),
                 const SizedBox(
                   height: 30,

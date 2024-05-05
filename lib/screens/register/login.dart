@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:selaa/backend-functions/auth.dart';
 import 'package:selaa/backend-functions/links.dart';
-import 'package:selaa/screens/register/signup_buyer.dart';
+import 'package:sign_in_button/sign_in_button.dart';
 import 'pre_register.dart';
 import 'forget_password.dart';
 
@@ -164,75 +164,16 @@ class Login extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blue),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      child: IconButton(
-                        icon: const FaIcon(FontAwesomeIcons.facebookF),
-                        onPressed: () {
-                          signInWithFacebook(context,"default",ScaffoldMessenger.of(context));
-                        },
-                        color: Colors.blue,
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.red),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      child: IconButton(
-                        icon: const FaIcon(FontAwesomeIcons.google),
-                        onPressed: () {
-                          signInWithGoogle(context,"default",ScaffoldMessenger.of(context));
-                        },
-                        color: Colors.red,
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      child: IconButton(
-                        icon: const FaIcon(FontAwesomeIcons.apple),
-                        onPressed: () {},
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
+                SignInButton(
+                  Buttons.google,
+                  text: "Sign up with Google",
+                  onPressed: () {
+                    signInWithGoogle(context);
+                  },
                 ),
                 const SizedBox(
                   height: 70,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Don't have an account?",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const SignUpBuyer()));
-                      },
-                      child: const Text(
-                        " Sign Up",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Color(0xFF008080),
-                        ),
-                      ),
-                    ),
-                  ],
-                )
               ],
             ),
           ),

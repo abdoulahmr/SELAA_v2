@@ -160,19 +160,32 @@ Future<List<Map<String, dynamic>>> loadSellerInfo(uid, context) async {
 }
 
 // Load user postes
-Future<List<Map<String, dynamic>>> fetchProducts() async {
+Future<List<Map<String, dynamic>>> fetchProducts({String? sellerID}) async {
   List<Map<String, dynamic>> result = [];
   User? user = FirebaseAuth.instance.currentUser;
+  List<DocumentSnapshot> products = []; // Define products list here
+
   try {
     // Fetch products
-    QuerySnapshot productsSnapshot = await FirebaseFirestore.instance.collection('products')
-      .where('sellerID', isEqualTo: user?.uid)
-      .get();
-    List<DocumentSnapshot> products = productsSnapshot.docs;
+    if (sellerID == null) {
+      QuerySnapshot productsSnapshot = await FirebaseFirestore.instance
+          .collection('products')
+          .where('sellerID', isEqualTo: user?.uid)
+          .get();
+      products = productsSnapshot.docs.toList(); // Assign products to the defined list
+    } else {
+      QuerySnapshot productsSnapshot = await FirebaseFirestore.instance
+          .collection('products')
+          .where('sellerID', isEqualTo: sellerID)
+          .get();
+      products = productsSnapshot.docs.toList(); // Assign products to the defined list
+    }
 
     // Fetch categories
     Map<String, String> categoryMap = {};
-    QuerySnapshot categoriesSnapshot = await FirebaseFirestore.instance.collection('productCategory').get();
+    QuerySnapshot categoriesSnapshot = await FirebaseFirestore.instance
+        .collection('productCategory')
+        .get();
     for (var categoryDoc in categoriesSnapshot.docs) {
       categoryMap[categoryDoc.id] = categoryDoc['name'];
     }
@@ -202,7 +215,6 @@ Future<List<Map<String, dynamic>>> fetchProducts() async {
 
   return result;
 }
-
 
 // load poste information
 Future<List<Map<String, dynamic>>> loadPosteInfo(String productID, context) async {
@@ -652,10 +664,10 @@ Future<Map<String, dynamic>> loadSellerOrdersInfo(BuildContext context) async {
       }
     }).toList();
 
-    int pendingOrders = uniqueOrders.where((doc) => doc['status'] == 'Pending').length;
-    int onTheWayOrders = uniqueOrders.where((doc) => doc['status'] == 'In Progress').length;
-    int deliveredOrders = uniqueOrders.where((doc) => doc['status'] == 'Delivered').length;
-    int canceledOrders = uniqueOrders.where((doc) => doc['status'] == 'Canceled').length;
+    int pendingOrders = uniqueOrders.where((doc) => doc['status'] == 'pending').length;
+    int onTheWayOrders = uniqueOrders.where((doc) => doc['status'] == 'delivering').length;
+    int deliveredOrders = uniqueOrders.where((doc) => doc['status'] == 'delivered').length;
+    int canceledOrders = uniqueOrders.where((doc) => doc['status'] == 'canceled').length;
     
     return {
       'pendingOrders': pendingOrders,

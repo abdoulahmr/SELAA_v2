@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/generated/l10n.dart';
-//import 'package:selaa/main.dart';
 import 'package:selaa/screens/register/choice_auth.dart';
 
 class PreRegister extends StatefulWidget {

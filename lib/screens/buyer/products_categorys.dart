@@ -29,9 +29,9 @@ class _ProductsCategorysPageState extends State<ProductsCategorysPage> {
   void filterCategorys(String query) {
     setState(() {
       filteredCategorys = categorys
-        .where((category) =>
-          category['name'].toLowerCase().contains(query.toLowerCase()))
-      .toList();
+          .where((category) =>
+              category['name'].toLowerCase().contains(query.toLowerCase()))
+          .toList();
     });
   }
 
@@ -57,14 +57,16 @@ class _ProductsCategorysPageState extends State<ProductsCategorysPage> {
                     onChanged: (query) {
                       filterCategorys(query);
                     },
-                    decoration:  InputDecoration(
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(30.0)),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.0)),
                       focusedBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Color(0xFF415B5B)),
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                       hintText: 'Search...',
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 15),
                       suffixIcon: const Icon(
                         Icons.search,
                         color: Color(0xFF415B5B),
@@ -79,47 +81,54 @@ class _ProductsCategorysPageState extends State<ProductsCategorysPage> {
           Expanded(
             child: Container(
               margin: const EdgeInsets.all(20),
-              child: 
-              filteredCategorys.isEmpty
-              ? const Center(
-                  child: Text(
-                    'No product',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                )
-              :GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20,
-                ),
-                itemCount: filteredCategorys.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => ProductCategoryOverviewPage(categoryId: filteredCategorys[index]['id'],)));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: AppColors().secondaryColor,
-                        borderRadius: BorderRadius.circular(10),
+              child: filteredCategorys.isEmpty
+                  ? const Center(
+                      child: Text(
+                        'No product',
+                        style: TextStyle(fontSize: 20),
                       ),
-                      padding: const EdgeInsets.all(10),
-                      child: Center(
-                        child: Text(
-                          filteredCategorys[index]['name'],
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: Color(0xFF008080),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
+                    )
+                  : GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 20,
+                        mainAxisSpacing: 20,
+                      ),
+                      itemCount: filteredCategorys.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ProductCategoryOverviewPage(
+                                          categoryId: filteredCategorys[index]
+                                              ['id'],
+                                        )));
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: AppColors().secondaryColor,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: const EdgeInsets.all(10),
+                            child: Center(
+                              child: Text(
+                                filteredCategorys[index]['name'],
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: AppColors().primaryColor,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
             ),
           ),
         ],

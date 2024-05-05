@@ -31,14 +31,15 @@ class _OrderOverViewState extends State<OrderOverView> {
         _isLoading = false;
       });
     });
-    calculateOrderTotalPrice().then((value){
+    calculateOrderTotalPrice().then((value) {
       total = value;
     });
   }
 
   Future<double> calculateOrderTotalPrice() async {
     for (int i = 0; i < items.length; i++) {
-      total = total + (items[i]['quantity']*double.parse(items[i]['product']['price']));
+      total = total +
+          (items[i]['quantity'] * double.parse(items[i]['product']['price']));
     }
     return total;
   }
@@ -61,142 +62,144 @@ class _OrderOverViewState extends State<OrderOverView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _isLoading 
-      ? Center(
-        child: CircularProgressIndicator(
-          color: AppColors().primaryColor,
-        ),
-      )
-      :Column(
-        children: [
-          Container(
-            margin: const EdgeInsets.only(top: 30, left: 30),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: (){
-                  Navigator.pop(context);
-                },
+      body: _isLoading
+          ? Center(
+              child: CircularProgressIndicator(
+                color: AppColors().primaryColor,
               ),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.all(20),
-            padding: const EdgeInsets.all(20),
-            decoration: const BoxDecoration(
-              color: Color(0xFFCCE6E6),
-              borderRadius: BorderRadius.all(Radius.circular(30.0)),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            )
+          : Column(
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        text: 'Status: ',
-                        style: const TextStyle(color: Colors.black),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: order.isNotEmpty ? order[0]['status'] ?? "Pending" : "Pending",
-                            style: TextStyle(
-                              color: order.isNotEmpty ? _getStatusColor(order[0]['status']) : Colors.black,
-                              fontWeight: FontWeight.bold,
+                Container(
+                  margin: const EdgeInsets.only(top: 30, left: 30),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: AppColors().secondaryColor,
+                    borderRadius: const BorderRadius.all(Radius.circular(30.0)),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                              text: 'Status: ',
+                              style: const TextStyle(color: Colors.black),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: order.isNotEmpty
+                                      ? order[0]['status'] ?? "Pending"
+                                      : "Pending",
+                                  style: TextStyle(
+                                    color: order.isNotEmpty
+                                        ? _getStatusColor(order[0]['status'])
+                                        : Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
                             ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(items.isNotEmpty
+                              ? "date: ${order[0]['date']}"
+                              : ""),
+                          const SizedBox(height: 10),
+                          FutureBuilder<double>(
+                            future: calculateOrderTotalPrice(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<double> snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const CircularProgressIndicator();
+                              } else if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              } else {
+                                return Text("Price: ${snapshot.data} DZD");
+                              }
+                            },
                           ),
                         ],
                       ),
+                      QrImageView(
+                        data: widget.orderId,
+                        version: QrVersions.auto,
+                        size: MediaQuery.of(context).size.width * 0.3,
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: AppColors().secondaryColor,
+                      borderRadius: const BorderRadius.all(Radius.circular(30.0)),
                     ),
-                    const SizedBox(height: 10),
-                    Text(items.isNotEmpty ? "date: ${order[0]['date']}" : ""),
-                    const SizedBox(height: 10),
-                    FutureBuilder<double>(
-                      future: calculateOrderTotalPrice(),
-                      builder: (BuildContext context, AsyncSnapshot<double> snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else {
-                          return Text("Price: ${snapshot.data} DZD");
-                        }
+                    child: ListView.builder(
+                      itemCount: items.length,
+                      itemBuilder: (context, index) {
+                        return Column(children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.1,
+                                  child: Text(index.toString(),
+                                      style: const TextStyle(
+                                        overflow: TextOverflow.fade,
+                                      ))),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.4,
+                                child: Text(
+                                  items[index]['product']['title'],
+                                  style: const TextStyle(
+                                    overflow: TextOverflow.fade,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.1,
+                                  child:
+                                      Text(items[index]['quantity'].toString(),
+                                          style: const TextStyle(
+                                            overflow: TextOverflow.fade,
+                                          ))),
+                              SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.1,
+                                  child: Text(
+                                      "${items[index]['product']['price']} DZD",
+                                      style: const TextStyle(
+                                        overflow: TextOverflow.fade,
+                                      )))
+                            ],
+                          ),
+                          const Divider()
+                        ]);
                       },
                     ),
-                  ],
-                ),
-                QrImageView(
-                  data: widget.orderId,
-                  version: QrVersions.auto,
-                  size: MediaQuery.of(context).size.width * 0.3,
+                  ),
                 ),
               ],
             ),
-          ),
-          Expanded(
-            child: Container(
-              margin: const EdgeInsets.all(20),
-              padding: const EdgeInsets.all(20),
-              decoration: const BoxDecoration(
-                color: Color(0xFFCCE6E6),
-                borderRadius: BorderRadius.all(Radius.circular(30.0)),
-              ),
-              child: ListView.builder(
-                itemCount: items.length,
-                itemBuilder: (context, index){
-                  return Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.1,
-                            child: Text(
-                              index.toString(),
-                              style: const TextStyle(
-                                overflow: TextOverflow.fade,
-                              )
-                            )
-                          ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            child: Text(
-                              items[index]['product']['title'],
-                              style: const TextStyle(
-                                overflow: TextOverflow.fade,
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.1,
-                            child: Text(
-                              items[index]['quantity'].toString(),
-                              style: const TextStyle(
-                                overflow: TextOverflow.fade,
-                              )
-                            )
-                          ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.1,
-                            child: Text(
-                              "${items[index]['product']['price']} DZD",
-                              style: const TextStyle(
-                                overflow: TextOverflow.fade,
-                              )
-                            )
-                          )
-                        ],
-                      ),
-                      const Divider()
-                    ]
-                  );
-                },
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

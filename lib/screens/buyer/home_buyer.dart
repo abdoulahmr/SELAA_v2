@@ -2,7 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/backend-functions/load_data.dart';
-import 'package:selaa/screens/buyer/notification.dart';
+import 'package:selaa/screens/buyer/my_orders.dart';
 import 'package:selaa/screens/buyer/product_category_overview.dart';
 import 'package:selaa/screens/buyer/products_categorys.dart';
 import 'package:selaa/screens/seller/product_page.dart';
@@ -23,7 +23,6 @@ class _HomeState extends State<HomeBuyer> {
   final List<Widget> _pages = [
     const HomeBuyer(),
     const ProductSearchPage(),
-    const NotificationPage(),
     const ShoppingCart(),
   ];
   List<Map<String, dynamic>> postes = [];
@@ -36,7 +35,7 @@ class _HomeState extends State<HomeBuyer> {
         postes = data;
       });
     });
-    loadStores().then((data){
+    loadStores().then((data) {
       setState(() {
         stores = data;
       });
@@ -52,25 +51,21 @@ class _HomeState extends State<HomeBuyer> {
           child: Column(
             children: [
               Container(
-                margin: const EdgeInsets.only(left: 30),
+                margin: const EdgeInsets.only(left: 30, top: 25),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        elevation: MaterialStateProperty.all(0),
-                        backgroundColor: MaterialStateProperty.all(AppColors().primaryColor),
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                            side: const BorderSide(color: Color(0xFF415B5B)),
-                          ),
-                        ),
-                      ),
+                    IconButton(
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const BuyerOptionsMenu()));
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute( builder: (context) =>const BuyerOptionsMenu()));
                       },
-                      child: const Center(child: Icon(Icons.menu,color: Colors.white,)),
+                      icon: Icon(
+                        Icons.menu_outlined,
+                        size: 35,
+                        color: AppColors().primaryColor,
+                      ),
                     ),
                     Image(
                       image: AssetImage(ImagePaths().blackhorizontalLogo),
@@ -80,12 +75,16 @@ class _HomeState extends State<HomeBuyer> {
                     Container(
                       margin: const EdgeInsets.only(right: 30),
                       child: IconButton(
-                        icon: const Icon(
-                          Icons.notifications,
+                        icon: Icon(
+                          Icons.delivery_dining,
                           size: 35,
-                          color: Color(0xFF008080),
-                          ),
-                        onPressed: (){
+                          color: AppColors().primaryColor,
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const MyOrdersPage()),
+                          );
                         },
                       )
                     ),
@@ -95,10 +94,10 @@ class _HomeState extends State<HomeBuyer> {
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height * 0.17,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFCCE6E6),
+                decoration: BoxDecoration(
+                  color: AppColors().secondaryColor,
                 ),
-                child:  CarouselSlider(
+                child: CarouselSlider(
                   items: [
                     Image(
                       image: NetworkImage(ImagePaths().ad1),
@@ -116,7 +115,8 @@ class _HomeState extends State<HomeBuyer> {
                     autoPlay: true,
                     autoPlayCurve: Curves.fastOutSlowIn,
                     enableInfiniteScroll: true,
-                    autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                    autoPlayAnimationDuration:
+                        const Duration(milliseconds: 800),
                     viewportFraction: 0.8,
                   ),
                 ),
@@ -125,71 +125,87 @@ class _HomeState extends State<HomeBuyer> {
               Column(
                 children: [
                   GestureDetector(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const ProductSearchPage()));
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      height: MediaQuery.of(context).size.height * 0.05,
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF4F4F4),
-                        borderRadius: BorderRadius.circular(30),
-                        border: Border.all(
-                          color: const Color(0xFF415B5B),
-                          width: 1,
-                        ),
-                      ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Search...",
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const ProductSearchPage()));
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        height: MediaQuery.of(context).size.height * 0.065,
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          border: Border.all(
+                            color: AppColors().borderColor,
+                            width: 1,
                           ),
-                          Icon(
-                            Icons.search,
-                            color: Color(0xFF415B5B),
-                          )
-                        ],
-                      ),
-                    )
-                  ),
+                        ),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                "Search...",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                              Icon(
+                                Icons.search,
+                                color: AppColors().borderColor,
+                              )
+                            ],
+                          ),
+                        ),
+                      )),
                   const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Container(
-                        width: MediaQuery.of(context).size.width /6,
+                        width: MediaQuery.of(context).size.width / 6,
                         height: MediaQuery.of(context).size.height / 15,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Color(0xFFCCE6E6),
+                          color: AppColors().secondaryColor,
                         ),
                         child: Center(
                           child: IconButton(
                             onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const ProductCategoryOverviewPage(categoryId: "ZlZfD5jmaypx4PJ5WKtr",)));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ProductCategoryOverviewPage(
+                                            categoryId: "ZlZfD5jmaypx4PJ5WKtr",
+                                          )));
                             },
                             icon: const Icon(Icons.devices),
-                              iconSize: 30,
-                              color: AppColors().primaryColor,
+                            iconSize: 30,
+                            color: AppColors().primaryColor,
                           ),
                         ),
                       ),
                       Container(
-                        width: MediaQuery.of(context).size.width /6,
+                        width: MediaQuery.of(context).size.width / 6,
                         height: MediaQuery.of(context).size.height / 15,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Color(0xFFCCE6E6),
+                          color: AppColors().secondaryColor,
                         ),
                         child: Center(
                           child: IconButton(
                             onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const ProductCategoryOverviewPage(categoryId: "l7lxIu6It9Xu1tSLfuQ4",)));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ProductCategoryOverviewPage(
+                                            categoryId: "l7lxIu6It9Xu1tSLfuQ4",
+                                          )));
                             },
                             icon: const Icon(Icons.fastfood_outlined),
                             iconSize: 30,
@@ -198,16 +214,22 @@ class _HomeState extends State<HomeBuyer> {
                         ),
                       ),
                       Container(
-                        width: MediaQuery.of(context).size.width /6,
+                        width: MediaQuery.of(context).size.width / 6,
                         height: MediaQuery.of(context).size.height / 15,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Color(0xFFCCE6E6),
+                          color: AppColors().secondaryColor,
                         ),
                         child: Center(
                           child: IconButton(
                             onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const ProductCategoryOverviewPage(categoryId: "Xdk6BS0tiQjCgCNEEORK",)));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ProductCategoryOverviewPage(
+                                            categoryId: "Xdk6BS0tiQjCgCNEEORK",
+                                          )));
                             },
                             icon: const Icon(Icons.checkroom),
                             iconSize: 30,
@@ -216,42 +238,51 @@ class _HomeState extends State<HomeBuyer> {
                         ),
                       ),
                       Container(
-                        width: MediaQuery.of(context).size.width /6,
+                        width: MediaQuery.of(context).size.width / 6,
                         height: MediaQuery.of(context).size.height / 15,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Color(0xFFCCE6E6),
+                          color: AppColors().secondaryColor,
                         ),
                         child: Center(
                           child: IconButton(
                             onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const ProductCategoryOverviewPage(categoryId: "xNrEZXO3xk8DTj04qKVw",)));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ProductCategoryOverviewPage(
+                                            categoryId: "xNrEZXO3xk8DTj04qKVw",
+                                          )));
                             },
-                            icon : const Icon(Icons.chair_outlined),
+                            icon: const Icon(Icons.chair_outlined),
                             iconSize: 30,
                             color: AppColors().primaryColor,
                           ),
                         ),
                       ),
                       SizedBox(
-                        width: MediaQuery.of(context).size.width /9,
-                        height: MediaQuery.of(context).size.height / 15,
-                        child: Center(
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const ProductsCategorysPage()));
-                            },
-                            child: const Text(
-                              "See More",
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Color(0xFF008080),
-                                fontWeight: FontWeight.bold,
+                          width: MediaQuery.of(context).size.width / 9,
+                          height: MediaQuery.of(context).size.height / 15,
+                          child: Center(
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const ProductsCategorysPage()));
+                              },
+                              child: Text(
+                                "See More",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: AppColors().primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                          ),
-                        )
-                      ),
+                          )),
                     ],
                   ),
                 ],
@@ -276,16 +307,17 @@ class _HomeState extends State<HomeBuyer> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    ProductPage(productID: postes[startIndex]['productID']),
+                                builder: (context) => ProductPage(
+                                    productID: postes[startIndex]['productID']),
                               ),
                             );
                           },
                           child: Container(
                             padding: const EdgeInsets.all(10),
-                            decoration: const BoxDecoration(
-                              color: Color(0xFFCCE6E6),
-                              borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                            decoration: BoxDecoration(
+                              color: AppColors().secondaryColor,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(30.0)),
                             ),
                             width: MediaQuery.of(context).size.width * 0.45,
                             height: MediaQuery.of(context).size.height * 0.35,
@@ -298,14 +330,16 @@ class _HomeState extends State<HomeBuyer> {
                                   ),
                                   child: Image.network(
                                     postes[startIndex]['imageUrls'][0],
-                                    height: MediaQuery.of(context).size.height * 0.2,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.2,
                                     width: MediaQuery.of(context).size.width,
                                     fit: BoxFit.cover,
                                   ),
                                 ),
                                 const SizedBox(height: 10),
                                 SizedBox(
-                                  height: MediaQuery.of(context).size.height * 0.07,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.07,
                                   width: MediaQuery.of(context).size.width,
                                   child: Text(
                                     postes[startIndex]['title'],
@@ -318,7 +352,8 @@ class _HomeState extends State<HomeBuyer> {
                                 ),
                                 const SizedBox(height: 10),
                                 SizedBox(
-                                  height: MediaQuery.of(context).size.height * 0.03,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.03,
                                   width: MediaQuery.of(context).size.width,
                                   child: Text(
                                     "${postes[startIndex]['price']} DZ",
@@ -339,17 +374,18 @@ class _HomeState extends State<HomeBuyer> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    ProductPage(productID: postes[endIndex]['productID']),
+                                builder: (context) => ProductPage(
+                                    productID: postes[endIndex]['productID']),
                               ),
                             );
                           },
                           child: Container(
                             margin: const EdgeInsets.all(10),
                             padding: const EdgeInsets.all(10),
-                            decoration: const BoxDecoration(
-                              color: Color(0xFFCCE6E6),
-                              borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                            decoration: BoxDecoration(
+                              color: AppColors().secondaryColor,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(30.0)),
                             ),
                             width: MediaQuery.of(context).size.width * 0.45,
                             height: MediaQuery.of(context).size.height * 0.35,
@@ -361,15 +397,18 @@ class _HomeState extends State<HomeBuyer> {
                                     topRight: Radius.circular(20.0),
                                   ),
                                   child: Image.network(
-                                    postes[endIndex]['imageUrls']?[0] ?? 'fallback_url',
-                                    height: MediaQuery.of(context).size.height * 0.2,
+                                    postes[endIndex]['imageUrls']?[0] ??
+                                        'fallback_url',
+                                    height: MediaQuery.of(context).size.height *
+                                        0.2,
                                     width: MediaQuery.of(context).size.width,
                                     fit: BoxFit.cover,
                                   ),
                                 ),
                                 const SizedBox(height: 10),
                                 SizedBox(
-                                  height: MediaQuery.of(context).size.height * 0.07,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.07,
                                   width: MediaQuery.of(context).size.width,
                                   child: Text(
                                     postes[endIndex]['title'],
@@ -382,7 +421,8 @@ class _HomeState extends State<HomeBuyer> {
                                 ),
                                 const SizedBox(height: 10),
                                 SizedBox(
-                                  height: MediaQuery.of(context).size.height * 0.03,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.03,
                                   width: MediaQuery.of(context).size.width,
                                   child: Text(
                                     "${postes[endIndex]['price']} DZ",
@@ -439,13 +479,6 @@ class _HomeState extends State<HomeBuyer> {
                 size: 35,
               ),
               label: "Search",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.notifications_none_outlined,
-                size: 35,
-              ),
-              label: "Notification",
             ),
             BottomNavigationBarItem(
               icon: Icon(

@@ -3,10 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:flutter/material.dart';
-import 'package:selaa/screens/register/complete_info.dart';
 import 'package:selaa/screens/register/redirect_login.dart';
 import '../screens/register/login.dart';
 
@@ -146,24 +144,22 @@ Future<User?> loginWithEmailPassword(
         .doc(user!.uid)
         .update({'fcmToken': fcmToken});
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const RedirectLogin()));
-    // remove the comment to check email
-    ////////////////////////////////////////////////
-    // if (user != null && !user.emailVerified) {
-    //   Navigator.pop(context);
-    //   // Show info alert if email is not verified
-    //   Fluttertoast.showToast(
-    //     msg: "Please confirm your email address! code 1-2-1",
-    //     toastLength: Toast.LENGTH_SHORT,
-    //     gravity: ToastGravity.BOTTOM,
-    //     timeInSecForIosWeb: 1,
-    //     backgroundColor: Colors.yellow,
-    //     textColor: Colors.black,
-    //     fontSize: 16.0,
-    //   );
-    // } else {
-    //   // Navigate to home screen after successful login
-    //   Navigator.push(context, MaterialPageRoute(builder: (context) => const RedirectLogin()));
-    // }
+    if (!user.emailVerified) {
+      Navigator.pop(context);
+      // Show info alert if email is not verified
+      Fluttertoast.showToast(
+        msg: "Please confirm your email address! code 1-2-1",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.yellow,
+        textColor: Colors.black,
+        fontSize: 16.0,
+      );
+    } else {
+      // Navigate to home screen after successful login
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const RedirectLogin()));
+    }
   } on FirebaseAuthException catch (e) {
     // Handle FirebaseAuth exceptions
     if (e.code == 'user-not-found') {
@@ -263,12 +259,11 @@ Future<void> signOut(context) async {
 }
 
 // Function to sign up with Google account
-Future<User?> signInWithGoogle(BuildContext context, String accountType, ScaffoldMessengerState scaffoldMessenger) async {
+Future<User?> signInWithGoogle(BuildContext context) async {
   try {
     final GoogleSignIn googleSignIn = GoogleSignIn();
-    await googleSignIn.signOut(); // Sign out the current account
+    await googleSignIn.signOut();
     final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
-
     if (googleSignInAccount != null) {
       final GoogleSignInAuthentication googleSignInAuthentication =
           await googleSignInAccount.authentication;
@@ -280,39 +275,23 @@ Future<User?> signInWithGoogle(BuildContext context, String accountType, Scaffol
           await FirebaseAuth.instance.signInWithCredential(credential);
       final User? user = userCredential.user;
       if (user != null) {
-        // Check if the user's email already exists in Firestore
         final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
             .collection('users')
             .where('email', isEqualTo: user.email)
             .get();
         if (querySnapshot.docs.isEmpty) {
-          // Get the FCM token
-          String? fcmToken = await FirebaseMessaging.instance.getToken();
-          await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-            'firstname': user.displayName?.split(' ')[0] ?? '',
-            'lastname': user.displayName?.split(' ')[1] ?? '',
-            'email': user.email,
-            'phoneNumber': '',
-            'shippingAdress': '',
-            'accountType': accountType,
-            'balance': 0,
-            'check': false,
-            'fcmToken': fcmToken
-          });
-          // Navigate to user info screen to complete registration
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => CompleteRegistrationPage()));
+          Fluttertoast.showToast(
+            msg: "Create account then login with google",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.yellow,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
           return null;
         }
         // Email exists, proceed with sign-in
-        // Dismiss loading alert
-        scaffoldMessenger.hideCurrentSnackBar();
-        String? fcmToken = await FirebaseMessaging.instance.getToken();
-        // Save the FCM token to the user's document in Firestore
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user!.uid)
-            .update({'fcmToken': fcmToken});
         // Navigate to home screen after successful login
         Navigator.pushReplacement(
           context,
@@ -332,64 +311,4 @@ Future<User?> signInWithGoogle(BuildContext context, String accountType, Scaffol
       );
   }
   return null;
-}
-
-// Function to sign up with Facebook account
-Future<void> signInWithFacebook(BuildContext context, String accountType, ScaffoldMessengerState scaffoldMessenger) async {
-  try {
-    final LoginResult result = await FacebookAuth.instance.login();
-
-    if (result.status == LoginStatus.success) {
-      final AccessToken accessToken = result.accessToken!;
-      final OAuthCredential credential = FacebookAuthProvider.credential(accessToken.token);
-
-      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
-      final User? user = userCredential.user;
-      
-      if (user != null) {
-        final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-            .collection('users')
-            .where('email', isEqualTo: user.email)
-            .get();
-        
-        if (querySnapshot.docs.isEmpty) {
-          await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-            'firstname': user.displayName?.split(' ')[0] ?? '',
-            'lastname': user.displayName?.split(' ')[1] ?? '',
-            'email': user.email,
-            'phoneNumber': '',
-            'shippingAdress': '',
-            'accountType': accountType,
-            'balance': 0,
-            'check': false
-          });
-
-          Navigator.push(context, MaterialPageRoute(builder: (context) => CompleteRegistrationPage()));
-        } else {
-          scaffoldMessenger.hideCurrentSnackBar();
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const RedirectLogin()));
-        }
-      }
-    } else {
-      Fluttertoast.showToast(
-        msg: "Error logging in please send us a feedback code 1-6-1",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
-    }
-  } catch (e) {
-    Fluttertoast.showToast(
-        msg: "Error logging in please send us a feedback code 1-6-2",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
-  }
 }

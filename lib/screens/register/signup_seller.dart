@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:selaa/backend-functions/auth.dart';
+import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/screens/register/login.dart';
 import 'package:selaa/screens/register/pre_register.dart';
 import 'package:selaa/screens/register/signup_buyer.dart';
@@ -22,7 +23,7 @@ class _SignUpState extends State<SignUpSeller> {
   Color color = Colors.black;
 
   void checkInputs(context) {
-    if(_isChecked==true){
+    if (_isChecked == true) {
       if (_email.text.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -35,14 +36,13 @@ class _SignUpState extends State<SignUpSeller> {
             content: Text('First name is empty'),
           ),
         );
-      } else if(_lastname.text.isEmpty){
+      } else if (_lastname.text.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Last name is empty'),
           ),
         );
-      } 
-      else if (_password.text != _confirmPassword.text) {
+      } else if (_password.text != _confirmPassword.text) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Passwords do not match!'),
@@ -58,7 +58,7 @@ class _SignUpState extends State<SignUpSeller> {
           context: context,
         );
       }
-    }else{
+    } else {
       setState(() {
         color = Colors.red;
       });
@@ -80,7 +80,10 @@ class _SignUpState extends State<SignUpSeller> {
                   child: IconButton(
                     icon: const FaIcon(FontAwesomeIcons.arrowLeft),
                     onPressed: () {
-                       Navigator.push(context, MaterialPageRoute(builder: (context) => const PreRegister()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const PreRegister()));
                     },
                   ),
                 ),
@@ -99,15 +102,15 @@ class _SignUpState extends State<SignUpSeller> {
                   child: TextFormField(
                     controller: _firstname,
                     decoration: InputDecoration(
-                      labelText: 'First Name',
-                      labelStyle: const TextStyle(
-                        color: Color(0xFF415B5B),
-                      ),  
-                      hintText: 'seller1',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0)),
-                      focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF415B5B)))),
+                        labelText: 'First Name',
+                        labelStyle: const TextStyle(
+                          color: Color(0xFF415B5B),
+                        ),
+                        hintText: 'seller1',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15.0)),
+                        focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF415B5B)))),
                   ),
                 ),
                 Container(
@@ -115,15 +118,15 @@ class _SignUpState extends State<SignUpSeller> {
                   child: TextFormField(
                     controller: _lastname,
                     decoration: InputDecoration(
-                      labelText: 'Last Name',
-                      labelStyle: const TextStyle(
-                        color: Color(0xFF415B5B),
-                      ),  
-                      hintText: 'seller1',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0)),
-                      focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF415B5B)))),
+                        labelText: 'Last Name',
+                        labelStyle: const TextStyle(
+                          color: Color(0xFF415B5B),
+                        ),
+                        hintText: 'seller1',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15.0)),
+                        focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF415B5B)))),
                   ),
                 ),
                 Container(
@@ -132,15 +135,15 @@ class _SignUpState extends State<SignUpSeller> {
                     keyboardType: TextInputType.emailAddress,
                     controller: _email,
                     decoration: InputDecoration(
-                      labelText: 'Email',
-                      labelStyle: const TextStyle(
-                        color: Color(0xFF415B5B),
-                      ),  
-                      hintText: 'ex : selaa@examle.org',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0)),
-                      focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF415B5B)))),
+                        labelText: 'Email',
+                        labelStyle: const TextStyle(
+                          color: Color(0xFF415B5B),
+                        ),
+                        hintText: 'ex : selaa@examle.org',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15.0)),
+                        focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF415B5B)))),
                   ),
                 ),
                 Container(
@@ -149,15 +152,15 @@ class _SignUpState extends State<SignUpSeller> {
                     controller: _password,
                     obscureText: true,
                     decoration: InputDecoration(
-                      labelText: 'Password',
-                      labelStyle: const TextStyle(
-                        color: Color(0xFF415B5B),
-                      ),  
-                      hintText: '********',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0)),
-                      focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF415B5B)))),
+                        labelText: 'Password',
+                        labelStyle: const TextStyle(
+                          color: Color(0xFF415B5B),
+                        ),
+                        hintText: '********',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15.0)),
+                        focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF415B5B)))),
                   ),
                 ),
                 Container(
@@ -166,18 +169,18 @@ class _SignUpState extends State<SignUpSeller> {
                     controller: _confirmPassword,
                     obscureText: true,
                     decoration: InputDecoration(
-                      labelText: 'Confirm password',
-                      labelStyle: const TextStyle(
-                        color: Color(0xFF415B5B),
-                      ),  
-                      hintText: '********',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0)),
-                      focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF415B5B)))),
+                        labelText: 'Confirm password',
+                        labelStyle: const TextStyle(
+                          color: Color(0xFF415B5B),
+                        ),
+                        hintText: '********',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15.0)),
+                        focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF415B5B)))),
                   ),
                 ),
-                 const SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 Row(
@@ -211,7 +214,8 @@ class _SignUpState extends State<SignUpSeller> {
                   },
                   style: ButtonStyle(
                     fixedSize: MaterialStateProperty.all(
-                      Size(MediaQuery.of(context).size.width*0.85, MediaQuery.of(context).size.height*0.06),
+                      Size(MediaQuery.of(context).size.width * 0.85,
+                          MediaQuery.of(context).size.height * 0.06),
                     ),
                     backgroundColor:
                         MaterialStateProperty.all(const Color(0xFF415B5B)),
@@ -263,14 +267,17 @@ class _SignUpState extends State<SignUpSeller> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const SignUpBuyer()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SignUpBuyer()));
                   },
                   style: ButtonStyle(
                     fixedSize: MaterialStateProperty.all(
-                      Size(MediaQuery.of(context).size.width*0.5, MediaQuery.of(context).size.height*0.03),
+                      Size(MediaQuery.of(context).size.width * 0.5,
+                          MediaQuery.of(context).size.height * 0.03),
                     ),
-                    backgroundColor:
-                        MaterialStateProperty.all(Colors.white),
+                    backgroundColor: MaterialStateProperty.all(Colors.white),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),
@@ -301,13 +308,14 @@ class _SignUpState extends State<SignUpSeller> {
                     ),
                     InkWell(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Login()));
                       },
-                      child: const Text(
+                      child: Text(
                         " Login Now",
                         style: TextStyle(
                           fontSize: 16,
-                          color: Color(0xFFCCE6E6),
+                          color: AppColors().secondaryColor,
                         ),
                       ),
                     ),

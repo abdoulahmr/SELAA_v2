@@ -29,10 +29,11 @@ class _SearchOrderPageState extends State<SearchOrderPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.07),
+        preferredSize:
+            Size.fromHeight(MediaQuery.of(context).size.height * 0.07),
         child: AppBar(
           backgroundColor: AppColors().secondaryColor,
-          iconTheme: const IconThemeData(color: Color(0xFF008080)),
+          iconTheme: IconThemeData(color: AppColors().primaryColor),
           title: Row(
             children: [
               Container(
@@ -58,8 +59,11 @@ class _SearchOrderPageState extends State<SearchOrderPage> {
                         ),
                         onChanged: (value) {
                           setState(() {
-                            filteredOrders = orders.where((order) =>
-                                order['orderId'].toLowerCase().contains(value.toLowerCase())).toList();
+                            filteredOrders = orders
+                                .where((order) => order['orderId']
+                                    .toLowerCase()
+                                    .contains(value.toLowerCase()))
+                                .toList();
                           });
                         },
                       ),
@@ -73,9 +77,9 @@ class _SearchOrderPageState extends State<SearchOrderPage> {
           actions: [
             IconButton(
               onPressed: () async {},
-              icon: const Icon(
+              icon: Icon(
                 Icons.qr_code_scanner,
-                color: Color(0xFF008080),
+                color: AppColors().primaryColor,
               ),
             ),
           ],
@@ -94,33 +98,36 @@ class _SearchOrderPageState extends State<SearchOrderPage> {
                       onTap: () {},
                       child: FutureBuilder<String>(
                         future: loadUserName(context, orders[index]["buyerID"]),
-                        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        } else {
-                          if (snapshot.hasError) {
-                            return const Text('Error loading user name');
+                        builder: (BuildContext context,
+                            AsyncSnapshot<String> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
                           } else {
-                            return ListTile(
-                              title: Text(snapshot.data ?? 'Unknown'),
-                              subtitle: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    orders[index]["status"],
-                                  ),
-                                  Text(orders[index]["date"]),
-                                ],
-                              ),
-                            );
+                            if (snapshot.hasError) {
+                              return const Text('Error loading user name');
+                            } else {
+                              return ListTile(
+                                title: Text(snapshot.data ?? 'Unknown'),
+                                subtitle: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      orders[index]["status"],
+                                    ),
+                                    Text(orders[index]["date"]),
+                                  ],
+                                ),
+                              );
+                            }
                           }
-                        }
-                      },
+                        },
+                      ),
                     ),
-                  ),
-                  const Divider(),
-                ],
-              );
+                    const Divider(),
+                  ],
+                );
               },
             ),
           ),

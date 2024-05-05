@@ -56,7 +56,7 @@ class ChoiceAuthPage extends StatelessWidget {
                 const SizedBox(height: 30),
                 ElevatedButton(
                     onPressed: () {
-                      Navigator.push(context,MaterialPageRoute(builder: (context) => Login()));
+                      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => Login()));
                     },
                     style: ButtonStyle(
                       elevation: MaterialStateProperty.all(0),
@@ -106,11 +106,11 @@ class ChoiceAuthPage extends StatelessWidget {
                                     ),
                                   ),
                                   onPressed: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => const SignUpBuyer()));
+                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SignUpBuyer()));
                                   },
-                                  child: const Text(
-                                    'Register as a Buyer',
-                                    style: TextStyle(
+                                  child: Text(
+                                    S.of(context).registerAsABuyer,
+                                    style: const TextStyle(
                                       fontSize: 20,
                                       color: Color(0xFF415B5B),
                                     )
@@ -131,15 +131,15 @@ class ChoiceAuthPage extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  child: const Text(
-                                    'Register as a Seller',
-                                    style: TextStyle(
+                                  child: Text(
+                                    S.of(context).registerAsASeller,
+                                    style: const TextStyle(
                                       fontSize: 20,
                                       color: Color(0xFF415B5B),
                                     )
                                   ),
                                   onPressed: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => const SignUpSeller()));
+                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SignUpSeller()));
                                   }
                                 ),
                               ],
