@@ -30,9 +30,11 @@ class _HomeState extends State<HomeSeller> {
   void initState() {
     super.initState();
     loadProfilePicture(context).then((data) {
-      setState(() {
-        profilePicture = data;
-      });
+      if (mounted) {
+        setState(() {
+          profilePicture = data;
+        });
+      }
     });
     loadSellerOrdersInfo(context).then((data) {
       setState(() {
@@ -70,8 +72,7 @@ class _HomeState extends State<HomeSeller> {
                   ElevatedButton(
                     style: ButtonStyle(
                       elevation: MaterialStateProperty.all(0),
-                      backgroundColor:
-                          MaterialStateProperty.all(AppColors().primaryColor),
+                      backgroundColor: MaterialStateProperty.all(AppColors().primaryColor),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
@@ -80,16 +81,14 @@ class _HomeState extends State<HomeSeller> {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const OptionsMenu()));
+                      Navigator.push(context,MaterialPageRoute(builder: (context) => const OptionsMenu()));
                     },
                     child: const Center(
-                        child: Icon(
-                      Icons.menu,
-                      color: Colors.white,
-                    )),
+                      child: Icon(
+                        Icons.menu,
+                        color: Colors.white,
+                      )
+                    ),
                   ),
                   Image(
                     image: AssetImage(ImagePaths().horizontalLogo),
@@ -100,16 +99,13 @@ class _HomeState extends State<HomeSeller> {
                     margin: const EdgeInsets.only(right: 30),
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const UserPage()));
+                        Navigator.push(context,MaterialPageRoute(builder: (context) => const UserPage()));
                       },
                       child: CircleAvatar(
                         radius: 25,
                         backgroundImage: profilePicture.isNotEmpty
-                            ? NetworkImage(profilePicture)
-                            : NetworkImage(ImagePaths().defaultProfilePicture),
+                        ? NetworkImage(profilePicture)
+                        : NetworkImage(ImagePaths().defaultProfilePicture),
                       ),
                     ),
                   ),
@@ -124,15 +120,9 @@ class _HomeState extends State<HomeSeller> {
               ),
               child: CarouselSlider(
                 items: [
-                  Image(
-                    image: NetworkImage(ImagePaths().ad1),
-                  ),
-                  Image(
-                    image: NetworkImage(ImagePaths().ad2),
-                  ),
-                  Image(
-                    image: NetworkImage(ImagePaths().ad3),
-                  ),
+                  Image(image: NetworkImage(ImagePaths().ad1)),
+                  Image(image: NetworkImage(ImagePaths().ad2)),
+                  Image(image: NetworkImage(ImagePaths().ad3)),
                 ],
                 options: CarouselOptions(
                   height: MediaQuery.of(context).size.height * 0.2,
@@ -290,51 +280,51 @@ class _HomeState extends State<HomeSeller> {
                         height: 10,
                       ),
                       Container(
-                          padding: const EdgeInsets.all(20),
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          decoration: BoxDecoration(
-                            color: AppColors().secondaryColor,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(30.0)),
-                          ),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  const Text(
-                                    "Products:",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                    ),
+                        padding: const EdgeInsets.all(20),
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        decoration: BoxDecoration(
+                          color: AppColors().secondaryColor,
+                          borderRadius: const BorderRadius.all(Radius.circular(30.0)),
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                const Text(
+                                  "Products:",
+                                  style: TextStyle(
+                                    fontSize: 15,
                                   ),
-                                  Text(
-                                    productsInfo['totalProducts'].toString(),
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                ),
+                                Text(
+                                  productsInfo['totalProducts'].toString(),
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  const Text(
-                                    "Category:",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                    ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                const Text(
+                                  "Category:",
+                                  style: TextStyle(
+                                    fontSize: 15,
                                   ),
-                                  Text(
-                                    productsInfo['totalCategories'].toString(),
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                ),
+                                Text(
+                                  productsInfo['totalCategories'].toString(),
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                ],
-                              ),
-                            ],
-                          ))
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                      )
                     ],
                   ),
                 )
@@ -361,40 +351,34 @@ class _HomeState extends State<HomeSeller> {
                 borderRadius: const BorderRadius.all(Radius.circular(30.0)),
               ),
               child: ordersPreview.isEmpty
-                  ? const Center(child: Text('No recent orders'))
-                  : ListView.builder(
-                      itemCount: ordersPreview.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Column(
+              ? const Center(child: Text('No recent orders'))
+              : ListView.builder(
+                itemCount: ordersPreview.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Column(
+                    children: [
+                      ListTile(
+                        title: Text(ordersPreview[index]["buyer"]["firstname"] +" " +
+                          ordersPreview[index]["buyer"]["lastname"] ??'Unknown'),
+                        subtitle: Row(
+                          mainAxisAlignment:MainAxisAlignment.spaceBetween,
                           children: [
-                            ListTile(
-                              title: Text(ordersPreview[index]["buyer"]
-                                          ["firstname"] +
-                                      " " +
-                                      ordersPreview[index]["buyer"]
-                                          ["lastname"] ??
-                                  'Unknown'),
-                              subtitle: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(ordersPreview[index]["date"] ?? ''),
-                                  Text(ordersPreview[index]["status"] ??
-                                      'Unknown'),
-                                ],
-                              ),
-                            ),
-                            Divider(
-                              color: AppColors().primaryColor,
-                              thickness: 1,
-                              height: 1,
-                              indent: 10,
-                              endIndent: 10,
-                            ),
+                            Text(ordersPreview[index]["date"] ?? ''),
+                            Text(ordersPreview[index]["status"] ??'Unknown'),
                           ],
-                        );
-                      },
-                    ),
+                        ),
+                      ),
+                      Divider(
+                        color: AppColors().primaryColor,
+                        thickness: 1,
+                        height: 1,
+                        indent: 10,
+                        endIndent: 10,
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
             const SizedBox(height: 10),
           ],

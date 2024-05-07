@@ -3,9 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/generated/l10n.dart';
-import 'package:selaa/screens/register/signup_seller.dart';
-import 'login.dart';
-import 'signup_buyer.dart';
+import 'package:selaa/screens/register/login.dart';
+import 'package:selaa/screens/register/nif_check.dart';
+
+
 
 class ChoiceAuthPage extends StatelessWidget {
   const ChoiceAuthPage({super.key});
@@ -106,7 +107,12 @@ class ChoiceAuthPage extends StatelessWidget {
                                     ),
                                   ),
                                   onPressed: () {
-                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SignUpBuyer()));
+                                    Navigator.pushReplacement(
+                                      context, 
+                                      MaterialPageRoute(
+                                        builder: (context) => const CheckNifScreen(accountType: "buyer",)
+                                      )
+                                    );
                                   },
                                   child: Text(
                                     S.of(context).registerAsABuyer,
@@ -139,7 +145,12 @@ class ChoiceAuthPage extends StatelessWidget {
                                     )
                                   ),
                                   onPressed: () {
-                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SignUpSeller()));
+                                    Navigator.pushReplacement(
+                                      context, 
+                                      MaterialPageRoute(
+                                        builder: (context) => const CheckNifScreen(accountType: "seller",)
+                                      )
+                                    );
                                   }
                                 ),
                               ],

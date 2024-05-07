@@ -4,10 +4,10 @@ import 'package:selaa/backend-functions/auth.dart';
 import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/screens/register/login.dart';
 import 'package:selaa/screens/register/pre_register.dart';
-import 'package:selaa/screens/register/signup_buyer.dart';
 
 class SignUpSeller extends StatefulWidget {
-  const SignUpSeller({Key? key}) : super(key: key);
+  const SignUpSeller({Key? key, required this.nif}) : super(key: key);
+  final int nif;
 
   @override
   State<SignUpSeller> createState() => _SignUpState();
@@ -55,6 +55,7 @@ class _SignUpState extends State<SignUpSeller> {
           firstname: _firstname.text,
           lastname: _lastname.text,
           accountType: "seller",
+          nif: widget.nif,
           context: context,
         );
       }
@@ -236,65 +237,6 @@ class _SignUpState extends State<SignUpSeller> {
                 ),
                 const SizedBox(
                   height: 15,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 100,
-                      height: 1,
-                      color: Colors.black,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(
-                        "Or",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 100,
-                      height: 1,
-                      color: Colors.black,
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const SignUpBuyer()));
-                  },
-                  style: ButtonStyle(
-                    fixedSize: MaterialStateProperty.all(
-                      Size(MediaQuery.of(context).size.width * 0.5,
-                          MediaQuery.of(context).size.height * 0.03),
-                    ),
-                    backgroundColor: MaterialStateProperty.all(Colors.white),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        side: const BorderSide(color: Color(0xFF415B5B)),
-                      ),
-                    ),
-                  ),
-                  child: const Text(
-                    "Register as a buyer",
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Color(0xFF415B5B),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 30,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

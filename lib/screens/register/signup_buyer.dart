@@ -4,11 +4,10 @@ import 'package:selaa/backend-functions/auth.dart';
 import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/screens/register/login.dart';
 import 'package:selaa/screens/register/pre_register.dart';
-import 'package:selaa/screens/register/signup_seller.dart';
-import 'package:sign_in_button/sign_in_button.dart';
 
 class SignUpBuyer extends StatefulWidget {
-  const SignUpBuyer({Key? key}) : super(key: key);
+  const SignUpBuyer({Key? key, required this.nif}) : super(key: key);
+  final int nif;
 
   @override
   State<SignUpBuyer> createState() => _SignUpState();
@@ -57,6 +56,7 @@ class _SignUpState extends State<SignUpBuyer> {
           firstname: _firstname.text,
           lastname: _lastname.text,
           accountType: "buyer",
+          nif: widget.nif,
           context: context,
         );
       }
@@ -259,40 +259,6 @@ class _SignUpState extends State<SignUpBuyer> {
                       color: Colors.black,
                     ),
                   ],
-                ),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const SignUpSeller()));
-                  },
-                  style: ButtonStyle(
-                    fixedSize: MaterialStateProperty.all(
-                      Size(MediaQuery.of(context).size.width*0.5, MediaQuery.of(context).size.height*0.03),
-                    ),
-                    backgroundColor:
-                        MaterialStateProperty.all(Colors.white),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        side: const BorderSide(color: Color(0xFF415B5B)),
-                      ),
-                    ),
-                  ),
-                  child: const Text(
-                    "Register as a seller",
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Color(0xFF415B5B),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                SignInButton(
-                  Buttons.google,
-                  text: "Sign up with Google",
-                  onPressed: () {
-                    signInWithGoogle(context);
-                  },
                 ),
                 const SizedBox(
                   height: 30,

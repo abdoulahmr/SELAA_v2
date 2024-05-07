@@ -928,22 +928,29 @@ Future<List<Map<String, dynamic>>> loadProductRating(context, String productID) 
 }
 
 // load stores
-Future<List<Map<String, dynamic>?>> loadStores() async {
+Future<List<Map<String, dynamic>>> loadStores() async {
   try {
     // Get a reference to the collection
-     QuerySnapshot<Map<String, dynamic>> storesSnapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .where('accountType', isEqualTo: 'seller')
-        .get();
+    QuerySnapshot<Map<String, dynamic>> storesSnapshot =
+        await FirebaseFirestore.instance
+            .collection('users')
+            .where('accountType', isEqualTo: 'seller')
+            .get();
 
-    // Convert the documents to a list of data maps
-    return storesSnapshot.docs.map((doc) => doc.data()).toList();
+    // Convert the documents to a list of maps containing document data and ID
+    return storesSnapshot.docs.map((doc) {
+      return {
+        'id': doc.id,
+        'data': doc.data(),
+      };
+    }).toList();
   } catch (error) {
     // Handle any errors
     print("Error loading stores: $error");
     return [];
   }
 }
+
 
 Future<List<Map<String, dynamic>>> loadAgents() async {
   try {

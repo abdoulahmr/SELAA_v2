@@ -145,8 +145,7 @@ class OptionsMenu extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => const SettingsList()),
+                      MaterialPageRoute(builder: (context) => const SettingsList()),
                     );
                   },
                   style: OutlinedButton.styleFrom(
@@ -221,7 +220,8 @@ class OptionsMenu extends StatelessWidget {
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.1,
                 child: OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                  },
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: Colors.white),
                   ),

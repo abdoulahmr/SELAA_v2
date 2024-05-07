@@ -15,6 +15,7 @@ Future<User?> registerWithEmailPassword({
   required firstname,
   required lastname,
   required accountType,
+  required nif,
   context,
 }) async {
   // Show loading alert while registering
@@ -44,6 +45,7 @@ Future<User?> registerWithEmailPassword({
           'shippingAdress': '',
           'accountType': accountType,
           'balance': 0,
+          'nif': nif,
           'check': true
         });
       }
@@ -60,6 +62,7 @@ Future<User?> registerWithEmailPassword({
           'bio': '',
           'profilePicture': '',
           'balance': 0,
+          'nif': nif,
           'check': true
         });
       }
@@ -293,6 +296,7 @@ Future<User?> signInWithGoogle(BuildContext context) async {
         }
         // Email exists, proceed with sign-in
         // Navigate to home screen after successful login
+        Navigator.pop(context);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const RedirectLogin()),
