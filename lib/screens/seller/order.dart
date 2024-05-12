@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/screens/register/redirect_login.dart';
+import 'package:selaa/screens/seller/offer.dart';
 import 'package:selaa/screens/seller/order_overview.dart';
 import 'package:selaa/screens/seller/order_search.dart';
 import 'package:selaa/screens/seller/user_page.dart';
@@ -15,10 +16,11 @@ class ListOrderPage extends StatefulWidget {
 }
 
 class _OrderPageState extends State<ListOrderPage> {
-  int _currentIndex = 0;
+  int _currentIndex = 3;
   final List<Widget> _pages = [
     const RedirectLogin(),
     const UserPage(),
+    const OfferScreen(),
     const ListOrderPage()
   ];
 
@@ -117,6 +119,13 @@ class _OrderPageState extends State<ListOrderPage> {
                 ),
                 label: "Profile",
               ),
+              BottomNavigationBarItem(
+              icon: Icon(
+                Icons.campaign_outlined,
+                size: 30,
+              ),
+              label: "Offer",
+            ),
               BottomNavigationBarItem(
                 icon: Icon(
                   Icons.sort,

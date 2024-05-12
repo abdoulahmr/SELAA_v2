@@ -946,12 +946,11 @@ Future<List<Map<String, dynamic>>> loadStores() async {
     }).toList();
   } catch (error) {
     // Handle any errors
-    print("Error loading stores: $error");
     return [];
   }
 }
 
-
+// load agents
 Future<List<Map<String, dynamic>>> loadAgents() async {
   try {
     QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
@@ -972,6 +971,7 @@ Future<List<Map<String, dynamic>>> loadAgents() async {
   }
 }
 
+// load request status stream
 Stream<List<dynamic>> getRequestStatusStream(String orderID) {
   try{
     return FirebaseFirestore.instance
@@ -984,7 +984,7 @@ Stream<List<dynamic>> getRequestStatusStream(String orderID) {
   }
 }
 
-
+// load request status
 Future<List<Map<String, dynamic>>> loadRequestStatus(String agentID, String orderID) async {
   try {
     QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
@@ -995,6 +995,55 @@ Future<List<Map<String, dynamic>>> loadRequestStatus(String agentID, String orde
       .get();
     return snapshot.docs.map((doc) => doc.data()).toList();
   } catch (error) {
+    return [];
+  }
+}
+
+// load offer
+Future<List<Map<String, dynamic>>> loadSellerOffer(context) async {
+  User? user = FirebaseAuth.instance.currentUser;
+  try {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+        .collection('offer')
+        .where('seller', isEqualTo: user?.uid)
+        .get();
+
+    List<Map<String, dynamic>> offers = [];
+    for (var doc in snapshot.docs) {
+      DocumentReference<Map<String, dynamic>> productRef = doc.data()['product'];
+      DocumentSnapshot<Map<String, dynamic>> productSnapshot = await productRef.get();
+      
+      Map<String, dynamic> offerData = doc.data();
+      offerData['product'] = productSnapshot.data();
+      offerData['id'] = doc.id; // Add the document ID to the offerData map
+      offers.add(offerData);
+    }
+
+    return offers;
+  } catch (error) {
+    return [];
+  }
+}
+
+// load all offers
+Future<List<Map<String, dynamic>>> loadOffers(context) async{
+  try{
+    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+        .collection('offer')
+        .get();
+
+    List<Map<String, dynamic>> offers = [];
+    for (var doc in snapshot.docs) {
+      DocumentReference<Map<String, dynamic>> productRef = doc.data()['product'];
+      DocumentSnapshot<Map<String, dynamic>> productSnapshot = await productRef.get();
+      
+      Map<String, dynamic> offerData = doc.data();
+      offerData['product'] = productSnapshot.data();
+      offerData['id'] = doc.id;
+      offers.add(offerData);
+    }
+    return offers;
+  }catch(e){
     return [];
   }
 }

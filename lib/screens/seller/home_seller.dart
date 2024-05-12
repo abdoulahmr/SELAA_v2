@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/backend-functions/load_data.dart';
+import 'package:selaa/screens/seller/offer.dart';
 import 'package:selaa/screens/seller/order.dart';
 import 'package:selaa/screens/seller/user_page.dart';
 import 'package:selaa/screens/settings/seller_option_menu.dart';
@@ -23,6 +24,7 @@ class _HomeState extends State<HomeSeller> {
   final List<Widget> _pages = [
     const HomeSeller(),
     const UserPage(),
+    const OfferScreen(),
     const ListOrderPage(),
   ];
 
@@ -405,17 +407,24 @@ class _HomeState extends State<HomeSeller> {
           items: const [
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.home,
+                Icons.home_outlined,
                 size: 30,
               ),
               label: "Home",
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.account_circle,
+                Icons.account_circle_outlined,
                 size: 30,
               ),
               label: "Profile",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.campaign_outlined,
+                size: 30,
+              ),
+              label: "Offer",
             ),
             BottomNavigationBarItem(
               icon: Icon(

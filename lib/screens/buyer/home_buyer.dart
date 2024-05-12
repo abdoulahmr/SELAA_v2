@@ -21,6 +21,7 @@ class HomeBuyer extends StatefulWidget {
 class _HomeState extends State<HomeBuyer> {
   List<Map<String, dynamic>?> stores = [];
   List<Map<String, dynamic>> postes = [];
+  List<Map<String, dynamic>> offers = [];
   int _currentIndex = 0;
   final List<Widget> _pages = [
     const HomeBuyer(),
@@ -39,6 +40,11 @@ class _HomeState extends State<HomeBuyer> {
     loadStores().then((data) {
       setState(() {
         stores = data;
+      });
+    });
+    loadOffers(context).then((value){
+      setState(() {
+        offers = value;
       });
     });
   }

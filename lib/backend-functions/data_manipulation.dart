@@ -474,3 +474,82 @@ Future<void> requestDelivery(String agentID,LatLng position, String orderID)asyn
     'agentID': agentID
   });
 }
+
+// add discount offer
+Future<void> addDiscountOffer(String productID, double discount, context) async {
+  User? user = FirebaseAuth.instance.currentUser;
+  try {
+    // Add the discount offer to the product document
+    await FirebaseFirestore.instance.collection('offer')
+      .doc().set({
+        'seller': user!.uid,
+        'product': FirebaseFirestore.instance.collection('products').doc(productID),
+        'discount': discount,
+        'createdAt': DateTime.now(),
+      });
+    Fluttertoast.showToast(
+      msg: "Offer added successfully!",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.green,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+    Navigator.pop(context);
+  } catch (error) {
+    // Handle errors
+  }
+}
+
+// submit feedback
+Future<void> submitFeedback(context) async{
+  try {
+    // Add the feedback to the feedback collection
+    await FirebaseFirestore.instance.collection('feedback')
+      .doc().set({
+        'feedback': 'feedback',
+        'createdAt': DateTime.now(),
+      });
+    Navigator.pop(context);
+  } catch (error) {
+    // Handle errors
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 3-13-1",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  }
+}
+
+// delete offer
+Future<void> deleteOffer(String offerID, context) async {
+  try {
+    // Delete the offer from the offer collection
+    await FirebaseFirestore.instance.collection('offer').doc(offerID).delete();
+    Fluttertoast.showToast(
+      msg: "Offer deleted successfully!",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.green,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  } catch (error) {
+    // Handle errors
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 3-14-1",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  }
+}

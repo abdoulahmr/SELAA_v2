@@ -4,6 +4,7 @@ import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/screens/register/redirect_login.dart';
 import 'package:selaa/screens/seller/order.dart';
 import 'package:selaa/screens/seller/wallet.dart';
+import 'package:selaa/screens/settings/report_bug.dart';
 import 'package:selaa/screens/settings/settings_list.dart';
 import 'package:selaa/screens/seller/user_page.dart';
 
@@ -196,7 +197,12 @@ class OptionsMenu extends StatelessWidget {
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.1,
                 child: OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ReportBugScreen()),
+                    );
+                  },
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: Colors.white),
                   ),

@@ -4,6 +4,7 @@ import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/screens/buyer/my_orders.dart';
 import 'package:selaa/screens/register/redirect_login.dart';
 import 'package:selaa/screens/settings/change_language.dart';
+import 'package:selaa/screens/settings/report_bug.dart';
 import 'package:selaa/screens/settings/settings_list.dart';
 
 class BuyerOptionsMenu extends StatelessWidget {
@@ -140,7 +141,12 @@ class BuyerOptionsMenu extends StatelessWidget {
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.1,
                 child: OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ReportBugScreen()),
+                    );
+                  },
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: Colors.white),
                   ),

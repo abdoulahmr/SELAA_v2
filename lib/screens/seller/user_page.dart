@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/backend-functions/load_data.dart';
 import 'package:selaa/screens/seller/add_product.dart';
 import 'package:selaa/screens/seller/edit_profile.dart';
 import 'package:selaa/screens/seller/home_seller.dart';
+import 'package:selaa/screens/seller/offer.dart';
 import 'package:selaa/screens/seller/order.dart';
 import 'package:selaa/screens/seller/product_page.dart';
 
@@ -22,6 +22,7 @@ class _UserPage extends State<UserPage> {
   final List<Widget> _pages = [
     const HomeSeller(),
     const UserPage(),
+    const OfferScreen(),
     const ListOrderPage(),
   ];
 
@@ -227,11 +228,9 @@ class _UserPage extends State<UserPage> {
                               ),
                             );
                           },
-                          leading: Image(
-                            image: NetworkImage(userPostes[index]['imageUrls'][0]),
-                            width: 100,
-                            height: 100,
-                          ),
+                          leading: userPostes[index]['imageUrls']==null
+                          ? Image.network("https://via.placeholder.com/150", width: 50, height: 50)
+                          : Image.network(userPostes[index]['imageUrls'][0], width: 50, height: 50),
                           title: Text(
                             userPostes[index]['title'],
                             style: const TextStyle(
@@ -289,17 +288,24 @@ class _UserPage extends State<UserPage> {
           items: const [
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.home,
+                Icons.home_outlined,
                 size: 30,
               ),
               label: "Home",
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.account_circle,
+                Icons.account_circle_outlined,
                 size: 30,
               ),
               label: "Profile",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.campaign_outlined,
+                size: 30,
+              ),
+              label: "Offer",
             ),
             BottomNavigationBarItem(
               icon: Icon(
