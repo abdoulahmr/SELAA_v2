@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/backend-functions/load_data.dart';
 import 'package:selaa/screens/buyer/my_orders.dart';
+import 'package:selaa/screens/buyer/offer.dart';
 import 'package:selaa/screens/buyer/product_category_overview.dart';
 import 'package:selaa/screens/buyer/products_categorys.dart';
 import 'package:selaa/screens/buyer/store.dart';
+import 'package:selaa/screens/buyer/stores.dart';
 import 'package:selaa/screens/seller/product_page.dart';
 import 'package:selaa/screens/buyer/shopping_cart.dart';
 import 'package:selaa/screens/buyer/product_search_list.dart';
@@ -122,7 +124,11 @@ class _HomeState extends State<HomeBuyer> {
                 children: [
                   GestureDetector(
                       onTap: () {
-                        Navigator.push(context,MaterialPageRoute(builder: (context) =>const ProductSearchPage()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const ProductSearchPage()));
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width * 0.9,
@@ -272,13 +278,129 @@ class _HomeState extends State<HomeBuyer> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      "Suggested Stores",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    Image.asset(
+                      ImagePaths().bestOffers,
+                      width: MediaQuery.of(context).size.width * 0.4,
                     ),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const OffersScreen()));
+                      },
+                      child: Text(
+                        "See More",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: AppColors().primaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(left: 10),
+                height: MediaQuery.of(context).size.height * 0.23,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: offers.length,
+                  itemBuilder: (context, index) {
+                    double oldprice =
+                        double.parse(offers[index]['product']['price']);
+                    double discount = offers[index]['discount'];
+                    double newprice = oldprice - (oldprice * discount / 100);
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ProductPage(
+                                  productID: offers[index]['product']
+                                      ['productID'])),
+                        );
+                      },
+                      child: Container(
+                          margin: const EdgeInsets.all(10),
+                          child: Column(
+                            children: [
+                              ClipRRect(
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(30.0)),
+                                child: Image.network(
+                                  offers.isNotEmpty &&
+                                          index < offers.length &&
+                                          offers[index]['product']
+                                                  ['imageUrls'] !=
+                                              null &&
+                                          offers[index]['product']['imageUrls']
+                                              .isNotEmpty
+                                      ? offers[index]['product']['imageUrls'][0]
+                                      : "https://via.placeholder.com/150",
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.15,
+                                  width:
+                                      MediaQuery.of(context).size.height * 0.15,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              SizedBox(
+                                width:
+                                    MediaQuery.of(context).size.height * 0.12,
+                                child: Text(
+                                  offers.isNotEmpty && index < offers.length
+                                      ? "${newprice.toStringAsFixed(2)} DA"
+                                      : '',
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red,
+                                    overflow: TextOverflow.clip,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width:
+                                    MediaQuery.of(context).size.height * 0.12,
+                                child: Text(
+                                  offers.isNotEmpty && index < offers.length
+                                      ? "${oldprice.toStringAsFixed(2)} DA"
+                                      : '',
+                                  style: const TextStyle(
+                                    fontSize: 10,
+                                    decoration: TextDecoration.lineThrough,
+                                    overflow: TextOverflow.clip,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )),
+                    );
+                  },
+                ),
+              ),
+              Divider(
+                color: AppColors().primaryColor,
+                indent: 20,
+                endIndent: 20,
+              ),
+              Container(
+                margin: const EdgeInsets.only(left: 10, right: 10),
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Image.asset(
+                      ImagePaths().suggestedStores,
+                      width: MediaQuery.of(context).size.width * 0.6,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(context,MaterialPageRoute(builder: (context) =>const StoresScreen()));
+                      },
                       child: Text(
                         "See More",
                         style: TextStyle(
@@ -384,9 +506,9 @@ class _HomeState extends State<HomeBuyer> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      "Newst Product",
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    Image.asset(
+                      ImagePaths().newestProducts,
+                      width: MediaQuery.of(context).size.width * 0.6,
                     ),
                     InkWell(
                       onTap: () {},

@@ -129,7 +129,7 @@ class _OrderOverViewState extends State<OrderOverView> {
                               } else if (snapshot.hasError) {
                                 return Text('Error: ${snapshot.error}');
                               } else {
-                                return Text("Price: ${snapshot.data} DZD");
+                                return Text("Price: ${snapshot.data} DA");
                               }
                             },
                           ),
@@ -186,7 +186,7 @@ class _OrderOverViewState extends State<OrderOverView> {
                                   width:
                                       MediaQuery.of(context).size.width * 0.1,
                                   child: Text(
-                                      "${items[index]['product']['price']} DZD",
+                                      "${items[index]['product']['price']} DA",
                                       style: const TextStyle(
                                         overflow: TextOverflow.fade,
                                       )))

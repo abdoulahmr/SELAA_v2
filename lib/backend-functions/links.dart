@@ -12,6 +12,9 @@ class ImagePaths{
   String carIcon = "assets/images/car_icon.png";
   String truckIcon = "assets/images/truck_icon.png";
   String motorcycleIcon = "assets/images/motorcycle_icon.png";
+  String bestOffers = "assets/images/best-offers.png";
+  String newestProducts = "assets/images/newest-products.png";
+  String suggestedStores = "assets/images/suggested-stores.png";
 }
 class AppColors{
   Color primaryColor = const Color(0xFF008080);

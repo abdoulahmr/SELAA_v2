@@ -82,7 +82,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text(
-                          "Total : $totalPrice DZD",
+                          "Total : $totalPrice DA",
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,

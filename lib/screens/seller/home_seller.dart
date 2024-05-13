@@ -257,7 +257,7 @@ class _HomeState extends State<HomeSeller> {
                         ),
                         child: Center(
                           child: Text(
-                            "$balanceInfo DZD",
+                            "$balanceInfo DA",
                             style: const TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,

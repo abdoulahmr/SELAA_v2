@@ -148,8 +148,8 @@ class _WalletScreenState extends State<WalletScreen> {
                   ),
                   Text(
                     userInfo.isNotEmpty && userInfo[0]['balance'] != null
-                    ?"${userInfo[0]['balance'].toStringAsFixed(3)} DZD"
-                    :'0 DZD',
+                        ? "${userInfo[0]['balance'].toStringAsFixed(3)} DA"
+                        : '0 DA',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w400,

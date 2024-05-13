@@ -102,6 +102,9 @@ flutter:
     - assets/images/car_icon.png
     - assets/images/motorcycle_icon.png
     - assets/images/truck_icon.png
+    - assets/images/best-offers.png
+    - assets/images/newest-products.png
+    - assets/images/suggested-stores.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

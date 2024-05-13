@@ -76,7 +76,8 @@ class _UserPage extends State<UserPage> {
                             radius: 60,
                             backgroundImage:userInfo[0]['profilePicture'] != null
                             ? NetworkImage(userInfo[0]['profilePicture'])
-                            : NetworkImage(ImagePaths().defaultProfilePicture),
+                                        : const NetworkImage(
+                                            "https://via.placeholder.com/150"),
                         ),
                         ],
                       ),
@@ -245,7 +246,7 @@ class _UserPage extends State<UserPage> {
                             ),
                           ),
                           trailing: Text(
-                            "${userPostes[index]['price']} DZD",
+                              "${userPostes[index]['price']} DA",
                             style: TextStyle(
                               color: AppColors().primaryColor,
                               fontSize: 12,

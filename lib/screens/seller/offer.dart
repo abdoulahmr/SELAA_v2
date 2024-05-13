@@ -127,7 +127,7 @@ class _OfferScreenState extends State<OfferScreen> {
                 subtitle: Row(
                   children: [
                     Text(
-                      "${sellerOffer[index]['product']['price']} DZD",
+                            "${sellerOffer[index]['product']['price']} DA",
                       style: TextStyle(
                         color: AppColors().primaryColor,
                         fontSize: 12,
@@ -141,7 +141,7 @@ class _OfferScreenState extends State<OfferScreen> {
                     ),
                     const SizedBox(width: 10),
                     Text(
-                      "${newPrice.toString()} DZD",
+                            "${newPrice.toString()} DA",
                       style: TextStyle(
                         color: AppColors().primaryColor,
                         fontSize: 12,

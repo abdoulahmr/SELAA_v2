@@ -219,7 +219,7 @@ class _SellerOrderOverviewState extends State<SellerOrderOverview> {
                     (BuildContext context, AsyncSnapshot<double> snapshot) {
                   if (snapshot.hasData) {
                     return Text(
-                      "Total ${snapshot.data.toString()} DZD",
+                      "Total ${snapshot.data.toString()} DA",
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
@@ -276,7 +276,7 @@ class _SellerOrderOverviewState extends State<SellerOrderOverview> {
                           SizedBox(
                               width: MediaQuery.of(context).size.width * 0.1,
                               child: Text(
-                                  "${items[index]['product']['price']} DZD",
+                                  "${items[index]['product']['price']} DA",
                                   style: const TextStyle(
                                     overflow: TextOverflow.fade,
                                   )))

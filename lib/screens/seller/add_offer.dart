@@ -43,7 +43,7 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
                   : Image.network(productList[index]['imageUrls'][0], width: 50, height: 50),
                 title: Text(productList[index]['title']),
                 trailing: Text(
-                  productList[index]['price']+ ' DZD',
+                  productList[index]['price'] + ' DA',
                   style: TextStyle(
                     color: AppColors().primaryColor,
                     fontSize: 15,
@@ -83,7 +83,7 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
                                     ),
                                   ),
                                   Text(
-                                    'Discount price: - ${discountPrice.toStringAsFixed(2)} DZD',
+                                    'Discount price: - ${discountPrice.toStringAsFixed(2)} DA',
                                     style: TextStyle(
                                       color: AppColors().primaryColor,
                                       fontSize: 15,
