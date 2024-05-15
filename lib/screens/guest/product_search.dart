@@ -1,29 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/backend-functions/load_data.dart';
-import 'package:selaa/screens/buyer/home_buyer.dart';
-import 'package:selaa/screens/buyer/shopping_cart.dart';
-import 'package:selaa/screens/seller/product_page.dart';
+import 'package:selaa/screens/guest/home_guest.dart';
+import 'package:selaa/screens/guest/product_page.dart';
 
-class ProductSearchPage extends StatefulWidget {
-  const ProductSearchPage({super.key});
+class GuestProductSearchPage extends StatefulWidget {
+  const GuestProductSearchPage({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _ProductSearchPageState createState() => _ProductSearchPageState();
+  State<GuestProductSearchPage> createState() => _GuestProductSearchPageState();
 }
 
-class _ProductSearchPageState extends State<ProductSearchPage> {
+class _GuestProductSearchPageState extends State<GuestProductSearchPage> {
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> _searchResults = [];
   List<Map<String, dynamic>> _productList = [];
   int _currentIndex = 1;
   final List<Widget> _pages = [
-    const HomeBuyer(),
-    const ProductSearchPage(),
-    const ShoppingCart(),
+    const HomeGuest(),
+    const GuestProductSearchPage(),
   ];
-
+  
   void _performSearch(String query) {
     setState(() {
       _searchResults = _productList
@@ -86,7 +83,9 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                     title: Text(_searchResults[index]['title']),
                     subtitle: Text(_searchResults[index]['price']+" DA"),
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPage(productID: _searchResults[index]['productID'],discount: 0,)));
+                      Navigator.push(context, MaterialPageRoute( builder: (context) => 
+                          GuestProductPage(productID: _searchResults[index]['productID']),
+                        ));
                     },
                   );
                 },
@@ -127,13 +126,6 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                 size: 35,
               ),
               label: "Search",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.shopping_cart_outlined,
-                size: 35,
-              ),
-              label: "Cart",
             ),
           ],
         ),

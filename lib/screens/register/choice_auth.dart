@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:selaa/backend-functions/links.dart';
 import 'package:selaa/generated/l10n.dart';
+import 'package:selaa/screens/guest/home_guest.dart';
 import 'package:selaa/screens/register/login.dart';
 import 'package:selaa/screens/register/nif_check.dart';
 
@@ -180,6 +181,31 @@ class ChoiceAuthPage extends StatelessWidget {
                       color: Color(0xFF001A1A),
                     ),
                   ),
+                ),
+                const SizedBox(height: 20,),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    elevation: MaterialStateProperty.all(0),
+                    fixedSize: MaterialStateProperty.all(
+                      Size(MediaQuery.of(context).size.width*0.6, MediaQuery.of(context).size.height*0.05),
+                    ),
+                    backgroundColor: MaterialStateProperty.all(const Color(0xFFFFFFFF)),
+                  ),
+                  child: Text(
+                    "Continue as a guest",
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: AppColors().primaryColor,
+                    )
+                  ),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context, 
+                      MaterialPageRoute(
+                        builder: (context) => const HomeGuest()
+                      )
+                    );
+                  }
                 ),
               ],
             ),

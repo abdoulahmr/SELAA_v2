@@ -9,7 +9,6 @@ import 'package:selaa/backend-functions/data_manipulation.dart';
 import 'package:selaa/backend-functions/load_data.dart';
 import 'package:selaa/screens/buyer/home_buyer.dart';
 import 'package:selaa/backend-functions/oreder_structure.dart';
-import 'package:selaa/screens/seller/product_page.dart';
 
 class ShoppingCart extends StatefulWidget {
   const ShoppingCart({Key? key}) : super(key: key);
@@ -91,7 +90,8 @@ class _ShoppingCartState extends State<ShoppingCart> {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    IconButton(
+                    shoppingCart.isNotEmpty
+                    ? IconButton(
                       onPressed: () {
                         if(_isClicked == false){
                           if(userInfo[0]['phoneNumber'].isEmpty){
@@ -198,22 +198,8 @@ class _ShoppingCartState extends State<ShoppingCart> {
                         Icons.check,
                         color: AppColors().primaryColor,
                       ),
-                    ),
-                    IconButton(
-                      onPressed: (){
-                        for(var item in shoppingCart){
-                          deleteItemFromCart(context);
-                          setState(() {
-                            shoppingCart.remove(item);
-                            totalPrice = 0;
-                          });
-                        }
-                      }, 
-                      icon: const Icon(
-                        Icons.cancel_outlined,
-                        color: Colors.red,
-                      ),
-                    ),
+                    )
+                    : const SizedBox(height: 20),
                   ],
                 ),
               ),
@@ -222,74 +208,65 @@ class _ShoppingCartState extends State<ShoppingCart> {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProductPage(productID: shoppingCart[index]['product']['productID']),
+                  return Container(
+                    decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 230, 230, 230),
+                      borderRadius: BorderRadius.all(Radius.circular(30)),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ClipRRect(
+                          borderRadius: const BorderRadius.all(Radius.circular(25.0)),
+                          child: Image.network(
+                            shoppingCart[index]['product']['imageUrls'][0],
+                            height: MediaQuery.of(context).size.height * 0.1,
+                            width: MediaQuery.of(context).size.width * 0.2,
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      );
-                    },
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 230, 230, 230),
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                      ),
-                      margin: const EdgeInsets.all(10),
-                      padding: const EdgeInsets.all(10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          ClipRRect(
-                            borderRadius: const BorderRadius.all(Radius.circular(25.0)),
-                            child: Image.network(
-                              shoppingCart[index]['product']['imageUrls'][0],
-                              height: MediaQuery.of(context).size.height * 0.1,
-                              width: MediaQuery.of(context).size.width * 0.2,
-                              fit: BoxFit.cover,
+                        const SizedBox(width: 10),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          child: Text(
+                            shoppingCart[index]['product']["title"],
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          const SizedBox(width: 10),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            child: Text(
-                              shoppingCart[index]['product']["title"],
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
+                        ),
+                        const SizedBox(width: 10),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.1,
+                          child: Text(
+                            shoppingCart[index]['quantity'].toString(),
                           ),
-                          const SizedBox(width: 10),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.1,
-                            child: Text(
-                              shoppingCart[index]['quantity'].toString(),
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              if (index < shoppingCart.length) {
-                                deleteItemFromCart(context);
-                                setState(() {
-                                  shoppingCart.removeAt(index);
-                                  calculateTotalPrice(context).then((double price) {
-                                    setState(() {
-                                      totalPrice = price;
-                                    });
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            if (index < shoppingCart.length) {
+                              deleteItemFromCart(context);
+                              setState(() {
+                                shoppingCart.removeAt(index);
+                                totalPrice = 0;
+                                calculateTotalPrice(context).then((double price) {
+                                  setState(() {
+                                    totalPrice = price;
                                   });
                                 });
-                              }
-                            },
-                            icon: const Icon(
-                              Icons.delete,
-                              color: Colors.red,
-                            ),
-                          )
-                        ],
-                      ),
+                              });
+                            }
+                          },
+                          icon: const Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                          ),
+                        )
+                      ],
                     ),
                   );
                 },

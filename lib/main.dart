@@ -46,7 +46,7 @@ class _MainState extends State<Main> {
       ],
       supportedLocales: const [
         Locale('en'),
-        Locale('ar'),
+        Locale('ar'), 
       ],
       locale: _locale,
       debugShowCheckedModeBanner: false,

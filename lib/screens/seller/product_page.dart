@@ -9,8 +9,9 @@ import 'package:selaa/backend-functions/load_data.dart';
 import '../../backend-functions/data_manipulation.dart';
 
 class ProductPage extends StatefulWidget {
-  const ProductPage({Key? key, required this.productID}) : super(key: key);
+  const ProductPage({Key? key, required this.productID, required this.discount}) : super(key: key);
   final String productID;
+  final double discount;
 
   @override
   State<ProductPage> createState() => _ProductPageState();
@@ -67,29 +68,24 @@ class _ProductPageState extends State<ProductPage> {
               Navigator.pop(context);
             },
           ),
-          title: GestureDetector(
-            onTap: (){
-              print('User ID: ' + posteInfo[0]['sellerID']);
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.values[2],
-              children: [
-                CircleAvatar(
-                  radius: 20,
-                  backgroundImage: userInfo.isNotEmpty && userInfo[0]['profilePicture'] != null
-                    ? NetworkImage(userInfo[0]['profilePicture'])
-                    : NetworkImage(ImagePaths().defaultProfilePicture),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.values[2],
+            children: [
+              CircleAvatar(
+                radius: 20,
+                backgroundImage: userInfo.isNotEmpty && userInfo[0]['profilePicture'] != null
+                  ? NetworkImage(userInfo[0]['profilePicture'])
+                  : NetworkImage(ImagePaths().defaultProfilePicture),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                userInfo.isNotEmpty ? userInfo[0]['username'] ?? '' : '',
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(width: 10),
-                Text(
-                  userInfo.isNotEmpty ? userInfo[0]['username'] ?? '' : '',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
           actions: [
             Visibility(
@@ -123,6 +119,7 @@ class _ProductPageState extends State<ProductPage> {
                 posteInfo: posteInfo,
                 review: _review,
                 numRating: numRating,
+                discount: widget.discount,
               ),
               ProductReview(
                 productID: widget.productID, 
@@ -142,13 +139,13 @@ class ProductDetails extends StatefulWidget {
     required this.userInfo, 
     required this.posteInfo, 
     required this.review, 
-    required this.numRating}) : super(key: key);
+    required this.numRating, required this.discount}) : super(key: key);
   final String productID;
   final List<Map<String, dynamic>> userInfo;
   final double review;
   final int numRating;
   final List posteInfo;
-
+  final double discount;
 
   @override
   State<ProductDetails> createState() => _ProductDetailsState();
@@ -207,23 +204,38 @@ class _ProductDetailsState extends State<ProductDetails> {
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.9,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  AnimatedRatingStars(
-                    initialRating: widget.review,
-                    filledColor: AppColors().primaryColor,
-                    emptyColor: Colors.grey,
-                    emptyIcon: Icons.star_border,
-                    onChanged: (double rating) {},
-                    displayRatingValue: true,
-                    interactiveTooltips: true,
-                    customFilledIcon: Icons.star,
-                    customHalfFilledIcon: Icons.star_half,
-                    customEmptyIcon: Icons.star_border,
-                    starSize: 20.0,
-                    readOnly: true,
+                  Row(
+                    children: [
+                      AnimatedRatingStars(
+                        initialRating: widget.review,
+                        filledColor: AppColors().primaryColor,
+                        emptyColor: Colors.grey,
+                        emptyIcon: Icons.star_border,
+                        onChanged: (double rating) {},
+                        displayRatingValue: true,
+                        interactiveTooltips: true,
+                        customFilledIcon: Icons.star,
+                        customHalfFilledIcon: Icons.star_half,
+                        customEmptyIcon: Icons.star_border,
+                        starSize: 20.0,
+                        readOnly: true,
+                      ),
+                      const SizedBox(width: 10),
+                      Text("(${widget.numRating})"),
+                    ],
                   ),
-                  const SizedBox(width: 10),
-                  Text("(${widget.numRating})")
+                  const SizedBox(width: 20),
+                  widget.discount == 0.0
+                  ? const SizedBox(width: 10)
+                  : Text(
+                    "-${widget.discount.toStringAsFixed(0)}%",
+                    style: const TextStyle(
+                      color: Colors.red,
+                      fontSize: 20,
+                    ),
+                  ),
                 ],
               )
             ),
@@ -282,13 +294,40 @@ class _ProductDetailsState extends State<ProductDetails> {
                   color: AppColors().borderColor,
                 ),
               ),
-              child: Text(
-                widget.posteInfo.isNotEmpty ? "${widget.posteInfo[0]['price']} DZ" : '',
+              child: widget.discount == 0.0
+              ? Text(
+                widget.posteInfo.isNotEmpty ? "${widget.posteInfo[0]['price']} D" : '',
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 16,
                 ),
-              ),
+              )
+              : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    widget.posteInfo.isNotEmpty ? "${widget.posteInfo[0]['price']} DA" : '',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      decoration: TextDecoration.lineThrough,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  const Icon(
+                    Icons.arrow_forward_ios,
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    "${double.parse(widget.posteInfo[0]['price'])-(double.parse(widget.posteInfo[0]['price'])*widget.discount/100)} DA",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20, 
+                      color: Colors.red
+                    )
+                  ),
+                ],
+              )
             ),
             const SizedBox(height: 10),
             Container(

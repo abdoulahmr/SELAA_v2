@@ -125,10 +125,9 @@ class _HomeState extends State<HomeBuyer> {
                   GestureDetector(
                       onTap: () {
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const ProductSearchPage()));
+                          context,
+                          MaterialPageRoute(builder: (context) =>const ProductSearchPage())
+                        );
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width * 0.9,
@@ -285,9 +284,9 @@ class _HomeState extends State<HomeBuyer> {
                     InkWell(
                       onTap: () {
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const OffersScreen()));
+                          context,
+                          MaterialPageRoute(builder: (context) => const OffersScreen())
+                        );
                       },
                       child: Text(
                         "See More",
@@ -316,10 +315,10 @@ class _HomeState extends State<HomeBuyer> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => ProductPage(
-                                  productID: offers[index]['product']
-                                      ['productID'])),
+                          MaterialPageRoute(builder: (context) => ProductPage(
+                            productID: offers[index]['product']['productID'],
+                            discount: offers[index]['discount'],
+                          )),
                         );
                       },
                       child: Container(
@@ -539,7 +538,9 @@ class _HomeState extends State<HomeBuyer> {
                     return GestureDetector(
                       onTap: () {
                         Navigator.push(context, MaterialPageRoute( builder: (context) => 
-                          ProductPage(productID: postes[index]['productID']),
+                          ProductPage(productID: postes[index]['productID'],
+                          discount: 0,
+                          ),
                         ));
                       },
                       child: Container(
@@ -582,7 +583,7 @@ class _HomeState extends State<HomeBuyer> {
                               height: MediaQuery.of(context).size.height * 0.03,
                               width: MediaQuery.of(context).size.width * 0.9,
                               child: Text(
-                                "${postes[index]['price']} DZ",
+                                "${postes[index]['price']} DA",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 15,

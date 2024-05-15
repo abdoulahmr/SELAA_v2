@@ -834,96 +834,61 @@ Future<List<Map<String, dynamic>>> loadProductsCategories(context) async {
 
 // load product review
 Future<List<Map<String, dynamic>>> loadProductReviews(BuildContext context, String productID) async {
-  User? user = FirebaseAuth.instance.currentUser;
-  if (user != null) {
-    try {
-      // Fetch product reviews from Firestore
-      QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
-          .collection('products')
-          .doc(productID)
-          .collection('reviews')
-          .get();
-
-      List<Map<String, dynamic>> reviews = [];
-      for (QueryDocumentSnapshot<Map<String, dynamic>> doc in snapshot.docs) {
-        Map<String, dynamic> reviewData = doc.data();
-        // Check if 'buyer' field is not null
-        if (reviewData['buyer'] != null) {
-          DocumentSnapshot<Map<String, dynamic>> userSnapshot = await reviewData['buyer'].get();
-          Map<String, dynamic> userData = userSnapshot.data() ?? {};
-          reviewData['buyerInfo'] = userData;
-          reviews.add(reviewData);
-        }
+  try {      
+    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+      .collection('products')
+      .doc(productID)
+      .collection('reviews')
+      .get();
+    List<Map<String, dynamic>> reviews = [];
+    for (QueryDocumentSnapshot<Map<String, dynamic>> doc in snapshot.docs) {
+      Map<String, dynamic> reviewData = doc.data();
+      // Check if 'buyer' field is not null
+      if (reviewData['buyer'] != null) {
+        DocumentSnapshot<Map<String, dynamic>> userSnapshot = await reviewData['buyer'].get();
+        Map<String, dynamic> userData = userSnapshot.data() ?? {};
+        reviewData['buyerInfo'] = userData;
+        reviews.add(reviewData);
       }
-
-      return reviews;
-    } catch (error) {
-      // Handle any errors
-      Fluttertoast.showToast(
-        msg: "Error please send us a feedback code 4-22-1",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
-      return []; // Return an empty list in case of error
     }
-  } else {
-    // Handle case when user is null
+    return reviews;
+  } catch (error) {
+    // Handle any errors
     Fluttertoast.showToast(
-        msg: "Error please send us a feedback code 4-22-2",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
-    return [];
+      msg: "Error please send us a feedback code 4-22-1",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+    return []; // Return an empty list in case of error
   }
 }
 
-
 // load product rating
 Future<List<Map<String, dynamic>>> loadProductRating(context, String productID) async {
-  User? user = FirebaseAuth.instance.currentUser;
-  if (user != null) {
-    try {
-      // Fetch product reviews from Firestore
-      QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
-          .collection('products')
-          .doc(productID)
-          .collection('ratings')
-          .get();
-
-      return snapshot.docs.map((doc) => doc.data()).toList();
-    } catch (error) {
-      // Handle any errors
-      Fluttertoast.showToast(
-        msg: "Error please send us a feedback code 4-23-1",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
-      return []; // Return 0 in case of error
-    }
-  } else {
-    // Handle case when user is null
+  try {
+  // Fetch product reviews from Firestore
+    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+      .collection('products')
+      .doc(productID)
+      .collection('ratings')
+      .get();
+    return snapshot.docs.map((doc) => doc.data()).toList();
+  } catch (error) {
+  // Handle any errors
     Fluttertoast.showToast(
-        msg: "Error please send us a feedback code 4-23-2",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
-    return [];
+      msg: "Error please send us a feedback code 4-23-1",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+    return []; // Return 0 in case of error
   }
 }
 

@@ -14,7 +14,7 @@ class _ProductsCategorysPageState extends State<ProductsCategorysPage> {
   List<Map<String, dynamic>> categorys = [];
   List<Map<String, dynamic>> filteredCategorys = [];
   TextEditingController searchController = TextEditingController();
-
+  
   @override
   void initState() {
     super.initState();
@@ -82,53 +82,61 @@ class _ProductsCategorysPageState extends State<ProductsCategorysPage> {
             child: Container(
               margin: const EdgeInsets.all(20),
               child: filteredCategorys.isEmpty
-                  ? const Center(
-                      child: Text(
-                        'No product',
-                        style: TextStyle(fontSize: 20),
+              ? const Center(
+                child: Text(
+                  'No product',
+                  style: TextStyle(fontSize: 20),
+                ),
+              )
+              : GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                ),
+                itemCount: filteredCategorys.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) =>ProductCategoryOverviewPage(
+                          categoryId: filteredCategorys[index]['id'],
+                        ))
+                      );
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColors().secondaryColor,
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                    )
-                  : GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 20,
-                        mainAxisSpacing: 20,
-                      ),
-                      itemCount: filteredCategorys.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        ProductCategoryOverviewPage(
-                                          categoryId: filteredCategorys[index]
-                                              ['id'],
-                                        )));
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: AppColors().secondaryColor,
-                              borderRadius: BorderRadius.circular(10),
+                      padding: const EdgeInsets.all(10),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                            AppIcons().categoryIcons[filteredCategorys[index]['name']] ?? Icons.category,
+                              size: 25,
+                              color: AppColors().primaryColor,
                             ),
-                            padding: const EdgeInsets.all(10),
-                            child: Center(
-                              child: Text(
-                                filteredCategorys[index]['name'],
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: AppColors().primaryColor,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                            Text(
+                              filteredCategorys[index]['name'],
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: AppColors().primaryColor,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                overflow: TextOverflow.values[3],
                               ),
                             ),
-                          ),
-                        );
-                      },
+                          ],
+                        ),
+                      ),
                     ),
+                  );
+                },
+              ),
             ),
           ),
         ],

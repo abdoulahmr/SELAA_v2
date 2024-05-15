@@ -93,7 +93,7 @@ class _HomeState extends State<HomeSeller> {
                     ),
                   ),
                   Image(
-                    image: AssetImage(ImagePaths().horizontalLogo),
+                    image: AssetImage(ImagePaths().blackhorizontalLogo),
                     width: 120,
                     height: 120,
                   ),

@@ -85,7 +85,10 @@ class _OffersScreenState extends State<OffersScreen> {
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(context,MaterialPageRoute(builder: (context) => 
-                      ProductPage(productID: offers[index]['product']['productID'])),
+                      ProductPage(
+                        productID: offers[index]['product']['productID'],
+                        discount: offers[index]['discount'],  
+                      )),
                     );
                   },
                   child: Column(

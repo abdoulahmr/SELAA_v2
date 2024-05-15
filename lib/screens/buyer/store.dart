@@ -109,7 +109,7 @@ class _StoreState extends State<StoreScreen> {
                     return GestureDetector(
                       onTap: () {
                         Navigator.push(context, MaterialPageRoute( builder: (context) => 
-                          ProductPage(productID: products[index]['productID']),
+                          ProductPage(productID: products[index]['productID'],discount: 0,),
                         ));
                       },
                       child: Container(
@@ -151,7 +151,7 @@ class _StoreState extends State<StoreScreen> {
                               height: MediaQuery.of(context).size.height * 0.03,
                               width: MediaQuery.of(context).size.width * 0.9,
                               child: Text(
-                                "${products[index]['price']} DZ",
+                                "${products[index]['price']} D",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 15,

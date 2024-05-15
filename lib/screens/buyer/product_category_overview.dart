@@ -110,11 +110,12 @@ class _ProductCategoryOverviewPageState
                           GestureDetector(
                               onTap: () async {
                                 Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ProductPage(
-                                            productID: products[index]
-                                                ['productID'])));
+                                  context,
+                                  MaterialPageRoute(builder: (context) => ProductPage(
+                                    productID: products[index]['productID'],
+                                    discount: 0,
+                                  ))
+                                );
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(10),
@@ -165,7 +166,7 @@ class _ProductCategoryOverviewPageState
                                               0.03,
                                       width: MediaQuery.of(context).size.width,
                                       child: Text(
-                                        "${products[startIndex]['price']} DZ",
+                                        "${products[startIndex]['price']} DA",
                                         textAlign: TextAlign.center,
                                         style: const TextStyle(
                                           fontSize: 15,
@@ -180,11 +181,13 @@ class _ProductCategoryOverviewPageState
                           GestureDetector(
                               onTap: () {
                                 Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ProductPage(
-                                            productID: products[endIndex]
-                                                ['productID'])));
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ProductPage(
+                                      productID: products[endIndex]['productID'],
+                                      discount: 0,
+                                  ))
+                                );
                               },
                               child: Container(
                                 margin: const EdgeInsets.all(10),
@@ -237,7 +240,7 @@ class _ProductCategoryOverviewPageState
                                               0.03,
                                       width: MediaQuery.of(context).size.width,
                                       child: Text(
-                                        "${products[endIndex]['price']} DZ",
+                                        "${products[endIndex]['price']} DA",
                                         textAlign: TextAlign.center,
                                         style: const TextStyle(
                                           fontSize: 15,

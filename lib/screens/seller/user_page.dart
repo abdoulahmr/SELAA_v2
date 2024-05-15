@@ -225,6 +225,7 @@ class _UserPage extends State<UserPage> {
                               MaterialPageRoute(
                                 builder: (context) => ProductPage(
                                   productID: userPostes[index]['productID'],
+                                  discount: 0,
                                 ),
                               ),
                             );

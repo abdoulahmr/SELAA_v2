@@ -37,35 +37,51 @@ class MyOrdersPage extends StatelessWidget {
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.all(20),
-                  child: ListTile(
-                    title: Text(
-                      'Order ${index + 1}',
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: Text(
+                          '# ${index + 1}',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors().primaryColor,
+                          ),
+                        ),
+                        title: Text(
+                          '${orders[index]['orderId']}',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors().primaryColor,
+                          ),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 10),
+                            Text(
+                              'Date: ${orders[index]['date']}',
+                              style: const TextStyle(fontSize: 15),
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              'Status: ${orders[index]['status']}',
+                              style: const TextStyle(fontSize: 15),
+                            ),
+                          ],
+                        ),
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>OrderOverView(orderId: orders[index]['orderId']),
+                          ));
+                        },
                       ),
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 10),
-                        Text(
-                          'Date: ${orders[index]['date']}',
-                          style: const TextStyle(fontSize: 15),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          'Status: ${orders[index]['status']}',
-                          style: const TextStyle(fontSize: 15),
-                        ),
-                      ],
-                    ),
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            OrderOverView(orderId: orders[index]['orderId']),
-                      ));
-                    },
+                      const Divider(
+                        indent: 20,
+                        endIndent: 20,
+                      ),
+                    ],
                   ),
                 );
               },

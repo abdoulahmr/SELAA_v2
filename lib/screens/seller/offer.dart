@@ -86,6 +86,7 @@ class _OfferScreenState extends State<OfferScreen> {
                                     MaterialPageRoute(
                                       builder: (context) => ProductPage(
                                         productID: sellerOffer[index]['productID']['productID'],
+                                        discount: sellerOffer[index]['discount'],
                                       ),
                                     ),
                                   );
@@ -127,7 +128,7 @@ class _OfferScreenState extends State<OfferScreen> {
                 subtitle: Row(
                   children: [
                     Text(
-                            "${sellerOffer[index]['product']['price']} DA",
+                      "${sellerOffer[index]['product']['price']} DA",
                       style: TextStyle(
                         color: AppColors().primaryColor,
                         fontSize: 12,
