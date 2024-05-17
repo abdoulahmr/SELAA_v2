@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:flutter/material.dart';
 import 'package:selaa/backend-functions/auth.dart';
+import 'package:selaa/backend-functions/console_logs.dart';
 import '../screens/register/login.dart';
 import '../screens/seller/edit_profile.dart';
 
@@ -35,6 +36,7 @@ Future<void> resetPassword(String email, context) async {
         textColor: Colors.white,
         fontSize: 16.0,
       );
+    addLog(e.toString(), '2-1-1');
   }
 }
 
@@ -81,6 +83,7 @@ Future<void> updateUserInfo(
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog(error.toString(), '2-2-1');
   }
 }
 
@@ -110,6 +113,7 @@ Future<void> updateUserShippingAddress(String shippingAddress, context) async {
         textColor: Colors.white,
         fontSize: 16.0,
       );
+      addLog(e.toString(), '2-3-1');
     }
   } else {
     Fluttertoast.showToast(
@@ -121,6 +125,7 @@ Future<void> updateUserShippingAddress(String shippingAddress, context) async {
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog("e", '2-3-1');
   }
 }
 
@@ -154,6 +159,7 @@ Future<void> updateUserPhoneNumber(String phoneNumber, context) async {
         textColor: Colors.white,
         fontSize: 16.0,
       );
+      addLog(e.toString(), '2-4-1');
     }
   } else {
     Fluttertoast.showToast(
@@ -165,6 +171,7 @@ Future<void> updateUserPhoneNumber(String phoneNumber, context) async {
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog("e", '2-4-2');
   }
 }
 
@@ -188,6 +195,7 @@ Future<void> updatePassword(String currentPassword, String newPassword, context)
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog(e.toString(), '2-5-1');
     return;
   }
 
@@ -212,5 +220,6 @@ Future<void> updatePassword(String currentPassword, String newPassword, context)
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog(e.toString(), '2-5-2');
   }
 }

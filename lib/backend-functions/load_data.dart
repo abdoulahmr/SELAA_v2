@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:selaa/backend-functions/console_logs.dart';
 
 // Function to get account type (buyer,seller) and check for infos
 Future<Map<String, dynamic>> loadAccountDetails() async {
@@ -59,6 +60,7 @@ Future<List<Map<String, dynamic>>> loadUserInfo(context) async {
           textColor: Colors.white,
           fontSize: 16.0,
         );
+        addLog("error", '3-2-1');
         return [];
       }
     } catch (error) {
@@ -71,6 +73,7 @@ Future<List<Map<String, dynamic>>> loadUserInfo(context) async {
         textColor: Colors.white,
         fontSize: 16.0,
       );
+      addLog(error.toString(), '3-2-2');
       return [];
     }
   } else {
@@ -219,7 +222,6 @@ Future<List<Map<String, dynamic>>> fetchProducts({String? sellerID}) async {
 // load poste information
 Future<List<Map<String, dynamic>>> loadPosteInfo(String productID, context) async {
   List<Map<String, dynamic>> result = [];
-
   try {
     // Fetch product data from Firestore
     DocumentSnapshot<Map<String, dynamic>> productSnapshot =
@@ -262,6 +264,7 @@ Future<List<Map<String, dynamic>>> loadPosteInfo(String productID, context) asyn
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog(error.toString(), '4-6-2');
     return [];
   }
 }
@@ -286,6 +289,7 @@ Future<List<Map<String, dynamic>>> loadAllPostes(context) async {
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog(error.toString(), '4-6-2');
     return [];
   }
 }
@@ -330,6 +334,7 @@ Future<List<Map<String, dynamic>>> loadCartItems(context) async {
         textColor: Colors.white,
         fontSize: 16.0,
       );
+      addLog(error.toString(), '4-8-1');
     }
   } else {
     // Handle case when user is null
@@ -480,6 +485,7 @@ Future<List<Map<String, dynamic>>> loadBuyerOrders(context) async {
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog(e.toString(), '4-11-1');
     return []; 
   }
 }
@@ -522,6 +528,7 @@ Future<List<Map<String, dynamic>>> loadSellerOrders(context) async {
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog(e.toString(), '4-12-1');
     return []; 
   }
 }
@@ -550,6 +557,7 @@ Future<List<Map<String, dynamic>>> loadOrderInfo(String orderID) async {
       textColor: Colors.white,
       fontSize: 16.0,
     );    
+    addLog(e.toString(), '4-24-1');
     return [];
   }
 }
@@ -588,6 +596,7 @@ Future<List<Map<String, dynamic>>> loadOrderItems(String orderID) async {
       textColor: Colors.white,
       fontSize: 16.0,
     );    
+    addLog(e.toString(), '4-13-1');
     return [];
   }
 }
@@ -614,6 +623,7 @@ Future<String> loadUserName(context, uid) async {
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog(e.toString(), '4-14-2');
     return 'Error getting user name';
   }
 }
@@ -636,6 +646,7 @@ Future<Map<String, dynamic>> loadBuyerInfo(BuildContext context, String buyerId)
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog(error.toString(), '4-14-2');
     return {};
   }
 }
@@ -685,6 +696,7 @@ Future<Map<String, dynamic>> loadSellerOrdersInfo(BuildContext context) async {
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog(error.toString(), '4-16-2');
     return {};
   }
 }
@@ -723,6 +735,7 @@ Future<Map<String, dynamic>> loadSellerProductsInfo(BuildContext context) async 
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog(error.toString(), '4-17-2');
     return {};
   }
 }
@@ -761,6 +774,7 @@ Future<String> loadSellerBalanceInfo(BuildContext context) async {
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog(error.toString(), '4-18-2');
     return "0";
   }
 }
@@ -783,6 +797,7 @@ Future<List<Map<String, dynamic>>> loadProductsCategorys(context) async {
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog(error.toString(), '4-19-1');
     return [];
   }
 }
@@ -806,6 +821,7 @@ Future<List<Map<String, dynamic>>> loadProductsByCategory(String categoryID, con
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog(error.toString(), '4-20-1');
     return [];
   }
 }
@@ -828,6 +844,7 @@ Future<List<Map<String, dynamic>>> loadProductsCategories(context) async {
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog(error.toString(), '4-21-1');
     return []; // Return an empty list in case of error
   }
 }
@@ -863,6 +880,7 @@ Future<List<Map<String, dynamic>>> loadProductReviews(BuildContext context, Stri
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog(error.toString(), '4-22-1');
     return []; // Return an empty list in case of error
   }
 }
@@ -888,6 +906,7 @@ Future<List<Map<String, dynamic>>> loadProductRating(context, String productID) 
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog(error.toString(), '4-23-1');
     return []; // Return 0 in case of error
   }
 }
@@ -911,6 +930,7 @@ Future<List<Map<String, dynamic>>> loadStores() async {
     }).toList();
   } catch (error) {
     // Handle any errors
+    addLog(error.toString(), '4-15-1');
     return [];
   }
 }
@@ -932,6 +952,7 @@ Future<List<Map<String, dynamic>>> loadAgents() async {
     }).toList();
   } catch (error) {
     // Handle any errors
+    addLog(error.toString(), '4-16-1');
     return [];
   }
 }
@@ -945,6 +966,7 @@ Stream<List<dynamic>> getRequestStatusStream(String orderID) {
     .snapshots()
     .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
   } catch (error) {
+    addLog(error.toString(), '4-17-1');
     return Stream.value([]);
   }
 }
@@ -960,6 +982,7 @@ Future<List<Map<String, dynamic>>> loadRequestStatus(String agentID, String orde
       .get();
     return snapshot.docs.map((doc) => doc.data()).toList();
   } catch (error) {
+    addLog(error.toString(), '4-18-1');
     return [];
   }
 }
@@ -986,6 +1009,7 @@ Future<List<Map<String, dynamic>>> loadSellerOffer(context) async {
 
     return offers;
   } catch (error) {
+    addLog(error.toString(), '4-19-1');
     return [];
   }
 }
@@ -1009,6 +1033,7 @@ Future<List<Map<String, dynamic>>> loadOffers(context) async{
     }
     return offers;
   }catch(e){
+    addLog(e.toString(), '4-20-1');
     return [];
   }
 }

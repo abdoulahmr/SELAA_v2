@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:flutter/material.dart';
+import 'package:selaa/backend-functions/console_logs.dart';
 import 'package:selaa/screens/register/redirect_login.dart';
 import '../screens/register/login.dart';
 
@@ -93,6 +94,7 @@ Future<User?> registerWithEmailPassword({
         textColor: Colors.black,
         fontSize: 16.0,
       );
+      addLog(e.toString(), '1-1-1');
     } else if (e.code == 'email-already-in-use') {
       Fluttertoast.showToast(
         msg: "The account already exists for that email. code 1-1-2",
@@ -103,6 +105,7 @@ Future<User?> registerWithEmailPassword({
         textColor: Colors.black,
         fontSize: 16.0,
       );
+      addLog(e.toString(), '1-1-2');
     }
   } catch (e) {
     // Handle other exceptions
@@ -115,6 +118,7 @@ Future<User?> registerWithEmailPassword({
         textColor: Colors.white,
         fontSize: 16.0,
       );
+    addLog(e.toString(), '1-1-3');
   }
   return null;
 }
@@ -159,6 +163,7 @@ Future<User?> loginWithEmailPassword(
         textColor: Colors.black,
         fontSize: 16.0,
       );
+      addLog("e", '1-2-1');
     } else {
       // Navigate to home screen after successful login
       Navigator.push(context, MaterialPageRoute(builder: (context) => const RedirectLogin()));
@@ -176,6 +181,7 @@ Future<User?> loginWithEmailPassword(
         textColor: Colors.white,
         fontSize: 16.0,
       );
+      addLog(e.toString(), '1-2-2');
     } else if (e.code == 'wrong-password') {
       Navigator.pop(context);
       Fluttertoast.showToast(
@@ -186,7 +192,8 @@ Future<User?> loginWithEmailPassword(
         backgroundColor: Colors.red,
         textColor: Colors.white,
         fontSize: 16.0,
-      );    
+      );
+      addLog(e.toString(), '1-2-3');    
     } else {
       Navigator.pop(context);
       Fluttertoast.showToast(
@@ -198,6 +205,7 @@ Future<User?> loginWithEmailPassword(
         textColor: Colors.white,
         fontSize: 16.0,
       );
+      addLog(e.toString(), '1-2-4');
     }
   } catch (e) {
     Navigator.pop(context);
@@ -210,6 +218,7 @@ Future<User?> loginWithEmailPassword(
         textColor: Colors.white,
         fontSize: 16.0,
       );
+    addLog(e.toString(), '1-2-5');
   }
   return null;
 }
@@ -227,6 +236,7 @@ Future<void> resendEmailVerification(User user, context) async {
       textColor: Colors.black,
       fontSize: 16.0,
     );
+    addLog("e", '1-3-1');
   } catch (e) {
     Fluttertoast.showToast(
         msg: "Error logging in please send us a feedback code 1-3-2",
@@ -237,6 +247,7 @@ Future<void> resendEmailVerification(User user, context) async {
         textColor: Colors.white,
         fontSize: 16.0,
       );
+    addLog(e.toString(), '1-3-2');
   }
 }
 
@@ -258,6 +269,7 @@ Future<void> signOut(context) async {
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog(e.toString(), '1-4-1');
   }
 }
 
@@ -313,6 +325,7 @@ Future<User?> signInWithGoogle(BuildContext context) async {
         textColor: Colors.white,
         fontSize: 16.0,
       );
+    addLog(e.toString(), '1-5-1');
   }
   return null;
 }

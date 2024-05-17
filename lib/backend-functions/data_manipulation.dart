@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:flutter/material.dart';
+import 'package:selaa/backend-functions/console_logs.dart';
 import 'package:selaa/screens/seller/user_page.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
@@ -91,6 +92,7 @@ Future<void> addProduct(
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog(error.toString(), '3-1-1');
   }
 }
 
@@ -137,6 +139,7 @@ Future<void> deletePoste(String productID, context) async {
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog(error.toString(), '3-2-1');
   }
 }
 
@@ -172,6 +175,7 @@ Future<void> addItemToCart(
         textColor: Colors.white,
         fontSize: 16.0,
       );
+      addLog(error.toString(), '3-3-1');
     }
   }
 }
@@ -210,6 +214,7 @@ Future<double> calculateTotalPrice(context) async {
         textColor: Colors.white,
         fontSize: 16.0,
       );
+      addLog(error.toString(), '3-4-1');
     }
   } else {
     // Handle case when the user is null
@@ -222,6 +227,7 @@ Future<double> calculateTotalPrice(context) async {
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog("error", '3-4-2');
   }
   return total;
 }
@@ -251,6 +257,7 @@ Future<void> deleteItemFromCart(context) async {
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog(error.toString(), '3-6-1');
   }
 }
 
@@ -316,6 +323,7 @@ Future<void> saveOrder(
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog(e.toString(), '3-7-2');
   }
 }
 
@@ -343,7 +351,7 @@ Future<void> saveItemsInOrder(
       textColor: Colors.white,
       fontSize: 16.0,
     );
-    
+    addLog(error.toString(), '3-8-1');
   }
 }
 
@@ -372,6 +380,7 @@ Future<List<Map<String, dynamic>>> loadBuyerOrders(context) async {
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog(e.toString(), '3-9-1');
     return []; // Return an empty list if there's an error
   }
 }
@@ -444,6 +453,7 @@ Future<void> addProductReview(
         textColor: Colors.white,
         fontSize: 16.0,
       );
+      addLog(error.toString(), '3-11-1');
     }
   }
 }
@@ -499,6 +509,16 @@ Future<void> addDiscountOffer(String productID, double discount, context) async 
     Navigator.pop(context);
   } catch (error) {
     // Handle errors
+    Fluttertoast.showToast(
+      msg: "Error logging in please send us a feedback code 3-12-1",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+    addLog(error.toString(), '3-12-1');
   }
 }
 
@@ -523,6 +543,7 @@ Future<void> submitFeedback(context) async{
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog(error.toString(), '3-13-1');
   }
 }
 
@@ -551,5 +572,6 @@ Future<void> deleteOffer(String offerID, context) async {
       textColor: Colors.white,
       fontSize: 16.0,
     );
+    addLog(error.toString(), '3-14-1');
   }
 }
